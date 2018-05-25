@@ -16,14 +16,14 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 
 ## How to use this?
 
-As often with the code published in [terraform-aws-modules GitHub organization](https://github.com/terraform-aws-modules/terraform-aws-atlantis) you should have everything to run this code and get Atlantis up and running.
+As often with the code published in [terraform-aws-modules GitHub organization](https://github.com/terraform-aws-modules) you should have everything to run this code and get Atlantis up and running.
 
 There are two ways to do this:
 
-1. Run Atlantis as a standalone project
-2. As a Terraform module sharing existing AWS resources
+1. [As a standalone project](https://github.com/terraform-aws-modules/terraform-aws-atlantis#run-atlantis-as-a-standalone-project)
+2. [As a Terraform module](https://github.com/terraform-aws-modules/terraform-aws-atlantis#run-atlantis-as-a-terraform-module)
 
-### Standalone project
+### Run Atlantis as a standalone project
 
 1. Clone this github repository:
 
@@ -42,7 +42,7 @@ $ cd terraform-aws-atlantis
 
 Once this is done GitHub webhook has to be created to send events to your Atlantis endpoint. Read [Add GitHub Webhook](https://github.com/runatlantis/atlantis#add-github-webhook) in the official Atlantis documentation.
 
-### Usage as a Terraform module
+### Run Atlantis as a Terraform module
 
 This way allows integration with your existing AWS resources (eg, existing VPC or Route53 resources)
  
