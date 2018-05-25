@@ -64,7 +64,7 @@ module "atlantis" {
   # ACM (SSL certificate) - Specify ARN of an existing certificate or new one will be created and validated using Route53 DNS
   certificate_arn = "arn:aws:acm:eu-west-1:135367859851:certificate/70e008e1-c0e1-4c7e-9670-7bb5bd4f5a84"
 
-  # Atlantis parameters
+  # Atlantis
   atlantis_github_user       = "atlantis-bot"
   atlantis_github_user_token = "examplegithubtoken"
 }
@@ -72,7 +72,7 @@ module "atlantis" {
 
 ## Notes
 
-1. AWS Route53 zone is not created by this module, so zone specified as a value in `route53_zone_name` should be created before using this module.
+1. AWS Route53 zone is not created by this module, so zone specified as a value in `route53_zone_name` should be created before using this module. Check documentation for [aws_route53_zone](https://www.terraform.io/docs/providers/aws/r/route53_zone.html).
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
@@ -89,6 +89,7 @@ module "atlantis" {
 | azs | A list of availability zones in the region | list | - | yes |
 | certificate_arn | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | string | `` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden | string | - | yes |
+| cloudwatch_log_retention_in_days | Retention period of Atlantis CloudWatch logs | string | `7` | no |
 | create_route53_record | Whether to create Route53 record for Atlantis | string | `true` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | string | `atlantis` | no |
 | private_subnets | A list of private subnets inside the VPC | list | - | yes |
@@ -99,8 +100,9 @@ module "atlantis" {
 
 | Name | Description |
 |------|-------------|
-| atlantis_route53_record_fqdn | DNS |
-| vpc_id | VPC |
+| atlantis_route53_record_fqdn | The CIDR block of the VPC |
+| github_webhook_secret | Github webhook secret |
+| vpc_id | The ID of the VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

@@ -98,7 +98,8 @@ module "alb" {
   }]
 
   target_groups_count = 1
-  tags                = "${local.tags}"
+
+  tags = "${local.tags}"
 }
 
 ###################
@@ -109,6 +110,8 @@ resource "aws_acm_certificate" "cert" {
 
   domain_name       = "${var.acm_certificate_domain_name == "" ? join(".", list(var.name, var.route53_zone_name)) : var.acm_certificate_domain_name}"
   validation_method = "DNS"
+
+  tags = "${local.tags}"
 }
 
 data "aws_route53_zone" "this" {
@@ -274,5 +277,7 @@ resource "aws_ecs_service" "atlantis" {
 
 resource "aws_cloudwatch_log_group" "atlantis" {
   name              = "${var.name}"
-  retention_in_days = 7
+  retention_in_days = "${var.cloudwatch_log_retention_in_days}"
+
+  tags = "${local.tags}"
 }

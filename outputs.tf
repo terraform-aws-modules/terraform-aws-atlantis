@@ -10,5 +10,5 @@ output "atlantis_route53_record_fqdn" {
 
 output "github_webhook_secret" {
   description = "Github webhook secret"
-  value = "${random_id.webhook.hex}"
+  value       = "${random_id.webhook.hex}"
 }

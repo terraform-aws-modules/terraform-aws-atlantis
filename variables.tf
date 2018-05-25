@@ -42,6 +42,11 @@ variable "create_route53_record" {
   default     = true
 }
 
+variable "cloudwatch_log_retention_in_days" {
+  description = "Retention period of Atlantis CloudWatch logs"
+  default     = 7
+}
+
 variable "atlantis_image" {
   description = "Docker image to run Atlantis with. If not specified, official Atlantis image will be used"
   default     = ""
