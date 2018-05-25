@@ -1,16 +1,16 @@
 # AWS Terraform module which runs Atlantis on AWS Fargate
 
-[Atlantis](https://github.com/runatlantis/atlantis) is tool which provides unified workflow for collaborating on Terraform through GitHub and GitLab.
+[Atlantis](https://www.runatlantis.io/) is tool which provides unified workflow for collaborating on Terraform through GitHub and GitLab.
 
-This repository contains Terraform infrastructure code which creates AWS resources required to run [Atlantis](https://github.com/runatlantis/atlantis) on AWS, including:
+This repository contains Terraform infrastructure code which creates AWS resources required to run [Atlantis](https://www.runatlantis.io/) on AWS, including:
 
 - Virtual Private Cloud (VPC)
 - SSL certificate using Amazon Certificate Manager (ACM)
 - Application Load Balancer (ALB)
 - Domain name using AWS Route53 which points to ALB
-- AWS Elastic Cloud Service (ECS) and AWS Fargate running Atlantis Docker image
+- [AWS Elastic Cloud Service (ECS)](https://aws.amazon.com/ecs/) and [AWS Fargate](https://aws.amazon.com/fargate/) running Atlantis Docker image
 
-AWS Fargate is used instead of AWS ECS/EC2 to reduce the bill, and it is also a cool AWS service.
+[AWS Fargate](https://aws.amazon.com/fargate/) is used instead of AWS ECS/EC2 to reduce the bill, and it is also a cool AWS service.
 
 ### Before using Atlantis and the code in this repository please make sure that you have read and understood the security implications described in [the official Atlantis documentation](https://github.com/runatlantis/atlantis#security).
 
@@ -106,9 +106,9 @@ module "atlantis" {
 
 ## Authors
 
-[Seth Vargo](https://github.com/sethvargo) has created [atlantis-on-gke](https://github.com/sethvargo/atlantis-on-gke)(Terraform configurations for running Atlantis on [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine)). This inspired me to do similar stuff for AWS Fargate.
-
 Module is created and maintained by [Anton Babenko](https://github.com/antonbabenko).
+
+[Seth Vargo](https://github.com/sethvargo) has created [atlantis-on-gke](https://github.com/sethvargo/atlantis-on-gke)(Terraform configurations for running Atlantis on [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine)). This inspired me to do similar stuff for AWS Fargate.
 
 ## License
 
