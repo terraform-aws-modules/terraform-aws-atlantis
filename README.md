@@ -99,7 +99,7 @@ module "atlantis" {
 
 | Name | Description |
 |------|-------------|
-| atlantis_route53_record_fqdn | The CIDR block of the VPC |
+| atlantis_route53_record_fqdn | DNS |
 | vpc_id | VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

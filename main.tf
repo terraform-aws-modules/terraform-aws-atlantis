@@ -96,6 +96,7 @@ module "alb" {
     backend_port     = 4141
     target_type      = "ip"
   }]
+
   target_groups_count = 1
   tags                = "${local.tags}"
 }
