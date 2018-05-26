@@ -18,7 +18,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 
 As often with the code published in [terraform-aws-modules GitHub organization](https://github.com/terraform-aws-modules) you should have everything to run this code and get Atlantis up and running.
 
-There are two main ways to do this:
+There are three main ways to do this:
 
 1. [As a standalone project](https://github.com/terraform-aws-modules/terraform-aws-atlantis#run-atlantis-as-a-standalone-project)
 2. [As a Terraform module](https://github.com/terraform-aws-modules/terraform-aws-atlantis#run-atlantis-as-a-terraform-module)
@@ -73,19 +73,19 @@ module "atlantis" {
 
 ### Run Atlantis as a part of an existing AWS infrastructure (use existing VPC)
 
-This way allows integration with your existing AWS resources - VPC, public and private subnets. Specify the following arguments:
+This way allows integration with your existing AWS resources - VPC, public and private subnets. Specify the following arguments (see methods described above):
 
 ```
-vpc_id = "vpc-1651acf1"
+vpc_id             = "vpc-1651acf1"
 private_subnet_ids = ["subnet-1fe3d837", "subnet-129d66ab"]
-public_subnet_ids = ["subnet-1211eef5", "subnet-163466ab"]
+public_subnet_ids  = ["subnet-1211eef5", "subnet-163466ab"]
 ```
 
 If `vpc_id` is specified it will take precedence over `cidr` and existing VPC will be used. `private_subnet_ids` and `public_subnet_ids` must be specified also.
 
-Make sure that both private and public subnets were created in the same set of availability zones (ALB - is created in public subnets, ECS Fargate service in private subnets).
+Make sure that both private and public subnets were created in the same set of availability zones (ALB will be created in public subnets, ECS Fargate service in private subnets).
 
-If all subnets provided are public (no NAT gateway) then `ecs_service_assign_public_ip` should be set to `true`.
+If all provided subnets are public (no NAT gateway) then `ecs_service_assign_public_ip` should be set to `true`.
 
 ## Notes
 
