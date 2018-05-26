@@ -74,6 +74,10 @@ module "atlantis" {
 
 1. AWS Route53 zone is not created by this module, so zone specified as a value in `route53_zone_name` should be created before using this module. Check documentation for [aws_route53_zone](https://www.terraform.io/docs/providers/aws/r/route53_zone.html).
 
+## Examples
+
+* [GitHub repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook)
+
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Inputs
@@ -90,7 +94,11 @@ module "atlantis" {
 | certificate_arn | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | string | `` | no |
 | cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden | string | - | yes |
 | cloudwatch_log_retention_in_days | Retention period of Atlantis CloudWatch logs | string | `7` | no |
+| create_github_repository_webhook | Whether to create Github repository webhook for Atlantis. This requires valid Github credentials specified as `github_token` and `github_organization`. | string | `true` | no |
 | create_route53_record | Whether to create Route53 record for Atlantis | string | `true` | no |
+| github_organization | Github organization | string | `` | no |
+| github_repo_names | Github repositories where webhook should be created | list | `<list>` | no |
+| github_token | Github token | string | `` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | string | `atlantis` | no |
 | private_subnets | A list of private subnets inside the VPC | list | - | yes |
 | public_subnets | A list of public subnets inside the VPC | list | - | yes |
@@ -100,8 +108,9 @@ module "atlantis" {
 
 | Name | Description |
 |------|-------------|
-| atlantis_route53_record_fqdn | The CIDR block of the VPC |
+| atlantis_url | URL of Atlantis |
 | github_webhook_secret | Github webhook secret |
+| github_webhook_urls | Github webhook URL |
 | vpc_id | The ID of the VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

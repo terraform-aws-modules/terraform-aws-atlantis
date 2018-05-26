@@ -1,6 +1,10 @@
 locals {
   atlantis_image = "${var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : "${var.atlantis_image}" }"
 
+  atlantis_url = "https://${element(concat(aws_route53_record.atlantis.*.fqdn, list("")), 0)}"
+
+  atlantis_url_events = "${local.atlantis_url}/events"
+
   tags = {
     Name = "${var.name}"
   }
@@ -10,6 +14,23 @@ data "aws_region" "current" {}
 
 resource "random_id" "webhook" {
   byte_length = "64"
+}
+
+###################
+# Github webhook(s)
+###################
+module "github_repository_webhook" {
+  source = "./modules/github-repository-webhook"
+
+  create_github_repository_webhook = "${var.create_github_repository_webhook}"
+
+  github_token        = "${var.github_token}"
+  github_organization = "${var.github_organization}"
+
+  github_repo_names = "${var.github_repo_names}"
+
+  webhook_url    = "${local.atlantis_url_events}"
+  webhook_secret = "${random_id.webhook.hex}"
 }
 
 ###################
@@ -35,6 +56,39 @@ module "vpc" {
 
 ###################
 # ALB
+###################
+module "alb" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "v3.4.0"
+
+  load_balancer_name = "${var.name}"
+
+  vpc_id          = "${module.vpc.vpc_id}"
+  subnets         = ["${module.vpc.public_subnets}"]
+  security_groups = ["${module.alb_https_sg.this_security_group_id}"]
+  logging_enabled = false
+
+  https_listeners = [{
+    port            = 443
+    certificate_arn = "${var.certificate_arn == "" ? element(concat(aws_acm_certificate_validation.cert.*.certificate_arn, list("")), 0) : var.certificate_arn}"
+  }]
+
+  https_listeners_count = 1
+
+  target_groups = [{
+    name             = "${var.name}"
+    backend_protocol = "HTTP"
+    backend_port     = 4141
+    target_type      = "ip"
+  }]
+
+  target_groups_count = 1
+
+  tags = "${local.tags}"
+}
+
+###################
+# Security groups
 ###################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
@@ -72,38 +126,8 @@ module "atlantis_sg" {
   tags = "${local.tags}"
 }
 
-module "alb" {
-  source  = "terraform-aws-modules/alb/aws"
-  version = "v3.4.0"
-
-  load_balancer_name = "${var.name}"
-
-  vpc_id          = "${module.vpc.vpc_id}"
-  subnets         = ["${module.vpc.public_subnets}"]
-  security_groups = ["${module.alb_https_sg.this_security_group_id}"]
-  logging_enabled = false
-
-  https_listeners = [{
-    port            = 443
-    certificate_arn = "${var.certificate_arn == "" ? element(concat(aws_acm_certificate_validation.cert.*.certificate_arn, list("")), 0) : var.certificate_arn}"
-  }]
-
-  https_listeners_count = 1
-
-  target_groups = [{
-    name             = "${var.name}"
-    backend_protocol = "HTTP"
-    backend_port     = 4141
-    target_type      = "ip"
-  }]
-
-  target_groups_count = 1
-
-  tags = "${local.tags}"
-}
-
 ###################
-# ECS
+# ACM (SSL certificate)
 ###################
 resource "aws_acm_certificate" "cert" {
   count = "${var.certificate_arn == "" ? 1 : 0}"
@@ -275,6 +299,9 @@ resource "aws_ecs_service" "atlantis" {
   }
 }
 
+###################
+# Cloudwatch logs
+###################
 resource "aws_cloudwatch_log_group" "atlantis" {
   name              = "${var.name}"
   retention_in_days = "${var.cloudwatch_log_retention_in_days}"

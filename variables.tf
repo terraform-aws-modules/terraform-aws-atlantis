@@ -69,3 +69,24 @@ variable "atlantis_repo_whitelist" {
   description = "List of allowed repositories Atlantis can be used with"
   type        = "list"
 }
+
+variable "create_github_repository_webhook" {
+  description = "Whether to create Github repository webhook for Atlantis. This requires valid Github credentials specified as `github_token` and `github_organization`."
+  default     = true
+}
+
+variable "github_token" {
+  description = "Github token"
+  default     = ""
+}
+
+variable "github_organization" {
+  description = "Github organization"
+  default     = ""
+}
+
+variable "github_repo_names" {
+  description = "Github repositories where webhook should be created"
+  type        = "list"
+  default     = []
+}
