@@ -1,8 +1,11 @@
 # VPC
-cidr            = "10.10.0.0/16"
-azs             = ["eu-west-1a", "eu-west-1b"]
+cidr = "10.10.0.0/16"
+
+azs = ["eu-west-1a", "eu-west-1b"]
+
 private_subnets = ["10.10.1.0/24", "10.10.2.0/24"]
-public_subnets  = ["10.10.11.0/24", "10.10.12.0/24"]
+
+public_subnets = ["10.10.11.0/24", "10.10.12.0/24"]
 
 # DNS
 route53_zone_name = "example.com"
@@ -11,7 +14,18 @@ route53_zone_name = "example.com"
 # Specify ARN of an existing certificate or new one will be created and validated using Route53 DNS:
 # certificate_arn = "arn:aws:acm:eu-west-1:135367859851:certificate/70e008e1-c0e1-4c7e-9670-7bb5bd4f5a84"
 
+# Github repo webhook
+create_github_repository_webhook = true
+
+github_token = "dd77a64848dc3246c0e57cc0b46fa784ea066a56d"
+
+github_organization = "mygithubusername"
+
+github_repo_names = ["awesome-repo", "another-awesome-repo"]
+
 # Atlantis
-atlantis_github_user       = "atlantis-bot"
+atlantis_github_user = "atlantis-bot"
+
 atlantis_github_user_token = "examplegithubtoken"
-atlantis_repo_whitelist    = ["github.com/terraform-aws-modules/*"]
+
+atlantis_repo_whitelist = ["github.com/terraform-aws-modules/*"]
