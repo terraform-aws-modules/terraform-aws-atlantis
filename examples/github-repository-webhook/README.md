@@ -23,6 +23,6 @@ Note that this example may create resources which cost money. Run `terraform des
 | Name | Description |
 |------|-------------|
 | github_webhook_secret | Github webhook secret |
-| github_webhook_url | Github webhook URL |
+| github_webhook_urls | Github webhook URL |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

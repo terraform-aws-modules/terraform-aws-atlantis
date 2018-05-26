@@ -1,8 +1,12 @@
 locals {
-  atlantis_image = "${var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : "${var.atlantis_image}" }"
+  # VPC - existing or new?
+  vpc_id             = "${var.vpc_id == "" ? module.vpc.vpc_id : var.vpc_id}"
+  private_subnet_ids = "${coalescelist(module.vpc.private_subnets, var.private_subnet_ids)}"
+  public_subnet_ids  = "${coalescelist(module.vpc.public_subnets, var.public_subnet_ids)}"
 
-  atlantis_url = "https://${element(concat(aws_route53_record.atlantis.*.fqdn, list("")), 0)}"
-
+  # Atlantis
+  atlantis_image      = "${var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : "${var.atlantis_image}" }"
+  atlantis_url        = "https://${coalesce(element(concat(aws_route53_record.atlantis.*.fqdn, list("")), 0), module.alb.dns_name)}"
   atlantis_url_events = "${local.atlantis_url}/events"
 
   tags = {
@@ -40,10 +44,11 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "v1.32.0"
 
+  create_vpc = "${var.vpc_id == ""}"
+
   name = "${var.name}"
 
-  cidr = "${var.cidr}"
-
+  cidr            = "${var.cidr}"
   azs             = "${var.azs}"
   private_subnets = "${var.private_subnets}"
   public_subnets  = "${var.public_subnets}"
@@ -63,8 +68,8 @@ module "alb" {
 
   load_balancer_name = "${var.name}"
 
-  vpc_id          = "${module.vpc.vpc_id}"
-  subnets         = ["${module.vpc.public_subnets}"]
+  vpc_id          = "${local.vpc_id}"
+  subnets         = ["${local.public_subnet_ids}"]
   security_groups = ["${module.alb_https_sg.this_security_group_id}"]
   logging_enabled = false
 
@@ -95,7 +100,7 @@ module "alb_https_sg" {
   version = "v1.25.0"
 
   name        = "${var.name}-alb"
-  vpc_id      = "${module.vpc.vpc_id}"
+  vpc_id      = "${local.vpc_id}"
   description = "Security group with HTTPS ports open for everybody (IPv4 CIDR), egress ports are all world open"
 
   ingress_cidr_blocks = ["0.0.0.0/0"]
@@ -108,8 +113,8 @@ module "atlantis_sg" {
   version = "v1.25.0"
 
   name        = "${var.name}"
-  vpc_id      = "${module.vpc.vpc_id}"
-  description = "Security group with open port for Atlantis (4141) from ALB (${module.alb_https_sg.this_security_group_id}), egress ports are all world open"
+  vpc_id      = "${local.vpc_id}"
+  description = "Security group with open port for Atlantis (4141) from ALB, egress ports are all world open"
 
   ingress_with_source_security_group_id = [
     {
@@ -287,9 +292,9 @@ resource "aws_ecs_service" "atlantis" {
   deployment_minimum_healthy_percent = 0
 
   network_configuration {
-    subnets          = ["${module.vpc.private_subnets}"]
+    subnets          = ["${local.private_subnet_ids}"]
     security_groups  = ["${module.atlantis_sg.this_security_group_id}"]
-    assign_public_ip = false
+    assign_public_ip = "${var.ecs_service_assign_public_ip}"
   }
 
   load_balancer {

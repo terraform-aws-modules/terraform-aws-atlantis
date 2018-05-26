@@ -18,10 +18,11 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 
 As often with the code published in [terraform-aws-modules GitHub organization](https://github.com/terraform-aws-modules) you should have everything to run this code and get Atlantis up and running.
 
-There are two ways to do this:
+There are two main ways to do this:
 
 1. [As a standalone project](https://github.com/terraform-aws-modules/terraform-aws-atlantis#run-atlantis-as-a-standalone-project)
 2. [As a Terraform module](https://github.com/terraform-aws-modules/terraform-aws-atlantis#run-atlantis-as-a-terraform-module)
+3. [As a part of an existing AWS infrastructure](https://github.com/terraform-aws-modules/terraform-aws-atlantis#run-atlantis-as-a-part-of-an-existing-aws-infrastructure)
 
 ### Run Atlantis as a standalone project
 
@@ -38,13 +39,13 @@ $ cd terraform-aws-atlantis
 
 4. Run `terraform apply` to apply the Terraform configuration and create required infrastructure.
 
-5. Run `terraform output atlantis_route53_record_fqdn` to get URL where Atlantis is publicly reachable. (Note: It may take a minute or two to get it reachable for the first time)
+5. Run `terraform output atlantis_url` to get URL where Atlantis is publicly reachable. (Note: It may take a minute or two to get it reachable for the first time)
 
-Once this is done GitHub webhook has to be created to send events to your Atlantis endpoint. Read [Add GitHub Webhook](https://github.com/runatlantis/atlantis#add-github-webhook) in the official Atlantis documentation.
+6. Github webhook is automatically created if `github_token`, `github_organization` and `github_repo_names` were specified. Read [Add GitHub Webhook](https://github.com/runatlantis/atlantis#add-github-webhook) in the official Atlantis documentation or check [example "GitHub repository webhook for Atlantis"](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook) to add more webhooks.
 
 ### Run Atlantis as a Terraform module
 
-This way allows integration with your existing AWS resources (eg, existing VPC or Route53 resources)
+This way allows integration with your existing Terraform configurations.
  
 ```hcl
 module "atlantis" {
@@ -70,6 +71,22 @@ module "atlantis" {
 }
 ```
 
+### Run Atlantis as a part of an existing AWS infrastructure (use existing VPC)
+
+This way allows integration with your existing AWS resources - VPC, public and private subnets. Specify the following arguments:
+
+```
+vpc_id = "vpc-1651acf1"
+private_subnet_ids = ["subnet-1fe3d837", "subnet-129d66ab"]
+public_subnet_ids = ["subnet-1211eef5", "subnet-163466ab"]
+```
+
+If `vpc_id` is specified it will take precedence over `cidr` and existing VPC will be used. `private_subnet_ids` and `public_subnet_ids` must be specified also.
+
+Make sure that both private and public subnets were created in the same set of availability zones (ALB - is created in public subnets, ECS Fargate service in private subnets).
+
+If all subnets provided are public (no NAT gateway) then `ecs_service_assign_public_ip` should be set to `true`.
+
 ## Notes
 
 1. AWS Route53 zone is not created by this module, so zone specified as a value in `route53_zone_name` should be created before using this module. Check documentation for [aws_route53_zone](https://www.terraform.io/docs/providers/aws/r/route53_zone.html).
@@ -90,19 +107,23 @@ module "atlantis" {
 | atlantis_image | Docker image to run Atlantis with. If not specified, official Atlantis image will be used | string | `` | no |
 | atlantis_repo_whitelist | List of allowed repositories Atlantis can be used with | list | - | yes |
 | atlantis_version | Verion of Atlantis to run. If not specified latest will be used | string | `latest` | no |
-| azs | A list of availability zones in the region | list | - | yes |
+| azs | A list of availability zones in the region | list | `<list>` | no |
 | certificate_arn | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | string | `` | no |
-| cidr | The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden | string | - | yes |
+| cidr | The CIDR block for the VPC which will be created if `vpc_id` is not specified | string | `` | no |
 | cloudwatch_log_retention_in_days | Retention period of Atlantis CloudWatch logs | string | `7` | no |
 | create_github_repository_webhook | Whether to create Github repository webhook for Atlantis. This requires valid Github credentials specified as `github_token` and `github_organization`. | string | `true` | no |
 | create_route53_record | Whether to create Route53 record for Atlantis | string | `true` | no |
+| ecs_service_assign_public_ip | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | string | `false` | no |
 | github_organization | Github organization | string | `` | no |
 | github_repo_names | Github repositories where webhook should be created | list | `<list>` | no |
 | github_token | Github token | string | `` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | string | `atlantis` | no |
-| private_subnets | A list of private subnets inside the VPC | list | - | yes |
-| public_subnets | A list of public subnets inside the VPC | list | - | yes |
+| private_subnet_ids | A list of IDs of existing private subnets inside the VPC | list | `<list>` | no |
+| private_subnets | A list of private subnets inside the VPC | list | `<list>` | no |
+| public_subnet_ids | A list of IDs of existing public subnets inside the VPC | list | `<list>` | no |
+| public_subnets | A list of public subnets inside the VPC | list | `<list>` | no |
 | route53_zone_name | Route53 zone name to create ACM certificate in and main A-record | string | `` | no |
+| vpc_id | ID of an existing VPC where resources will be created | string | `` | no |
 
 ## Outputs
 
@@ -111,7 +132,6 @@ module "atlantis" {
 | atlantis_url | URL of Atlantis |
 | github_webhook_secret | Github webhook secret |
 | github_webhook_urls | Github webhook URL |
-| vpc_id | The ID of the VPC |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

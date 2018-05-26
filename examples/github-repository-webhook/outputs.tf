@@ -1,4 +1,4 @@
-output "github_webhook_url" {
+output "github_webhook_urls" {
   description = "Github webhook URL"
   value       = "${module.github_repository_webhook.this_repository_webhook_urls}"
 }
