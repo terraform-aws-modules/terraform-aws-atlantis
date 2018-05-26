@@ -3,23 +3,44 @@ variable "name" {
   default     = "atlantis"
 }
 
+variable "vpc_id" {
+  description = "ID of an existing VPC where resources will be created"
+  default     = ""
+}
+
+variable "public_subnet_ids" {
+  description = "A list of IDs of existing public subnets inside the VPC"
+  type        = "list"
+  default     = []
+}
+
+variable "private_subnet_ids" {
+  description = "A list of IDs of existing private subnets inside the VPC"
+  type        = "list"
+  default     = []
+}
+
 variable "cidr" {
-  description = "The CIDR block for the VPC. Default value is a valid CIDR, but not acceptable by AWS and should be overriden"
+  description = "The CIDR block for the VPC which will be created if `vpc_id` is not specified"
+  default     = ""
 }
 
 variable "azs" {
   description = "A list of availability zones in the region"
   type        = "list"
+  default     = []
 }
 
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
   type        = "list"
+  default     = []
 }
 
 variable "private_subnets" {
   description = "A list of private subnets inside the VPC"
   type        = "list"
+  default     = []
 }
 
 variable "certificate_arn" {
@@ -40,6 +61,11 @@ variable "route53_zone_name" {
 variable "create_route53_record" {
   description = "Whether to create Route53 record for Atlantis"
   default     = true
+}
+
+variable "ecs_service_assign_public_ip" {
+  description = "Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html)"
+  default     = false
 }
 
 variable "cloudwatch_log_retention_in_days" {
