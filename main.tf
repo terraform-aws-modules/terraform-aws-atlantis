@@ -98,7 +98,7 @@ module "alb" {
 ###################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v1.25.0"
+  version = "v2.0.0"
 
   name        = "${var.name}-alb"
   vpc_id      = "${local.vpc_id}"
@@ -111,13 +111,13 @@ module "alb_https_sg" {
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v1.25.0"
+  version = "v2.0.0"
 
   name        = "${var.name}"
   vpc_id      = "${local.vpc_id}"
   description = "Security group with open port for Atlantis (4141) from ALB, egress ports are all world open"
 
-  ingress_with_source_security_group_id = [
+  computed_ingress_with_source_security_group_id = [
     {
       from_port                = 4141
       to_port                  = 4141
@@ -126,6 +126,8 @@ module "atlantis_sg" {
       source_security_group_id = "${module.alb_https_sg.this_security_group_id}"
     },
   ]
+
+  number_of_computed_ingress_with_source_security_group_id = 1
 
   egress_rules = ["all-all"]
 
