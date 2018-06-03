@@ -81,10 +81,11 @@ module "alb" {
   https_listeners_count = 1
 
   target_groups = [{
-    name             = "${var.name}"
-    backend_protocol = "HTTP"
-    backend_port     = 4141
-    target_type      = "ip"
+    name                 = "${var.name}"
+    backend_protocol     = "HTTP"
+    backend_port         = 4141
+    target_type          = "ip"
+    deregistration_delay = 10
   }]
 
   target_groups_count = 1
@@ -220,8 +221,8 @@ resource "aws_ecs_task_definition" "atlantis" {
   execution_role_arn       = "${aws_iam_role.ecs_task_execution.arn}"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = 1024
-  memory                   = 2048
+  cpu                      = 256
+  memory                   = 512
 
   container_definitions = <<EOF
 [
