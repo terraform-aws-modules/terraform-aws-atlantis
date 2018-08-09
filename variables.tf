@@ -116,3 +116,9 @@ variable "github_repo_names" {
   type        = "list"
   default     = []
 }
+
+variable "allow_repo_config" {
+  description = "When true allows the use of atlantis.yaml config files within the source repos."
+  type = "string"
+  default = "false"
+}
