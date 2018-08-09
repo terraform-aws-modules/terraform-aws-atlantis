@@ -285,10 +285,15 @@ resource "aws_ecs_task_definition" "atlantis" {
 EOF
 }
 
+data "aws_ecs_task_definition" "atlantis" {
+  task_definition = "${aws_ecs_task_definition.atlantis.name}"
+  depends_on      = ["aws_ecs_task_definition.task"]
+}
+
 resource "aws_ecs_service" "atlantis" {
   name                               = "${var.name}"
   cluster                            = "${module.ecs.this_ecs_cluster_id}"
-  task_definition                    = "${aws_ecs_task_definition.atlantis.arn}"
+  task_definition                    = "${data.aws_ecs_task_definition.atlantis.family}:${max("${aws_ecs_task_definition.atlantis.revision}", "${data.aws_ecs_task_definition.atlantis.revision}")}"
   desired_count                      = 1
   launch_type                        = "FARGATE"
   deployment_maximum_percent         = 100
