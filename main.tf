@@ -300,8 +300,8 @@ resource "aws_ecs_service" "atlantis" {
   task_definition                    = "${data.aws_ecs_task_definition.atlantis.family}:${max("${aws_ecs_task_definition.atlantis.revision}", "${data.aws_ecs_task_definition.atlantis.revision}")}"
   desired_count                      = 1
   launch_type                        = "FARGATE"
-  deployment_maximum_percent         = 100
-  deployment_minimum_healthy_percent = 0
+  deployment_maximum_percent         = 200
+  deployment_minimum_healthy_percent = 50
 
   network_configuration {
     subnets          = ["${local.private_subnet_ids}"]
