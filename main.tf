@@ -286,7 +286,7 @@ EOF
 }
 
 data "aws_ecs_task_definition" "atlantis" {
-  task_definition = "${aws_ecs_task_definition.atlantis.name}"
+  task_definition = "${var.name}"
   depends_on      = ["aws_ecs_task_definition.atlantis"]
 }
 
