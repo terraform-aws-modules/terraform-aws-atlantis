@@ -287,7 +287,7 @@ EOF
 
 data "aws_ecs_task_definition" "atlantis" {
   task_definition = "${aws_ecs_task_definition.atlantis.name}"
-  depends_on      = ["aws_ecs_task_definition.task"]
+  depends_on      = ["aws_ecs_task_definition.atlantis"]
 }
 
 resource "aws_ecs_service" "atlantis" {
