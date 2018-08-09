@@ -271,7 +271,7 @@ resource "aws_ecs_task_definition" "atlantis" {
             }
         },
         "mountPoints": [],
-        "name": "atlantis",
+        "name": "${var.name}",
         "portMappings": [
             {
                 "containerPort": 4141,
