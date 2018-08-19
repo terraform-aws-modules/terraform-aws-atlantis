@@ -221,6 +221,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
 resource "aws_ecs_task_definition" "atlantis" {
   family                   = "${var.name}"
   execution_role_arn       = "${aws_iam_role.ecs_task_execution.arn}"
+  task_role_arn            = "${aws_iam_role.ecs_task_execution.arn}"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 256
@@ -231,6 +232,10 @@ resource "aws_ecs_task_definition" "atlantis" {
     {
         "cpu": 0,
         "environment": [
+          {
+            "name": "ATLANTIS_ALLOW_REPO_CONFIG",
+            "value": "${var.allow_repo_config}"
+          },
             {
                 "name": "ATLANTIS_LOG_LEVEL",
                 "value": "debug"
@@ -271,7 +276,7 @@ resource "aws_ecs_task_definition" "atlantis" {
             }
         },
         "mountPoints": [],
-        "name": "atlantis",
+        "name": "${var.name}",
         "portMappings": [
             {
                 "containerPort": 4141,
@@ -285,14 +290,19 @@ resource "aws_ecs_task_definition" "atlantis" {
 EOF
 }
 
+data "aws_ecs_task_definition" "atlantis" {
+  task_definition = "${var.name}"
+  depends_on      = ["aws_ecs_task_definition.atlantis"]
+}
+
 resource "aws_ecs_service" "atlantis" {
   name                               = "${var.name}"
   cluster                            = "${module.ecs.this_ecs_cluster_id}"
-  task_definition                    = "${aws_ecs_task_definition.atlantis.arn}"
+  task_definition                    = "${data.aws_ecs_task_definition.atlantis.family}:${max("${aws_ecs_task_definition.atlantis.revision}", "${data.aws_ecs_task_definition.atlantis.revision}")}"
   desired_count                      = 1
   launch_type                        = "FARGATE"
-  deployment_maximum_percent         = 100
-  deployment_minimum_healthy_percent = 0
+  deployment_maximum_percent         = 200
+  deployment_minimum_healthy_percent = 50
 
   network_configuration {
     subnets          = ["${local.private_subnet_ids}"]
