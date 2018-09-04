@@ -118,6 +118,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | github_repo_names | Github repositories where webhook should be created | list | `<list>` | no |
 | github_token | Github token | string | `` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | string | `atlantis` | no |
+| policy_arn | The ARN of the policy you want to apply | string | `arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy` | no |
 | private_subnet_ids | A list of IDs of existing private subnets inside the VPC | list | `<list>` | no |
 | private_subnets | A list of private subnets inside the VPC | list | `<list>` | no |
 | public_subnet_ids | A list of IDs of existing public subnets inside the VPC | list | `<list>` | no |
