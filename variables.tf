@@ -123,8 +123,8 @@ variable "allow_repo_config" {
   default     = "false"
 }
 
-variable "policy_arn" {
-  description = "The ARN of the policy you want to apply"
-  type        = "string"
-  default     = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+variable "policies_arn" {
+  description = "A list of the ARN of the policies you want to apply"
+  type        = "list"
+  default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
