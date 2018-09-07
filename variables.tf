@@ -119,6 +119,12 @@ variable "github_repo_names" {
 
 variable "allow_repo_config" {
   description = "When true allows the use of atlantis.yaml config files within the source repos."
-  type = "string"
-  default = "false"
+  type        = "string"
+  default     = "false"
+}
+
+variable "policies_arn" {
+  description = "A list of the ARN of the policies you want to apply"
+  type        = "list"
+  default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
