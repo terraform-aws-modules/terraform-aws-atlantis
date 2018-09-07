@@ -102,6 +102,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
 | acm_certificate_domain_name | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name` | string | `` | no |
+| allow_repo_config | When true allows the use of atlantis.yaml config files within the source repos. | string | `false` | no |
 | atlantis_github_user | GitHub username of the user that is running the Atlantis command | string | - | yes |
 | atlantis_github_user_token | GitHub token of the user that is running the Atlantis command | string | - | yes |
 | atlantis_image | Docker image to run Atlantis with. If not specified, official Atlantis image will be used | string | `` | no |
@@ -118,7 +119,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | github_repo_names | Github repositories where webhook should be created | list | `<list>` | no |
 | github_token | Github token | string | `` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | string | `atlantis` | no |
-| policies_arn | The ARN of the policies you want to apply | list | `["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]` | no |
+| policies_arn | A list of the ARN of the policies you want to apply | list | `<list>` | no |
 | private_subnet_ids | A list of IDs of existing private subnets inside the VPC | list | `<list>` | no |
 | private_subnets | A list of private subnets inside the VPC | list | `<list>` | no |
 | public_subnet_ids | A list of IDs of existing public subnets inside the VPC | list | `<list>` | no |
@@ -133,6 +134,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | atlantis_url | URL of Atlantis |
 | github_webhook_secret | Github webhook secret |
 | github_webhook_urls | Github webhook URL |
+| task_role_arn | The Atlantis ECS task role arn |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

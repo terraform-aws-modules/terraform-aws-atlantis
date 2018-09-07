@@ -214,7 +214,7 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
-	count = "${length(var.policies_arn)}"
+  count = "${length(var.policies_arn)}"
 
   role       = "${aws_iam_role.ecs_task_execution.id}"
   policy_arn = "${element(var.policies_arn, count.index)}"
