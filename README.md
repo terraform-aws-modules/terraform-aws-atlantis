@@ -59,8 +59,8 @@ module "atlantis" {
   private_subnets = ["10.20.1.0/24", "10.20.2.0/24", "10.20.3.0/24"]
   public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
 
-  # DNS
-  route53_zone_name = "terraform-aws-modules.modules.tf"
+  # DNS (without trailing dot)
+  route53_zone_name = "example.com"
 
   # ACM (SSL certificate) - Specify ARN of an existing certificate or new one will be created and validated using Route53 DNS
   certificate_arn = "arn:aws:acm:eu-west-1:135367859851:certificate/70e008e1-c0e1-4c7e-9670-7bb5bd4f5a84"
@@ -68,7 +68,7 @@ module "atlantis" {
   # Atlantis
   atlantis_github_user       = "atlantis-bot"
   atlantis_github_user_token = "examplegithubtoken"
-  atlantis_repo_whitelist    = "github.com/terraform-aws-modules/*"
+  atlantis_repo_whitelist    = ["github.com/terraform-aws-modules/*"]"
 }
 ```
 
