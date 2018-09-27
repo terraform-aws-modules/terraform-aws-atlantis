@@ -125,7 +125,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | private_subnets | A list of private subnets inside the VPC | list | `<list>` | no |
 | public_subnet_ids | A list of IDs of existing public subnets inside the VPC | list | `<list>` | no |
 | public_subnets | A list of public subnets inside the VPC | list | `<list>` | no |
-| route53_zone_name | Route53 zone name to create ACM certificate in and main A-record | string | `` | no |
+| route53_zone_name | Route53 zone name to create ACM certificate in and main A-record, without trailing dot  | string | `` | no |
 | vpc_id | ID of an existing VPC where resources will be created | string | `` | no |
 
 ## Outputs
