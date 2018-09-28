@@ -59,8 +59,8 @@ module "atlantis" {
   private_subnets = ["10.20.1.0/24", "10.20.2.0/24", "10.20.3.0/24"]
   public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
 
-  # DNS
-  route53_zone_name = "terraform-aws-modules.modules.tf"
+  # DNS (without trailing dot)
+  route53_zone_name = "example.com"
 
   # ACM (SSL certificate) - Specify ARN of an existing certificate or new one will be created and validated using Route53 DNS
   certificate_arn = "arn:aws:acm:eu-west-1:135367859851:certificate/70e008e1-c0e1-4c7e-9670-7bb5bd4f5a84"
@@ -68,7 +68,7 @@ module "atlantis" {
   # Atlantis
   atlantis_github_user       = "atlantis-bot"
   atlantis_github_user_token = "examplegithubtoken"
-  atlantis_repo_whitelist    = "github.com/terraform-aws-modules/*"
+  atlantis_repo_whitelist    = ["github.com/terraform-aws-modules/*"]"
 }
 ```
 
@@ -126,7 +126,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | private_subnets | A list of private subnets inside the VPC | list | `<list>` | no |
 | public_subnet_ids | A list of IDs of existing public subnets inside the VPC | list | `<list>` | no |
 | public_subnets | A list of public subnets inside the VPC | list | `<list>` | no |
-| route53_zone_name | Route53 zone name to create ACM certificate in and main A-record | string | `` | no |
+| route53_zone_name | Route53 zone name to create ACM certificate in and main A-record, without trailing dot  | string | `` | no |
 | vpc_id | ID of an existing VPC where resources will be created | string | `` | no |
 
 ## Outputs
