@@ -104,7 +104,7 @@ module "alb_https_sg" {
   vpc_id      = "${local.vpc_id}"
   description = "Security group with HTTPS ports open for everybody (IPv4 CIDR), egress ports are all world open"
 
-  ingress_cidr_blocks = ["0.0.0.0/0"]
+  ingress_cidr_blocks = "${var.alb_ingress_cidr_blocks}"
 
   tags = "${local.tags}"
 }

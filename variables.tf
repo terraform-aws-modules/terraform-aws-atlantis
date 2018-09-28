@@ -128,3 +128,9 @@ variable "policies_arn" {
   type        = "list"
   default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
+
+variable "alb_ingress_cird_blocks" {
+  description = "List of IPv4 CIDR ranges to use on all ingress rules of the ALB."
+  type        = "list"
+  default     = ["0.0.0.0/0"]
+}
