@@ -54,7 +54,7 @@ variable "acm_certificate_domain_name" {
 }
 
 variable "route53_zone_name" {
-  description = "Route53 zone name to create ACM certificate in and main A-record"
+  description = "Route53 zone name to create ACM certificate in and main A-record, without trailing dot"
   default     = ""
 }
 

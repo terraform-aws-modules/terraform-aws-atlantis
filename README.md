@@ -103,7 +103,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
 | acm_certificate_domain_name | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name` | string | `` | no |
-| alb_ingress_cidr_blocks | A list of IPv4 CIDR ranges to use on all ingress rules of the ALB | list | `<list>` | no | 
+| alb_ingress_cidr_blocks | List of IPv4 CIDR ranges to use on all ingress rules of the ALB. | list | `<list>` | no |
 | allow_repo_config | When true allows the use of atlantis.yaml config files within the source repos. | string | `false` | no |
 | atlantis_github_user | GitHub username of the user that is running the Atlantis command | string | - | yes |
 | atlantis_github_user_token | GitHub token of the user that is running the Atlantis command | string | - | yes |
@@ -126,7 +126,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | private_subnets | A list of private subnets inside the VPC | list | `<list>` | no |
 | public_subnet_ids | A list of IDs of existing public subnets inside the VPC | list | `<list>` | no |
 | public_subnets | A list of public subnets inside the VPC | list | `<list>` | no |
-| route53_zone_name | Route53 zone name to create ACM certificate in and main A-record, without trailing dot  | string | `` | no |
+| route53_zone_name | Route53 zone name to create ACM certificate in and main A-record, without trailing dot | string | `` | no |
 | vpc_id | ID of an existing VPC where resources will be created | string | `` | no |
 
 ## Outputs
