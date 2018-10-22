@@ -41,7 +41,7 @@ $ cd terraform-aws-atlantis
 
 5. Run `terraform output atlantis_url` to get URL where Atlantis is publicly reachable. (Note: It may take a minute or two to get it reachable for the first time)
 
-6. Github webhook is automatically created if `github_token`, `github_organization` and `github_repo_names` were specified. Read [Add GitHub Webhook](https://github.com/runatlantis/atlantis#add-github-webhook) in the official Atlantis documentation or check [example "GitHub repository webhook for Atlantis"](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook) to add more webhooks.
+6. Github webhook is automatically created if `github_token`, `github_organization` and `atlantis_allowed_repo_names` were specified. Read [Add GitHub Webhook](https://github.com/runatlantis/atlantis#add-github-webhook) in the official Atlantis documentation or check [example "GitHub repository webhook for Atlantis"](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook) to add more webhooks.
 
 ### Run Atlantis as a Terraform module
 
@@ -118,7 +118,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | create_route53_record | Whether to create Route53 record for Atlantis | string | `true` | no |
 | ecs_service_assign_public_ip | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | string | `false` | no |
 | github_organization | Github organization | string | `` | no |
-| github_repo_names | Github repositories where webhook should be created | list | `<list>` | no |
+| atlantis_allowed_repo_names | Github repositories where webhook should be created | list | `<list>` | no |
 | github_token | Github token | string | `` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | string | `atlantis` | no |
 | policies_arn | A list of the ARN of the policies you want to apply | list | `<list>` | no |

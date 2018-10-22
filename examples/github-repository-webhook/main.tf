@@ -6,7 +6,7 @@ module "github_repository_webhook" {
 
   // This assumes that you are the owner of these repositories and they are available at:
   // https://github.com/mygithubusername/awesome-repo and https://github.com/mygithubusername/another-awesome-repo
-  github_repo_names = ["awesome-repo", "another-awesome-repo"]
+  atlantis_allowed_repo_names = ["awesome-repo", "another-awesome-repo"]
 
   webhook_url    = "http://atlantis.acmecompany.com/events"
   webhook_secret = "1234567890SECRET"
