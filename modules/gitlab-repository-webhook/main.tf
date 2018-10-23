@@ -1,5 +1,6 @@
 provider "gitlab" {
   token        = "${var.gitlab_token}"
+  base_url     = "${var.base_url}"
 }
 
 resource "gitlab_project" "sample_project" {

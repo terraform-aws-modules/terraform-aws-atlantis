@@ -112,8 +112,8 @@ variable "atlantis_webhook_secret" {
   default     = ""
 }
 
-variable "gitlab_token" {
-  description = "gitlab token"
+variable "atlantis_gitlab_base_url" {
+  description = "gitlab base_url"
   default     = ""
 }
 

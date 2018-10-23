@@ -26,7 +26,8 @@ module "gitlab_project_hook" {
 
   create_gitlab_repository_webhook = "${var.create_gitlab_repository_webhook}"
 
-  gitlab_token        = "${var.gitlab_token}"
+  base_url            = "${var.atlantis_gitlab_base_url}"
+  gitlab_token        = "${var.atlantis_gitlab_user_token}"
   gitlab_organization = "${var.gitlab_organization}"
 
   atlantis_allowed_repo_names = "${var.atlantis_allowed_repo_names}"

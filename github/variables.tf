@@ -135,11 +135,6 @@ variable "create_gitlab_repository_webhook" {
   default     = false
 }
 
-variable "gitlab_token" {
-  description = "gitlab token"
-  default     = ""
-}
-
 variable "gitlab_organization" {
   description = "gitlab organization"
   default     = ""

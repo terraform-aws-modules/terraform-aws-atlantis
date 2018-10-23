@@ -3,6 +3,11 @@ variable "create_gitlab_repository_webhook" {
   default     = true
 }
 
+variable "base_url" {
+  description = "gitlab base_url use"
+  default     = ""
+}
+
 variable "gitlab_token" {
   description = "gitlab token to use when creating webhook"
   default     = ""
