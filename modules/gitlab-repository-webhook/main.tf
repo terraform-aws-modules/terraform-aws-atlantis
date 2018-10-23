@@ -1,6 +1,9 @@
 provider "gitlab" {
   token        = "${var.gitlab_token}"
-  organization = "${var.gitlab_organization}"
+}
+
+resource "gitlab_project" "sample_project" {
+    name = "${var.gitlab_organization}"
 }
 
 resource "gitlab_repository_webhook" "this" {
