@@ -21,7 +21,7 @@ resource "random_id" "webhook" {
 ###################
 # Gitlab webhook(s)
 ###################
-module "gitlab_repository_webhook" {
+module "gitlab_project_hook" {
   source = "../modules/gitlab-repository-webhook"
 
   create_gitlab_repository_webhook = "${var.create_gitlab_repository_webhook}"

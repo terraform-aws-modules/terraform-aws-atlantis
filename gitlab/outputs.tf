@@ -5,12 +5,12 @@ output "atlantis_url" {
 
 output "gitlab_webhook_secret" {
   description = "gitlab webhook secret"
-  value       = "${module.gitlab_repository_webhook.this_repository_webhook_secret}"
+  value       = "${module.gitlab_project_hook.this_repository_webhook_secret}"
 }
 
 output "gitlab_webhook_urls" {
   description = "gitlab webhook URL"
-  value       = "${module.gitlab_repository_webhook.this_repository_webhook_urls}"
+  value       = "${module.gitlab_project_hook.this_repository_webhook_urls}"
 }
 
 output "task_role_arn" {

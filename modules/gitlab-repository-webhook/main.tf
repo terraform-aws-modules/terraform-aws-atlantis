@@ -6,7 +6,7 @@ resource "gitlab_project" "sample_project" {
     name = "${var.gitlab_organization}"
 }
 
-resource "gitlab_repository_webhook" "this" {
+resource "gitlab_project_hook" "this" {
   count = "${var.create_gitlab_repository_webhook && length(var.atlantis_allowed_repo_names) > 0 ? length(var.atlantis_allowed_repo_names) : 0}"
 
   name       = "web"
@@ -14,17 +14,14 @@ resource "gitlab_repository_webhook" "this" {
 
   configuration {
     url          = "${var.webhook_url}"
-    content_type = "application/json"
-    insecure_ssl = false
-    secret       = "${var.webhook_secret}"
+    #content_type = "application/json"
+    enable_ssl_verification = "false"
+    token       = "${var.webhook_secret}"
   }
 
-  events = [
-    "issue_comment",
-    "pull_request",
-    "pull_request_review",
-    "pull_request_review_comment",
-  ]
+  merge_requests_events = "true"
+  push_events = "true"
+  note_events = "true"
 
   lifecycle {
     # The secret is saved as ******* in the state
