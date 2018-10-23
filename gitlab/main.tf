@@ -9,9 +9,7 @@ locals {
   atlantis_url        = "https://${coalesce(element(concat(aws_route53_record.atlantis.*.fqdn, list("")), 0), module.alb.dns_name)}"
   atlantis_url_events = "${local.atlantis_url}/events"
 
-  tags = {
-    Name = "${var.name}"
-  }
+  tags = "${var.tags}"
 }
 
 data "aws_region" "current" {}
@@ -21,27 +19,10 @@ resource "random_id" "webhook" {
 }
 
 ###################
-# Github webhook(s)
-###################
-module "github_repository_webhook" {
-  source = "./modules/github-repository-webhook"
-
-  create_github_repository_webhook = "${var.create_github_repository_webhook}"
-
-  github_token        = "${var.github_token}"
-  github_organization = "${var.github_organization}"
-
-  atlantis_allowed_repo_names = "${var.atlantis_allowed_repo_names}"
-
-  webhook_url    = "${local.atlantis_url_events}"
-  webhook_secret = "${random_id.webhook.hex}"
-}
-
-###################
 # Gitlab webhook(s)
 ###################
 module "gitlab_repository_webhook" {
-  source = "./modules/gitlab-repository-webhook"
+  source = "../modules/gitlab-repository-webhook"
 
   create_gitlab_repository_webhook = "${var.create_gitlab_repository_webhook}"
 
@@ -268,18 +249,6 @@ resource "aws_ecs_task_definition" "atlantis" {
                 "value": "https://${coalesce(element(concat(aws_route53_record.atlantis.*.fqdn, list("")), 0), module.alb.dns_name)}"
             },
             {
-                "name": "ATLANTIS_GH_USER",
-                "value": "${var.atlantis_github_user}"
-            },
-            {
-                "name": "ATLANTIS_GH_TOKEN",
-                "value": "${var.atlantis_github_user_token}"
-            },
-            {
-                "name": "ATLANTIS_GH_WEBHOOK_SECRET",
-                "value": "${random_id.webhook.hex}"
-            },
-            {
                 "name": "ATLANTIS_GITLAB_USER",
                 "value": "${var.atlantis_gitlab_user}"
             },
@@ -289,7 +258,7 @@ resource "aws_ecs_task_definition" "atlantis" {
             },
             {
                 "name": "ATLANTIS_GITLAB_WEBHOOK_SECRET",
-                "value": "${var.atlantis_gitlab_webhook_secret}"
+                "value": "${var.atlantis_webhook_secret}"
             },
             {
                 "name": "ATLANTIS_REPO_WHITELIST",

@@ -92,9 +92,9 @@ variable "atlantis_github_user" {
   description = "GitHub username of the user that is running the Atlantis command"
 }
 
-variable "atlantis_github_user_token" {
-  description = "GitHub token of the user that is running the Atlantis command"
-}
+# variable "atlantis_github_user_token" {
+#   description = "GitHub token of the user that is running the Atlantis command"
+# }
 
 variable "create_github_repository_webhook" {
   description = "Whether to create Github repository webhook for Atlantis. This requires valid Github credentials specified as `github_token` and `github_organization`."
@@ -108,6 +108,11 @@ variable "github_token" {
 
 variable "github_organization" {
   description = "Github organization"
+  default     = ""
+}
+
+variable "atlantis_webhook_secret" {
+  description = "webhook secret"
   default     = ""
 }
 
@@ -156,4 +161,13 @@ variable "alb_ingress_cidr_blocks" {
   description = "List of IPv4 CIDR ranges to use on all ingress rules of the ALB."
   type        = "list"
   default     = ["0.0.0.0/0"]
+}
+
+variable "tags" {
+  description = "A map of the tags for this resource"
+  type        = "map"
+  default     = {
+    Terraform = "true"
+    Environment = "dev"
+  }
 }
