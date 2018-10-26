@@ -219,7 +219,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
   policy_arn = "${element(var.policies_arn, count.index)}"
 }
 
-resource "aws_ecs_task_definition" "atlantis-github" {
+resource "aws_ecs_task_definition" "atlantis" {
   family                   = "${var.name}"
   execution_role_arn       = "${aws_iam_role.ecs_task_execution.arn}"
   task_role_arn            = "${aws_iam_role.ecs_task_execution.arn}"

@@ -5,11 +5,29 @@ locals {
   public_subnet_ids  = "${coalescelist(module.vpc.public_subnets, var.public_subnet_ids)}"
 
   # Atlantis
-  atlantis_image      = "${var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : "${var.atlantis_image}" }"
   atlantis_url        = "https://${coalesce(element(concat(aws_route53_record.atlantis.*.fqdn, list("")), 0), module.alb.dns_name)}"
   atlantis_url_events = "${local.atlantis_url}/events"
-
+  container_definition = "${var.container_definitions == "" ? "${data.template_file.container_definitions.rendered}" : "${var.container_definitions}" }"
   tags = "${var.tags}"
+}
+
+data "template_file" "container_definitions" {
+  template = "${file("${path.module}/templates/atlantis-task.json")}"
+
+  vars {
+    name                            = "${var.name}"
+    atlantis_image                  = "${var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : "${var.atlantis_image}" }"
+    logs_name                       = "${var.name}"
+    logs_region                     = "${data.aws_region.current.name}"
+    ATLANTIS_ALLOW_REPO_CONFIG      = "${var.allow_repo_config}"
+    ATLANTIS_LOG_LEVEL              = "debug"
+    ATLANTIS_PORT                   = "4141"
+    ATLANTIS_ATLANTIS_URL           = "https://${coalesce(element(concat(aws_route53_record.atlantis.*.fqdn, list("")), 0), module.alb.dns_name)}"
+    ATLANTIS_GITLAB_USER            = "${var.atlantis_gitlab_user}"
+    ATLANTIS_GITLAB_TOKEN           = "${var.atlantis_gitlab_user_token}"
+    ATLANTIS_GITLAB_WEBHOOK_SECRET  = "${var.atlantis_webhook_secret}"
+    ATLANTIS_REPO_WHITELIST         = "${join(",", var.atlantis_repo_whitelist)}"
+  }
 }
 
 data "aws_region" "current" {}
@@ -225,73 +243,14 @@ resource "aws_ecs_task_definition" "atlantis" {
   task_role_arn            = "${aws_iam_role.ecs_task_execution.arn}"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = 256
-  memory                   = 512
+  cpu                      = 512
+  memory                   = 1024
 
-  container_definitions = <<EOF
-[
-    {
-        "cpu": 0,
-        "environment": [
-          {
-            "name": "ATLANTIS_ALLOW_REPO_CONFIG",
-            "value": "${var.allow_repo_config}"
-          },
-            {
-                "name": "ATLANTIS_LOG_LEVEL",
-                "value": "debug"
-            },
-            {
-                "name": "ATLANTIS_PORT",
-                "value": "4141"
-            },
-            {
-                "name": "ATLANTIS_ATLANTIS_URL",
-                "value": "https://${coalesce(element(concat(aws_route53_record.atlantis.*.fqdn, list("")), 0), module.alb.dns_name)}"
-            },
-            {
-                "name": "ATLANTIS_GITLAB_USER",
-                "value": "${var.atlantis_gitlab_user}"
-            },
-            {
-                "name": "ATLANTIS_GITLAB_TOKEN",
-                "value": "${var.atlantis_gitlab_user_token}"
-            },
-            {
-                "name": "ATLANTIS_GITLAB_WEBHOOK_SECRET",
-                "value": "${var.atlantis_webhook_secret}"
-            },
-            {
-                "name": "ATLANTIS_REPO_WHITELIST",
-                "value": "${join(",", var.atlantis_repo_whitelist)}"
-            }
-        ],
-        "essential": true,
-        "image": "${local.atlantis_image}",
-        "logConfiguration": {
-            "logDriver": "awslogs",
-            "options": {
-                "awslogs-group": "${var.name}",
-                "awslogs-region": "${data.aws_region.current.name}",
-                "awslogs-stream-prefix": "master"
-            }
-        },
-        "mountPoints": [],
-        "name": "${var.name}",
-        "portMappings": [
-            {
-                "containerPort": 4141,
-                "hostPort": 4141,
-                "protocol": "tcp"
-            }
-        ],
-        "volumesFrom": []
-    }
-]
-EOF
+  container_definitions = "${local.container_definition}"
+  
 }
 
-data "aws_ecs_task_definition" "atlantis" {
+data "aws_ecs_task_definition" "atlantis-data" {
   task_definition = "${var.name}"
   depends_on      = ["aws_ecs_task_definition.atlantis"]
 }
@@ -299,7 +258,7 @@ data "aws_ecs_task_definition" "atlantis" {
 resource "aws_ecs_service" "atlantis" {
   name                               = "${var.name}"
   cluster                            = "${module.ecs.this_ecs_cluster_id}"
-  task_definition                    = "${data.aws_ecs_task_definition.atlantis.family}:${max("${aws_ecs_task_definition.atlantis.revision}", "${data.aws_ecs_task_definition.atlantis.revision}")}"
+  task_definition                    = "${data.aws_ecs_task_definition.atlantis-data.family}:${max("${aws_ecs_task_definition.atlantis.revision}", "${data.aws_ecs_task_definition.atlantis-data.revision}")}"
   desired_count                      = 1
   launch_type                        = "FARGATE"
   deployment_maximum_percent         = 200

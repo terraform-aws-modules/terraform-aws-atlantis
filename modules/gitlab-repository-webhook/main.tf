@@ -3,9 +3,9 @@ provider "gitlab" {
   base_url     = "${var.base_url}"
 }
 
-resource "gitlab_project" "sample_project" {
-    name = "${var.gitlab_organization}"
-}
+# resource "gitlab_project" "sample_project" {
+#     name = "${var.gitlab_organization}"
+# }
 
 resource "gitlab_project_hook" "this" {
   count = "${var.create_gitlab_repository_webhook && length(var.atlantis_allowed_repo_names) > 0 ? length(var.atlantis_allowed_repo_names) : 0}"

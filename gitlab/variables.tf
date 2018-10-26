@@ -148,3 +148,11 @@ variable "tags" {
     Environment = "dev"
   }
 }
+
+variable "container_definitions" {
+  description = "The ec2 task definition json"
+  type        = "string"
+  default     = ""
+}
+
+

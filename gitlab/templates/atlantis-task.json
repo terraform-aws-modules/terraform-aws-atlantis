@@ -1,0 +1,59 @@
+[
+    {
+        "cpu": 0,
+        "environment": [
+          {
+            "name": "ATLANTIS_ALLOW_REPO_CONFIG",
+            "value": "${ATLANTIS_ALLOW_REPO_CONFIG}"
+          },
+            {
+                "name": "ATLANTIS_LOG_LEVEL",
+                "value": "${ATLANTIS_LOG_LEVEL}"
+            },
+            {
+                "name": "ATLANTIS_PORT",
+                "value": "${ATLANTIS_PORT}"
+            },
+            {
+                "name": "ATLANTIS_ATLANTIS_URL",
+                "value": "${ATLANTIS_ATLANTIS_URL}"
+            },
+            {
+                "name": "ATLANTIS_GITLAB_USER",
+                "value": "${ATLANTIS_GITLAB_USER}"
+            },
+            {
+                "name": "ATLANTIS_GITLAB_TOKEN",
+                "value": "${ATLANTIS_GITLAB_TOKEN}"
+            },
+            {
+                "name": "ATLANTIS_GITLAB_WEBHOOK_SECRET",
+                "value": "${ATLANTIS_GITLAB_WEBHOOK_SECRET}"
+            },
+            {
+                "name": "ATLANTIS_REPO_WHITELIST",
+                "value": "${ATLANTIS_REPO_WHITELIST}"
+            }
+        ],
+        "essential": true,
+        "image": "${atlantis_image}",
+        "logConfiguration": {
+            "logDriver": "awslogs",
+            "options": {
+                "awslogs-group": "${name}",
+                "awslogs-region": "${logs_region}",
+                "awslogs-stream-prefix": "master"
+            }
+        },
+        "mountPoints": [],
+        "name": "${name}",
+        "portMappings": [
+            {
+                "containerPort": ${ATLANTIS_PORT},
+                "hostPort": ${ATLANTIS_PORT},
+                "protocol": "tcp"
+            }
+        ],
+        "volumesFrom": []
+    }
+]
