@@ -257,7 +257,7 @@ resource "aws_ecs_service" "atlantis" {
   name                               = "${var.name}"
   cluster                            = "${module.ecs.this_ecs_cluster_id}"
   task_definition                    = "${data.aws_ecs_task_definition.atlantis-data.family}:${max("${aws_ecs_task_definition.atlantis.revision}", "${data.aws_ecs_task_definition.atlantis-data.revision}")}"
-  desired_count                      = 1
+  desired_count                      = ${var.desired_num_tasks}
   launch_type                        = "FARGATE"
   deployment_maximum_percent         = 200
   deployment_minimum_healthy_percent = 50

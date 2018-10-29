@@ -2,7 +2,10 @@ variable "name" {
   description = "Name to use on all resources created (VPC, ALB, etc)"
   default     = "atlantis"
 }
-
+variable "desired_num_tasks" {
+  description = "Desired number of tasks to deploy (desired_count)"
+  default     = 2
+}
 variable "vpc_id" {
   description = "ID of an existing VPC where resources will be created"
   default     = ""
