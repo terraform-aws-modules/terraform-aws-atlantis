@@ -18,7 +18,7 @@ data "template_file" "container_definitions" {
     name                            = "${var.name}"
     atlantis_image                  = "${var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : "${var.atlantis_image}" }"
     logs_name                       = "${var.name}"
-    logs_region                     = "${data.aws_region.current.name}"
+    logs_region                     = "${var.aws_region}"
     ATLANTIS_ALLOW_REPO_CONFIG      = "${var.allow_repo_config}"
     ATLANTIS_LOG_LEVEL              = "debug"
     ATLANTIS_PORT                   = "4141"
@@ -29,8 +29,6 @@ data "template_file" "container_definitions" {
     ATLANTIS_REPO_WHITELIST         = "${join(",", var.atlantis_repo_whitelist)}"
   }
 }
-
-data "aws_region" "current" {}
 
 resource "random_id" "webhook" {
   byte_length = "64"

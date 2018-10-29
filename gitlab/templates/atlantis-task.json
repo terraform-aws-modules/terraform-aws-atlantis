@@ -40,9 +40,9 @@
         "logConfiguration": {
             "logDriver": "awslogs",
             "options": {
-                "awslogs-group": "${name}",
+                "awslogs-group": "/ecs/${name}",
                 "awslogs-region": "${logs_region}",
-                "awslogs-stream-prefix": "master"
+                "awslogs-stream-prefix": "ecs"
             }
         },
         "mountPoints": [],

@@ -30,6 +30,10 @@ variable "azs" {
   type        = "list"
   default     = []
 }
+variable "aws_region" {
+  description = "The aws region for this Fargate container"
+  default     = "eu-central-1"
+}
 
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
