@@ -6,6 +6,13 @@ variable "desired_num_tasks" {
   description = "Desired number of tasks to deploy (desired_count)"
   default     = 2
 }
+
+variable "deployment_maximum_percent" {
+  default     = 200
+}
+variable "deployment_minimum_healthy_percent" {
+  default     = 50
+}
 variable "vpc_id" {
   description = "ID of an existing VPC where resources will be created"
   default     = ""
