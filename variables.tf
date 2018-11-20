@@ -87,8 +87,9 @@ variable "atlantis_github_user" {
   description = "GitHub username of the user that is running the Atlantis command"
 }
 
-variable "atlantis_github_user_token" {
+variable "atlantis_github_user_token_key" {
   description = "GitHub token of the user that is running the Atlantis command"
+  default = "/atlantis/github/user/token"
 }
 
 variable "atlantis_repo_whitelist" {

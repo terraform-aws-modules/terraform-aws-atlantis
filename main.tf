@@ -8,7 +8,7 @@ locals {
   atlantis_image      = "${var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : "${var.atlantis_image}" }"
   atlantis_url        = "https://${coalesce(element(concat(aws_route53_record.atlantis.*.fqdn, list("")), 0), module.alb.dns_name)}"
   atlantis_url_events = "${local.atlantis_url}/events"
-
+  
   tags = {
     Name = "${var.name}"
   }
@@ -220,6 +220,11 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
   policy_arn = "${element(var.policies_arn, count.index)}"
 }
 
+resource "aws_ssm_parameter" "gh_webhook_secret" {
+  name = "/atlantis/github/webhook/secret"
+  value = "${random_id.webhook.hex}"
+}
+
 resource "aws_ecs_task_definition" "atlantis" {
   family                   = "${var.name}"
   execution_role_arn       = "${aws_iam_role.ecs_task_execution.arn}"
@@ -233,6 +238,16 @@ resource "aws_ecs_task_definition" "atlantis" {
 [
     {
         "cpu": 0,
+        "secrets": [
+          {
+            "name": "ATLANTIS_GH_TOKEN"
+            "valueFrom": "${var.atlantis_github_user_token_key}"
+          },
+          {
+            "name": "ATLANTIS_GH_WEBHOOK_SECRET"
+            "valueFrom": "${aws_ssm_parameter.gh_webhook_secret.name}"
+          },
+        ],
         "environment": [
           {
             "name": "ATLANTIS_ALLOW_REPO_CONFIG",
@@ -253,14 +268,6 @@ resource "aws_ecs_task_definition" "atlantis" {
             {
                 "name": "ATLANTIS_GH_USER",
                 "value": "${var.atlantis_github_user}"
-            },
-            {
-                "name": "ATLANTIS_GH_TOKEN",
-                "value": "${var.atlantis_github_user_token}"
-            },
-            {
-                "name": "ATLANTIS_GH_WEBHOOK_SECRET",
-                "value": "${random_id.webhook.hex}"
             },
             {
                 "name": "ATLANTIS_REPO_WHITELIST",
