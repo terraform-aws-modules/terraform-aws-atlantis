@@ -68,7 +68,7 @@ module "atlantis" {
   # Atlantis
   atlantis_github_user       = "atlantis-bot"
   atlantis_github_user_token = "examplegithubtoken"
-  atlantis_repo_whitelist    = ["github.com/terraform-aws-modules/*"]"
+  atlantis_repo_whitelist    = ["github.com/terraform-aws-modules/*"]
 }
 ```
 
