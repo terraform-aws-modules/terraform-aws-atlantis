@@ -100,6 +100,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 ## Examples
 
 * [GitHub repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook)
+* [GitLab repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/gitlab-repository-webhook)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
@@ -124,8 +125,6 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | certificate\_arn | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | string | `` | no |
 | cidr | The CIDR block for the VPC which will be created if `vpc_id` is not specified | string | `` | no |
 | cloudwatch\_log\_retention\_in\_days | Retention period of Atlantis CloudWatch logs | string | `7` | no |
-| create\_github\_repository\_webhook | Whether to create Github repository webhook for Atlantis. This requires valid Github credentials specified as `github_token` and `github_organization`. | string | `false` | no |
-| create\_gitlab\_repository\_webhook | Whether to create Gitlab repository webhook for Atlantis. This requires valid Gitlab credentials specified as `gitlab_token`. | string | `false` | no |
 | create\_route53\_record | Whether to create Route53 record for Atlantis | string | `true` | no |
 | custom\_container\_definitions | A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used. | string | `` | no |
 | ecs\_service\_assign\_public\_ip | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | string | `false` | no |
@@ -134,10 +133,6 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | ecs\_service\_desired\_count | The number of instances of the task definition to place and keep running | string | `1` | no |
 | ecs\_task\_cpu | The number of cpu units used by the task | string | `256` | no |
 | ecs\_task\_memory | The amount (in MiB) of memory used by the task | string | `512` | no |
-| github\_organization | Github organization | string | `` | no |
-| github\_token | Github token | string | `` | no |
-| gitlab\_base\_url | Gitlab base_url | string | `` | no |
-| gitlab\_token | Gitlab token | string | `` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | string | `atlantis` | no |
 | policies\_arn | A list of the ARN of the policies you want to apply | list | `[ "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy" ]` | no |
 | private\_subnet\_ids | A list of IDs of existing private subnets inside the VPC | list | `[]` | no |
@@ -157,7 +152,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | atlantis\_url | URL of Atlantis |
 | atlantis\_url\_events | Webhook events URL of Atlantis |
 | task\_role\_arn | The Atlantis ECS task role arn |
-| webhook\_secret | - |
+| webhook\_secret | Webhook secret |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

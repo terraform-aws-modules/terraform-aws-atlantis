@@ -19,5 +19,6 @@ output "task_role_arn" {
 }
 
 output "webhook_secret" {
-  value = "${random_id.webhook.hex}"
+  description = "Webhook secret"
+  value       = "${random_id.webhook.hex}"
 }

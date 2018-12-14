@@ -176,21 +176,6 @@ variable "allow_repo_config" {
 }
 
 # Github
-variable "create_github_repository_webhook" {
-  description = "Whether to create Github repository webhook for Atlantis. This requires valid Github credentials specified as `github_token` and `github_organization`."
-  default     = false
-}
-
-variable "github_token" {
-  description = "Github token"
-  default     = ""
-}
-
-variable "github_organization" {
-  description = "Github organization"
-  default     = ""
-}
-
 variable "atlantis_github_user" {
   description = "GitHub username that is running the Atlantis command"
   default     = ""
@@ -202,21 +187,6 @@ variable "atlantis_github_user_token" {
 }
 
 # Gitlab
-variable "create_gitlab_repository_webhook" {
-  description = "Whether to create Gitlab repository webhook for Atlantis. This requires valid Gitlab credentials specified as `gitlab_token`."
-  default     = false
-}
-
-variable "gitlab_token" {
-  description = "Gitlab token"
-  default     = ""
-}
-
-variable "gitlab_base_url" {
-  description = "Gitlab base_url"
-  default     = ""
-}
-
 variable "atlantis_gitlab_user" {
   description = "Gitlab username that is running the Atlantis command"
   default     = ""

@@ -52,41 +52,6 @@ resource "aws_ssm_parameter" "atlantis_gitlab_user_token" {
   value = "${var.atlantis_gitlab_user_token}"
 }
 
-//
-//###################
-//# Github webhook(s)
-//###################
-//module "github_repository_webhook" {
-//  source = "./modules/github-repository-webhook"
-//
-//  create_github_repository_webhook = "${var.create_github_repository_webhook}"
-//
-//  github_token        = "${var.github_token}"
-//  github_organization = "${var.github_organization}"
-//
-//  atlantis_allowed_repo_names = "${var.atlantis_allowed_repo_names}"
-//
-//  webhook_url    = "${local.atlantis_url_events}"
-//  webhook_secret = "${aws_ssm_parameter.webhook.value}"
-//}
-
-###################
-# Gitlab webhook(s)
-###################
-//module "gitlab_repository_webhook" {
-//  source = "./modules/gitlab-repository-webhook"
-//
-//  create_gitlab_repository_webhook = "${var.create_gitlab_repository_webhook}"
-//
-//  gitlab_token    = "${var.gitlab_token}"
-//  gitlab_base_url = "${var.gitlab_base_url}"
-//
-//  atlantis_allowed_repo_names = "${var.atlantis_allowed_repo_names}"
-//
-//  webhook_url    = "${local.atlantis_url_events}"
-//  webhook_secret = "${aws_ssm_parameter.webhook.value}"
-//}
-
 ###################
 # VPC
 ###################
