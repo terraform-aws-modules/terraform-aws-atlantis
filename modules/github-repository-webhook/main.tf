@@ -4,10 +4,10 @@ provider "github" {
 }
 
 resource "github_repository_webhook" "this" {
-  count = "${var.create_github_repository_webhook && length(var.github_repo_names) > 0 ? length(var.github_repo_names) : 0}"
+  count = "${var.create_github_repository_webhook && length(var.atlantis_allowed_repo_names) > 0 ? length(var.atlantis_allowed_repo_names) : 0}"
 
   name       = "web"
-  repository = "${var.github_repo_names[count.index]}"
+  repository = "${var.atlantis_allowed_repo_names[count.index]}"
 
   configuration {
     url          = "${var.webhook_url}"

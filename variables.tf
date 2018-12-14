@@ -3,6 +3,12 @@ variable "name" {
   default     = "atlantis"
 }
 
+variable "tags" {
+  description = "A map of tags to use on all resources"
+  default     = {}
+}
+
+# VPC
 variable "vpc_id" {
   description = "ID of an existing VPC where resources will be created"
   default     = ""
@@ -43,6 +49,14 @@ variable "private_subnets" {
   default     = []
 }
 
+# ALB
+variable "alb_ingress_cidr_blocks" {
+  description = "List of IPv4 CIDR ranges to use on all ingress rules of the ALB."
+  type        = "list"
+  default     = ["0.0.0.0/0"]
+}
+
+# ACM
 variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS"
   default     = ""
@@ -53,6 +67,7 @@ variable "acm_certificate_domain_name" {
   default     = ""
 }
 
+# Route53
 variable "route53_zone_name" {
   description = "Route53 zone name to create ACM certificate in and main A-record, without trailing dot"
   default     = ""
@@ -63,16 +78,71 @@ variable "create_route53_record" {
   default     = true
 }
 
-variable "ecs_service_assign_public_ip" {
-  description = "Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html)"
-  default     = false
-}
-
+# Cloudwatch
 variable "cloudwatch_log_retention_in_days" {
   description = "Retention period of Atlantis CloudWatch logs"
   default     = 7
 }
 
+# SSM parameters for secrets
+variable "webhook_ssm_parameter_name" {
+  description = "Name of SSM parameter to keep webhook secret"
+  default     = "/atlantis/webhook/secret"
+}
+
+variable "atlantis_github_user_token_ssm_parameter_name" {
+  description = "Name of SSM parameter to keep atlantis_github_user_token"
+  default     = "/atlantis/github/user/token"
+}
+
+variable "atlantis_gitlab_user_token_ssm_parameter_name" {
+  description = "Name of SSM parameter to keep atlantis_gitlab_user_token"
+  default     = "/atlantis/gitlab/user/token"
+}
+
+# ECS Service / Task
+variable "ecs_service_assign_public_ip" {
+  description = "Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html)"
+  default     = false
+}
+
+variable "policies_arn" {
+  description = "A list of the ARN of the policies you want to apply"
+  type        = "list"
+  default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+}
+
+variable "ecs_service_desired_count" {
+  description = "The number of instances of the task definition to place and keep running"
+  default     = 1
+}
+
+variable "ecs_service_deployment_maximum_percent" {
+  description = "The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment"
+  default     = 200
+}
+
+variable "ecs_service_deployment_minimum_healthy_percent" {
+  description = "The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment"
+  default     = 50
+}
+
+variable "ecs_task_cpu" {
+  description = "The number of cpu units used by the task"
+  default     = 256
+}
+
+variable "ecs_task_memory" {
+  description = "The amount (in MiB) of memory used by the task"
+  default     = 512
+}
+
+variable "custom_container_definitions" {
+  description = "A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used."
+  default     = ""
+}
+
+# Atlantis
 variable "atlantis_image" {
   description = "Docker image to run Atlantis with. If not specified, official Atlantis image will be used"
   default     = ""
@@ -83,12 +153,9 @@ variable "atlantis_version" {
   default     = "latest"
 }
 
-variable "atlantis_github_user" {
-  description = "GitHub username of the user that is running the Atlantis command"
-}
-
-variable "atlantis_github_user_token" {
-  description = "GitHub token of the user that is running the Atlantis command"
+variable "atlantis_port" {
+  description = "Local port Atlantis should be running on. Default value is most likely fine."
+  default     = "4141"
 }
 
 variable "atlantis_repo_whitelist" {
@@ -96,22 +163,7 @@ variable "atlantis_repo_whitelist" {
   type        = "list"
 }
 
-variable "create_github_repository_webhook" {
-  description = "Whether to create Github repository webhook for Atlantis. This requires valid Github credentials specified as `github_token` and `github_organization`."
-  default     = true
-}
-
-variable "github_token" {
-  description = "Github token"
-  default     = ""
-}
-
-variable "github_organization" {
-  description = "Github organization"
-  default     = ""
-}
-
-variable "github_repo_names" {
+variable "atlantis_allowed_repo_names" {
   description = "Github repositories where webhook should be created"
   type        = "list"
   default     = []
@@ -123,14 +175,24 @@ variable "allow_repo_config" {
   default     = "false"
 }
 
-variable "policies_arn" {
-  description = "A list of the ARN of the policies you want to apply"
-  type        = "list"
-  default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+# Github
+variable "atlantis_github_user" {
+  description = "GitHub username that is running the Atlantis command"
+  default     = ""
 }
 
-variable "alb_ingress_cidr_blocks" {
-  description = "List of IPv4 CIDR ranges to use on all ingress rules of the ALB."
-  type        = "list"
-  default     = ["0.0.0.0/0"]
+variable "atlantis_github_user_token" {
+  description = "GitHub token of the user that is running the Atlantis command"
+  default     = ""
+}
+
+# Gitlab
+variable "atlantis_gitlab_user" {
+  description = "Gitlab username that is running the Atlantis command"
+  default     = ""
+}
+
+variable "atlantis_gitlab_user_token" {
+  description = "Gitlab token of the user that is running the Atlantis command"
+  default     = ""
 }

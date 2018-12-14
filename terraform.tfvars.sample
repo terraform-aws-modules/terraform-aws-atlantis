@@ -23,10 +23,9 @@ route53_zone_name = "example.com"
 create_github_repository_webhook = true
 
 github_token = "dd77a64848dc3246c0e57cc0b46fa784ea066a56d"
-
 github_organization = "mygithubusername"
 
-github_repo_names = ["awesome-repo", "another-awesome-repo"]
+atlantis_allowed_repo_names = ["awesome-repo", "another-awesome-repo"]
 
 # Atlantis
 atlantis_github_user = "atlantis-bot"
