@@ -3,17 +3,21 @@ output "atlantis_url" {
   value       = "${local.atlantis_url}"
 }
 
-output "github_webhook_secret" {
-  description = "Github webhook secret"
-  value       = "${module.github_repository_webhook.this_repository_webhook_secret}"
+output "atlantis_url_events" {
+  description = "Webhook events URL of Atlantis"
+  value       = "${local.atlantis_url_events}"
 }
 
-output "github_webhook_urls" {
-  description = "Github webhook URL"
-  value       = "${module.github_repository_webhook.this_repository_webhook_urls}"
+output "atlantis_allowed_repo_names" {
+  description = "Github repositories where webhook should be created"
+  value       = "${var.atlantis_allowed_repo_names}"
 }
 
 output "task_role_arn" {
   description = "The Atlantis ECS task role arn"
   value       = "${aws_iam_role.ecs_task_execution.arn}"
+}
+
+output "webhook_secret" {
+  value = "${random_id.webhook.hex}"
 }
