@@ -100,6 +100,12 @@ variable "atlantis_gitlab_user_token_ssm_parameter_name" {
   default     = "/atlantis/gitlab/user/token"
 }
 
+variable "ssm_kms_key_arn" {
+  type        = "string"
+  description = "KMS key for SSM Parameters. Required only if your key uses a custom KMS key and not the default key."
+  default     = ""
+}
+
 # ECS Service / Task
 variable "ecs_service_assign_public_ip" {
   description = "Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html)"

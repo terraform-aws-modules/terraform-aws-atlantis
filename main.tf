@@ -11,6 +11,14 @@ locals {
 
   container_definitions = "${var.custom_container_definitions == "" ? data.template_file.container_definitions.rendered : var.custom_container_definitions}"
 
+  # kms:Decrypt—Required only if your key uses a custom KMS key and not the default key. 
+  # The ARN for your custom key should be added as a resource.
+  ssm_kms_statement = {
+    effect    = "Allow"
+    resources = ["${var.ssm_kms_key_arn}"]
+    actions   = ["kms:Decrypt"]
+  }
+
   tags = "${merge(map("Name", var.name), var.tags)}"
 }
 
@@ -218,30 +226,34 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
 }
 
 // ref: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html
-//resource "aws_iam_role_policy" "ecs_task_access_secrets" {
-//  count = "${var.atlantis_github_user_token != "" || var.atlantis_gitlab_user_token != "" ? 1 : 0}"
-//
-//  role       = "${aws_iam_role.ecs_task_execution.id}"
-//  policy = <<EOF
-//{
-//  "Version": "2012-10-17",
-//  "Statement": [
-//    {
-//      "Effect": "Allow",
-//      "Action": [
-//        "ssm:GetParameters",
-//        "secretsmanager:GetSecretValue"
-//      ],
-//      "Resource": [
-//        "arn:aws:ssm:::parameter/*",
-//        "arn:aws:secretsmanager:::secret:*",
-//        "arn:aws:kms:region:aws_account_id:key:key_id"
-//      ]
-//    }
-//  ]
-//}
-//EOF
-//}
+data "aws_iam_policy_document" "ecs_task_access_secrets" {
+  statement {
+    effect = "Allow"
+
+    resources = [
+      "arn:aws:ssm:::parameter/${var.webhook_ssm_parameter_name}",
+      "arn:aws:ssm:::parameter/${var.atlantis_github_user_token_ssm_parameter_name}",
+      "arn:aws:ssm:::parameter/${var.atlantis_gitlab_user_token_ssm_parameter_name}",
+    ]
+
+    actions = [
+      "ssm:GetParameters",
+      "secretsmanager:GetSecretValue",
+    ]
+  }
+}
+
+data "aws_iam_policy_document" "ecs_task_access" {
+  source_json = "${data.aws_iam_policy_document.ecs_task_access_secrets.json}"
+  statement   = ["${var.ssm_kms_key_arn == "" ? "" : local.ssm_kms_statement}"]
+}
+
+resource "aws_iam_role_policy" "ecs_task_access_secrets" {
+  count = "${var.atlantis_github_user_token != "" || var.atlantis_gitlab_user_token != "" ? 1 : 0}"
+
+  role   = "${aws_iam_role.ecs_task_execution.id}"
+  policy = "${data.aws_iam_policy_document.ecs_task_access.json}"
+}
 
 data "template_file" "container_definitions" {
   template = "${file("${path.module}/atlantis-task.json")}"
