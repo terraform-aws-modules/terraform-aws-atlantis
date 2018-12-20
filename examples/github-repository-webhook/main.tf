@@ -1,13 +1,25 @@
+data "terraform_remote_state" "atlantis" {
+  backend = "local"
+
+  config {
+    path = "../../terraform.tfstate"
+  }
+}
+
 module "github_repository_webhook" {
   source = "../../modules/github-repository-webhook"
 
-  github_token        = "dd77a64848dc3246c0e57cc0b46fa784ea066a56d"
-  github_organization = "mygithubusername"
+  create_github_repository_webhook = true
 
+  github_token        = "${var.github_token}"
+  github_organization = "${var.github_organization}"
+
+  // Fetching these attributes from created already Atlantis Terraform state file
+  //
   // This assumes that you are the owner of these repositories and they are available at:
   // https://github.com/mygithubusername/awesome-repo and https://github.com/mygithubusername/another-awesome-repo
-  github_repo_names = ["awesome-repo", "another-awesome-repo"]
+  atlantis_allowed_repo_names = "${data.terraform_remote_state.atlantis.atlantis_allowed_repo_names}"
 
-  webhook_url    = "http://atlantis.acmecompany.com/events"
-  webhook_secret = "1234567890SECRET"
+  webhook_url    = "${data.terraform_remote_state.atlantis.atlantis_url_events}"
+  webhook_secret = "${data.terraform_remote_state.atlantis.webhook_secret}"
 }

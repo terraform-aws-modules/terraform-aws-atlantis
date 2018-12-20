@@ -13,7 +13,7 @@ variable "github_organization" {
   default     = ""
 }
 
-variable "github_repo_names" {
+variable "atlantis_allowed_repo_names" {
   description = "List of names of repositories which belong to the organization specified in `github_organization`"
   type        = "list"
 }
