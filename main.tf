@@ -9,12 +9,23 @@ locals {
   atlantis_url        = "https://${coalesce(element(concat(aws_route53_record.atlantis.*.fqdn, list("")), 0), module.alb.dns_name)}"
   atlantis_url_events = "${local.atlantis_url}/events"
 
-  container_definitions = "${var.custom_container_definitions == "" ? data.template_file.container_definitions.rendered : var.custom_container_definitions}"
+  # Include only one group of secrets - for github or for gitlab
+  has_secrets     = "${var.atlantis_gitlab_user_token != "" || var.atlantis_github_user_token != ""}"
+  secret_name_key = "${local.has_secrets && var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_TOKEN" : "ATLANTIS_GH_TOKEN"}"
+
+  secret_name_value_from = "${local.has_secrets && var.atlantis_gitlab_user_token != "" ? var.atlantis_gitlab_user_token_ssm_parameter_name : var.atlantis_github_user_token_ssm_parameter_name}"
+
+  secret_webhook_key = "${local.has_secrets && var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : "ATLANTIS_GH_WEBHOOK_SECRET"}"
+
+  # Container definitions
+  container_definitions = "${var.custom_container_definitions == "" ? module.container_definition.json : var.custom_container_definitions}"
 
   tags = "${merge(map("Name", var.name), var.tags)}"
 }
 
 data "aws_region" "current" {}
+
+data "aws_caller_identity" "current" {}
 
 data "aws_route53_zone" "this" {
   count = "${var.create_route53_record}"
@@ -218,57 +229,112 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
 }
 
 // ref: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html
-//resource "aws_iam_role_policy" "ecs_task_access_secrets" {
-//  count = "${var.atlantis_github_user_token != "" || var.atlantis_gitlab_user_token != "" ? 1 : 0}"
-//
-//  role       = "${aws_iam_role.ecs_task_execution.id}"
-//  policy = <<EOF
-//{
-//  "Version": "2012-10-17",
-//  "Statement": [
-//    {
-//      "Effect": "Allow",
-//      "Action": [
-//        "ssm:GetParameters",
-//        "secretsmanager:GetSecretValue"
-//      ],
-//      "Resource": [
-//        "arn:aws:ssm:::parameter/*",
-//        "arn:aws:secretsmanager:::secret:*",
-//        "arn:aws:kms:region:aws_account_id:key:key_id"
-//      ]
-//    }
-//  ]
-//}
-//EOF
-//}
+data "aws_iam_policy_document" "ecs_task_access_secrets" {
+  statement {
+    effect = "Allow"
 
-data "template_file" "container_definitions" {
-  template = "${file("${path.module}/atlantis-task.json")}"
+    resources = [
+      "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.webhook_ssm_parameter_name}",
+      "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.atlantis_github_user_token_ssm_parameter_name}",
+      "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.atlantis_gitlab_user_token_ssm_parameter_name}",
+    ]
 
-  vars {
-    name                       = "${var.name}"
-    atlantis_image             = "${local.atlantis_image}"
-    logs_group                 = "${aws_cloudwatch_log_group.atlantis.name}"
-    logs_region                = "${data.aws_region.current.name}"
-    logs_stream_prefix         = "ecs"
-    ATLANTIS_ALLOW_REPO_CONFIG = "${var.allow_repo_config}"
-    ATLANTIS_LOG_LEVEL         = "debug"
-    ATLANTIS_PORT              = "${var.atlantis_port}"
-    ATLANTIS_ATLANTIS_URL      = "${local.atlantis_url}"
-    ATLANTIS_REPO_WHITELIST    = "${join(",", var.atlantis_repo_whitelist)}"
-
-    # When secrets will be supported in ECS Fargate use values from comment field
-    # Ref: https://github.com/aws/amazon-ecs-agent/issues/1209
-    ATLANTIS_GH_USER = "${var.atlantis_github_user}"
-
-    ATLANTIS_GH_TOKEN          = "${element(concat(aws_ssm_parameter.atlantis_github_user_token.*.value, list("")), 0)}" # "${var.atlantis_github_user_token_ssm_parameter_name}"
-    ATLANTIS_GH_WEBHOOK_SECRET = "${aws_ssm_parameter.webhook.value}"                                                    # "${var.webhook_ssm_parameter_name}"
-
-    ATLANTIS_GITLAB_USER           = "${var.atlantis_gitlab_user}"
-    ATLANTIS_GITLAB_TOKEN          = "${element(concat(aws_ssm_parameter.atlantis_gitlab_user_token.*.value, list("")), 0)}" # "${var.atlantis_gitlab_user_token_ssm_parameter_name}"
-    ATLANTIS_GITLAB_WEBHOOK_SECRET = "${aws_ssm_parameter.webhook.value}"                                                    # "${var.webhook_ssm_parameter_name}"
+    actions = [
+      "ssm:GetParameters",
+      "secretsmanager:GetSecretValue",
+    ]
   }
+}
+
+data "aws_iam_policy_document" "ecs_task_access_secrets_with_kms" {
+  count = "${var.ssm_kms_key_arn == "" ? 0 : 1}"
+
+  source_json = "${data.aws_iam_policy_document.ecs_task_access_secrets.0.json}"
+
+  statement {
+    sid       = "AllowKMSDecrypt"
+    effect    = "Allow"
+    actions   = ["kms:Decrypt"]
+    resources = ["${var.ssm_kms_key_arn == "" ? "" : var.ssm_kms_key_arn}"]
+  }
+}
+
+resource "aws_iam_role_policy" "ecs_task_access_secrets" {
+  count = "${var.atlantis_github_user_token != "" || var.atlantis_gitlab_user_token != "" ? 1 : 0}"
+
+  name = "ECSTaskAccessSecretsPolicy"
+
+  role = "${aws_iam_role.ecs_task_execution.id}"
+
+  policy = "${element(compact(concat(data.aws_iam_policy_document.ecs_task_access_secrets_with_kms.*.json, data.aws_iam_policy_document.ecs_task_access_secrets.*.json)), 0)}"
+}
+
+module "container_definition" {
+  source  = "cloudposse/ecs-container-definition/aws"
+  version = "v0.6.0"
+
+  container_name  = "${var.name}"
+  container_image = "${local.atlantis_image}"
+
+  container_cpu    = "${var.ecs_task_cpu}"
+  container_memory = "${var.ecs_task_memory}"
+
+  //  container_memory_reservation = "${var.ecs_task_memory_reservation}"
+
+  port_mappings = [
+    {
+      containerPort = "${var.atlantis_port}"
+      hostPort      = "${var.atlantis_port}"
+      protocol      = "tcp"
+    },
+  ]
+  log_options = [
+    {
+      "awslogs-region"        = "${data.aws_region.current.name}"
+      "awslogs-group"         = "${aws_cloudwatch_log_group.atlantis.name}"
+      "awslogs-stream-prefix" = "ecs"
+    },
+  ]
+  environment = [
+    {
+      name  = "ATLANTIS_ALLOW_REPO_CONFIG"
+      value = "${var.allow_repo_config}"
+    },
+    {
+      name  = "ATLANTIS_LOG_LEVEL"
+      value = "debug"
+    },
+    {
+      name  = "ATLANTIS_PORT"
+      value = "${var.atlantis_port}"
+    },
+    {
+      name  = "ATLANTIS_ATLANTIS_URL"
+      value = "${local.atlantis_url}"
+    },
+    {
+      name  = "ATLANTIS_GH_USER"
+      value = "${var.atlantis_github_user}"
+    },
+    {
+      name  = "ATLANTIS_GITLAB_USER"
+      value = "${var.atlantis_gitlab_user}"
+    },
+    {
+      name  = "ATLANTIS_REPO_WHITELIST"
+      value = "${join(",", var.atlantis_repo_whitelist)}"
+    },
+  ]
+  secrets = [
+    {
+      name      = "${local.secret_name_key}"
+      valueFrom = "${local.secret_name_value_from}"
+    },
+    {
+      name      = "${local.secret_webhook_key}"
+      valueFrom = "${var.webhook_ssm_parameter_name}"
+    },
+  ]
 }
 
 resource "aws_ecs_task_definition" "atlantis" {

@@ -9,7 +9,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 - Application Load Balancer (ALB)
 - Domain name using AWS Route53 which points to ALB
 - [AWS Elastic Cloud Service (ECS)](https://aws.amazon.com/ecs/) and [AWS Fargate](https://aws.amazon.com/fargate/) running Atlantis Docker image
-- AWS Parameter Store to keep secrets (todo: use AWS Secrets Manager to pass secrets to ECS task when Fargate supports them) 
+- AWS Parameter Store to keep secrets and access them in ECS task natively
 
 [AWS Fargate](https://aws.amazon.com/fargate/) is used instead of AWS ECS/EC2 to reduce the bill, and it is also a cool AWS service.
 
@@ -96,6 +96,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 ## Notes
 
 1. AWS Route53 zone is not created by this module, so zone specified as a value in `route53_zone_name` should be created before using this module. Check documentation for [aws_route53_zone](https://www.terraform.io/docs/providers/aws/r/route53_zone.html).
+1. Currently this module configures Atlantis in a way that it can not be used to work with GitHub and Gitlab simultaneously (can't make list of ECS secrets conditionally).
 
 ## Examples
 
@@ -140,6 +141,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | public\_subnet\_ids | A list of IDs of existing public subnets inside the VPC | list | `[]` | no |
 | public\_subnets | A list of public subnets inside the VPC | list | `[]` | no |
 | route53\_zone\_name | Route53 zone name to create ACM certificate in and main A-record, without trailing dot | string | `` | no |
+| ssm\_kms\_key\_arn | ARN of KMS key to use for entryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key | string | `` | no |
 | tags | A map of tags to use on all resources | map | `{}` | no |
 | vpc\_id | ID of an existing VPC where resources will be created | string | `` | no |
 | webhook\_ssm\_parameter\_name | Name of SSM parameter to keep webhook secret | string | `/atlantis/webhook/secret` | no |
