@@ -201,3 +201,8 @@ variable "atlantis_gitlab_user_token" {
   description = "Gitlab token of the user that is running the Atlantis command"
   default     = ""
 }
+
+variable "atlantis_gitlab_hostname" {
+  description = "Gitlab server hostname, defaults to gitlab.com"
+  default     = "gitlab.com"
+}
