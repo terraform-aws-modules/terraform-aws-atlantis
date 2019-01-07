@@ -301,6 +301,10 @@ module "container_definition" {
       value = "${var.allow_repo_config}"
     },
     {
+      name  = "ATLANTIS_GITLAB_HOSTNAME"
+      value = "${var.atlantis_gitlab_hostname}"
+    },
+    {
       name  = "ATLANTIS_LOG_LEVEL"
       value = "debug"
     },
