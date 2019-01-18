@@ -96,7 +96,7 @@ module "alb" {
 
   vpc_id          = "${local.vpc_id}"
   subnets         = ["${local.public_subnet_ids}"]
-  security_groups = ["${module.alb_https_sg.this_security_group_id}"]
+  security_groups = ["${module.alb_https_sg.this_security_group_id}", "${module.alb_http_sg.this_security_group_id}"]
   logging_enabled = false
 
   https_listeners = [{
@@ -105,6 +105,13 @@ module "alb" {
   }]
 
   https_listeners_count = 1
+
+  http_tcp_listeners = [{
+    port     = 80
+    protocol = "HTTP"
+  }]
+
+  http_tcp_listeners_count = 1
 
   target_groups = [{
     name                 = "${var.name}"
@@ -119,6 +126,25 @@ module "alb" {
   tags = "${local.tags}"
 }
 
+resource "aws_lb_listener_rule" "redirect_http_to_https" {
+  listener_arn = "${module.alb.http_tcp_listener_arns[0]}"
+
+  action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+
+  condition {
+    field  = "path-pattern"
+    values = ["*"]
+  }
+}
+
 ###################
 # Security groups
 ###################
@@ -126,9 +152,22 @@ module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
   version = "v2.9.0"
 
-  name        = "${var.name}-alb"
+  name        = "${var.name}-alb-https"
   vpc_id      = "${local.vpc_id}"
-  description = "Security group with HTTPS ports open for everybody (IPv4 CIDR), egress ports are all world open"
+  description = "Security group with HTTPS ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open"
+
+  ingress_cidr_blocks = "${var.alb_ingress_cidr_blocks}"
+
+  tags = "${local.tags}"
+}
+
+module "alb_http_sg" {
+  source  = "terraform-aws-modules/security-group/aws//modules/http-80"
+  version = "v2.9.0"
+
+  name        = "${var.name}-alb-http"
+  vpc_id      = "${local.vpc_id}"
+  description = "Security group with HTTP ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open"
 
   ingress_cidr_blocks = "${var.alb_ingress_cidr_blocks}"
 
