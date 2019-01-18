@@ -108,43 +108,44 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| acm\_certificate\_domain\_name | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name` | string | `` | no |
+| acm\_certificate\_domain\_name | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name` | string | `""` | no |
 | alb\_ingress\_cidr\_blocks | List of IPv4 CIDR ranges to use on all ingress rules of the ALB. | list | `[ "0.0.0.0/0" ]` | no |
-| allow\_repo\_config | When true allows the use of atlantis.yaml config files within the source repos. | string | `false` | no |
+| allow\_repo\_config | When true allows the use of atlantis.yaml config files within the source repos. | string | `"false"` | no |
 | atlantis\_allowed\_repo\_names | Github repositories where webhook should be created | list | `[]` | no |
-| atlantis\_github\_user | GitHub username that is running the Atlantis command | string | `` | no |
-| atlantis\_github\_user\_token | GitHub token of the user that is running the Atlantis command | string | `` | no |
-| atlantis\_github\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis_github_user_token | string | `/atlantis/github/user/token` | no |
-| atlantis\_gitlab\_user | Gitlab username that is running the Atlantis command | string | `` | no |
-| atlantis\_gitlab\_user\_token | Gitlab token of the user that is running the Atlantis command | string | `` | no |
-| atlantis\_gitlab\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis_gitlab_user_token | string | `/atlantis/gitlab/user/token` | no |
-| atlantis\_image | Docker image to run Atlantis with. If not specified, official Atlantis image will be used | string | `` | no |
-| atlantis\_port | Local port Atlantis should be running on. Default value is most likely fine. | string | `4141` | no |
-| atlantis\_repo\_whitelist | List of allowed repositories Atlantis can be used with | list | - | yes |
-| atlantis\_version | Verion of Atlantis to run. If not specified latest will be used | string | `latest` | no |
+| atlantis\_github\_user | GitHub username that is running the Atlantis command | string | `""` | no |
+| atlantis\_github\_user\_token | GitHub token of the user that is running the Atlantis command | string | `""` | no |
+| atlantis\_github\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis_github_user_token | string | `"/atlantis/github/user/token"` | no |
+| atlantis\_gitlab\_hostname | Gitlab server hostname, defaults to gitlab.com | string | `"gitlab.com"` | no |
+| atlantis\_gitlab\_user | Gitlab username that is running the Atlantis command | string | `""` | no |
+| atlantis\_gitlab\_user\_token | Gitlab token of the user that is running the Atlantis command | string | `""` | no |
+| atlantis\_gitlab\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis_gitlab_user_token | string | `"/atlantis/gitlab/user/token"` | no |
+| atlantis\_image | Docker image to run Atlantis with. If not specified, official Atlantis image will be used | string | `""` | no |
+| atlantis\_port | Local port Atlantis should be running on. Default value is most likely fine. | string | `"4141"` | no |
+| atlantis\_repo\_whitelist | List of allowed repositories Atlantis can be used with | list | n/a | yes |
+| atlantis\_version | Verion of Atlantis to run. If not specified latest will be used | string | `"latest"` | no |
 | azs | A list of availability zones in the region | list | `[]` | no |
-| certificate\_arn | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | string | `` | no |
-| cidr | The CIDR block for the VPC which will be created if `vpc_id` is not specified | string | `` | no |
-| cloudwatch\_log\_retention\_in\_days | Retention period of Atlantis CloudWatch logs | string | `7` | no |
-| create\_route53\_record | Whether to create Route53 record for Atlantis | string | `true` | no |
-| custom\_container\_definitions | A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used. | string | `` | no |
-| ecs\_service\_assign\_public\_ip | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | string | `false` | no |
-| ecs\_service\_deployment\_maximum\_percent | The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment | string | `200` | no |
-| ecs\_service\_deployment\_minimum\_healthy\_percent | The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment | string | `50` | no |
-| ecs\_service\_desired\_count | The number of instances of the task definition to place and keep running | string | `1` | no |
-| ecs\_task\_cpu | The number of cpu units used by the task | string | `256` | no |
-| ecs\_task\_memory | The amount (in MiB) of memory used by the task | string | `512` | no |
-| name | Name to use on all resources created (VPC, ALB, etc) | string | `atlantis` | no |
+| certificate\_arn | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | string | `""` | no |
+| cidr | The CIDR block for the VPC which will be created if `vpc_id` is not specified | string | `""` | no |
+| cloudwatch\_log\_retention\_in\_days | Retention period of Atlantis CloudWatch logs | string | `"7"` | no |
+| create\_route53\_record | Whether to create Route53 record for Atlantis | string | `"true"` | no |
+| custom\_container\_definitions | A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used. | string | `""` | no |
+| ecs\_service\_assign\_public\_ip | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | string | `"false"` | no |
+| ecs\_service\_deployment\_maximum\_percent | The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment | string | `"200"` | no |
+| ecs\_service\_deployment\_minimum\_healthy\_percent | The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment | string | `"50"` | no |
+| ecs\_service\_desired\_count | The number of instances of the task definition to place and keep running | string | `"1"` | no |
+| ecs\_task\_cpu | The number of cpu units used by the task | string | `"256"` | no |
+| ecs\_task\_memory | The amount (in MiB) of memory used by the task | string | `"512"` | no |
+| name | Name to use on all resources created (VPC, ALB, etc) | string | `"atlantis"` | no |
 | policies\_arn | A list of the ARN of the policies you want to apply | list | `[ "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy" ]` | no |
 | private\_subnet\_ids | A list of IDs of existing private subnets inside the VPC | list | `[]` | no |
 | private\_subnets | A list of private subnets inside the VPC | list | `[]` | no |
 | public\_subnet\_ids | A list of IDs of existing public subnets inside the VPC | list | `[]` | no |
 | public\_subnets | A list of public subnets inside the VPC | list | `[]` | no |
-| route53\_zone\_name | Route53 zone name to create ACM certificate in and main A-record, without trailing dot | string | `` | no |
-| ssm\_kms\_key\_arn | ARN of KMS key to use for entryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key | string | `` | no |
+| route53\_zone\_name | Route53 zone name to create ACM certificate in and main A-record, without trailing dot | string | `""` | no |
+| ssm\_kms\_key\_arn | ARN of KMS key to use for entryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key | string | `""` | no |
 | tags | A map of tags to use on all resources | map | `{}` | no |
-| vpc\_id | ID of an existing VPC where resources will be created | string | `` | no |
-| webhook\_ssm\_parameter\_name | Name of SSM parameter to keep webhook secret | string | `/atlantis/webhook/secret` | no |
+| vpc\_id | ID of an existing VPC where resources will be created | string | `""` | no |
+| webhook\_ssm\_parameter\_name | Name of SSM parameter to keep webhook secret | string | `"/atlantis/webhook/secret"` | no |
 
 ## Outputs
 

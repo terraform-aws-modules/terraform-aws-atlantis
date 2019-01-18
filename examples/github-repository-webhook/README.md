@@ -21,8 +21,8 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| github\_organization | Github organization | string | - | yes |
-| github\_token | Github token | string | - | yes |
+| github\_organization | Github organization | string | n/a | yes |
+| github\_token | Github token | string | n/a | yes |
 
 ## Outputs
 

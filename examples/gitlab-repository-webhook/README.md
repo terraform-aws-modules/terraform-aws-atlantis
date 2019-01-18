@@ -19,8 +19,8 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| gitlab\_base\_url | Gitlab base_url | string | `` | no |
-| gitlab\_token | Gitlab token | string | - | yes |
+| gitlab\_base\_url | Gitlab base_url | string | `""` | no |
+| gitlab\_token | Gitlab token | string | n/a | yes |
 
 ## Outputs
 
