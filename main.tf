@@ -42,7 +42,7 @@ module "github_repository_webhook" {
 ###################
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v1.32.0"
+  version = "v1.53.0"
 
   create_vpc = "${var.vpc_id == ""}"
 
@@ -64,7 +64,7 @@ module "vpc" {
 ###################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v3.4.0"
+  version = "v3.5.0"
 
   load_balancer_name = "${var.name}"
 
@@ -98,7 +98,7 @@ module "alb" {
 ###################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v2.0.0"
+  version = "v2.11.0"
 
   name        = "${var.name}-alb"
   vpc_id      = "${local.vpc_id}"
@@ -111,7 +111,7 @@ module "alb_https_sg" {
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v2.0.0"
+  version = "v2.11.0"
 
   name        = "${var.name}"
   vpc_id      = "${local.vpc_id}"
@@ -189,7 +189,7 @@ resource "aws_route53_record" "atlantis" {
 ###################
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "v1.0.0"
+  version = "v1.1.0"
 
   name = "${var.name}"
 }
