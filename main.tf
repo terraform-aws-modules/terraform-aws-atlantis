@@ -310,7 +310,7 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 
 module "container_definition" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.6.0"
+  version = "v0.7.0"
 
   container_name  = "${var.name}"
   container_image = "${local.atlantis_image}"
