@@ -68,7 +68,7 @@ resource "aws_ssm_parameter" "atlantis_gitlab_user_token" {
 ###################
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v1.49.0"
+  version = "v1.53.0"
 
   create_vpc = "${var.vpc_id == ""}"
 
@@ -90,7 +90,7 @@ module "vpc" {
 ###################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v3.4.0"
+  version = "v3.5.0"
 
   load_balancer_name = "${var.name}"
 
@@ -150,7 +150,7 @@ resource "aws_lb_listener_rule" "redirect_http_to_https" {
 ###################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v2.9.0"
+  version = "v2.11.0"
 
   name        = "${var.name}-alb-https"
   vpc_id      = "${local.vpc_id}"
@@ -176,7 +176,7 @@ module "alb_http_sg" {
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v2.9.0"
+  version = "v2.11.0"
 
   name        = "${var.name}"
   vpc_id      = "${local.vpc_id}"
@@ -204,7 +204,7 @@ module "atlantis_sg" {
 ###################
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v1.0.0"
+  version = "v1.1.0"
 
   create_certificate = "${var.certificate_arn == "" ? 1 : 0}"
 
@@ -236,7 +236,7 @@ resource "aws_route53_record" "atlantis" {
 ###################
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "v1.0.0"
+  version = "v1.1.0"
 
   name = "${var.name}"
 }
@@ -310,7 +310,7 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 
 module "container_definition" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.6.0"
+  version = "v0.7.0"
 
   container_name  = "${var.name}"
   container_image = "${local.atlantis_image}"
