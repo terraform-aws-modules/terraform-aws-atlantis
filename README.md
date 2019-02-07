@@ -127,8 +127,11 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | certificate\_arn | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | string | `""` | no |
 | cidr | The CIDR block for the VPC which will be created if `vpc_id` is not specified | string | `""` | no |
 | cloudwatch\_log\_retention\_in\_days | Retention period of Atlantis CloudWatch logs | string | `"7"` | no |
+| container\_memory\_reservation | The amount of memory (in MiB) to reserve for the container | string | `"128"` | no |
 | create\_route53\_record | Whether to create Route53 record for Atlantis | string | `"true"` | no |
 | custom\_container\_definitions | A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used. | string | `""` | no |
+| custom\_environment\_secrets | List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`) | list | `[]` | no |
+| custom\_environment\_variables | List of additional environment variables the container will use (list should contain maps with `name` and `value`) | list | `[]` | no |
 | ecs\_service\_assign\_public\_ip | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | string | `"false"` | no |
 | ecs\_service\_deployment\_maximum\_percent | The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment | string | `"200"` | no |
 | ecs\_service\_deployment\_minimum\_healthy\_percent | The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment | string | `"50"` | no |

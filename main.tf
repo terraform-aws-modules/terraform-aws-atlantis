@@ -20,6 +20,52 @@ locals {
   # Container definitions
   container_definitions = "${var.custom_container_definitions == "" ? module.container_definition.json : var.custom_container_definitions}"
 
+  container_definition_environment = [
+    {
+      name  = "ATLANTIS_ALLOW_REPO_CONFIG"
+      value = "${var.allow_repo_config}"
+    },
+    {
+      name  = "ATLANTIS_GITLAB_HOSTNAME"
+      value = "${var.atlantis_gitlab_hostname}"
+    },
+    {
+      name  = "ATLANTIS_LOG_LEVEL"
+      value = "debug"
+    },
+    {
+      name  = "ATLANTIS_PORT"
+      value = "${var.atlantis_port}"
+    },
+    {
+      name  = "ATLANTIS_ATLANTIS_URL"
+      value = "${local.atlantis_url}"
+    },
+    {
+      name  = "ATLANTIS_GH_USER"
+      value = "${var.atlantis_github_user}"
+    },
+    {
+      name  = "ATLANTIS_GITLAB_USER"
+      value = "${var.atlantis_gitlab_user}"
+    },
+    {
+      name  = "ATLANTIS_REPO_WHITELIST"
+      value = "${join(",", var.atlantis_repo_whitelist)}"
+    },
+  ]
+
+  container_definition_secrets = [
+    {
+      name      = "${local.secret_name_key}"
+      valueFrom = "${local.secret_name_value_from}"
+    },
+    {
+      name      = "${local.secret_webhook_key}"
+      valueFrom = "${var.webhook_ssm_parameter_name}"
+    },
+  ]
+
   tags = "${merge(map("Name", var.name), var.tags)}"
 }
 
@@ -315,10 +361,9 @@ module "container_definition" {
   container_name  = "${var.name}"
   container_image = "${local.atlantis_image}"
 
-  container_cpu    = "${var.ecs_task_cpu}"
-  container_memory = "${var.ecs_task_memory}"
-
-  //  container_memory_reservation = "${var.ecs_task_memory_reservation}"
+  container_cpu                = "${var.ecs_task_cpu}"
+  container_memory             = "${var.ecs_task_memory}"
+  container_memory_reservation = "${var.container_memory_reservation}"
 
   port_mappings = [
     {
@@ -327,6 +372,7 @@ module "container_definition" {
       protocol      = "tcp"
     },
   ]
+
   log_options = [
     {
       "awslogs-region"        = "${data.aws_region.current.name}"
@@ -334,50 +380,10 @@ module "container_definition" {
       "awslogs-stream-prefix" = "ecs"
     },
   ]
-  environment = [
-    {
-      name  = "ATLANTIS_ALLOW_REPO_CONFIG"
-      value = "${var.allow_repo_config}"
-    },
-    {
-      name  = "ATLANTIS_GITLAB_HOSTNAME"
-      value = "${var.atlantis_gitlab_hostname}"
-    },
-    {
-      name  = "ATLANTIS_LOG_LEVEL"
-      value = "debug"
-    },
-    {
-      name  = "ATLANTIS_PORT"
-      value = "${var.atlantis_port}"
-    },
-    {
-      name  = "ATLANTIS_ATLANTIS_URL"
-      value = "${local.atlantis_url}"
-    },
-    {
-      name  = "ATLANTIS_GH_USER"
-      value = "${var.atlantis_github_user}"
-    },
-    {
-      name  = "ATLANTIS_GITLAB_USER"
-      value = "${var.atlantis_gitlab_user}"
-    },
-    {
-      name  = "ATLANTIS_REPO_WHITELIST"
-      value = "${join(",", var.atlantis_repo_whitelist)}"
-    },
-  ]
-  secrets = [
-    {
-      name      = "${local.secret_name_key}"
-      valueFrom = "${local.secret_name_value_from}"
-    },
-    {
-      name      = "${local.secret_webhook_key}"
-      valueFrom = "${var.webhook_ssm_parameter_name}"
-    },
-  ]
+
+  environment = ["${concat(local.container_definition_environment, var.custom_environment_variables)}"]
+
+  secrets = ["${concat(local.container_definition_secrets, var.custom_environment_secrets)}"]
 }
 
 resource "aws_ecs_task_definition" "atlantis" {

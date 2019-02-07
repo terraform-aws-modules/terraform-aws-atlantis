@@ -142,6 +142,11 @@ variable "ecs_task_memory" {
   default     = 512
 }
 
+variable "container_memory_reservation" {
+  description = "The amount of memory (in MiB) to reserve for the container"
+  default     = 128
+}
+
 variable "custom_container_definitions" {
   description = "A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used."
   default     = ""
@@ -205,4 +210,14 @@ variable "atlantis_gitlab_user_token" {
 variable "atlantis_gitlab_hostname" {
   description = "Gitlab server hostname, defaults to gitlab.com"
   default     = "gitlab.com"
+}
+
+variable "custom_environment_secrets" {
+  description = "List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`)"
+  default     = []
+}
+
+variable "custom_environment_variables" {
+  description = "List of additional environment variables the container will use (list should contain maps with `name` and `value`)"
+  default     = []
 }
