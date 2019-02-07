@@ -367,6 +367,7 @@ module "container_definition" {
       name  = "ATLANTIS_REPO_WHITELIST"
       value = "${join(",", var.atlantis_repo_whitelist)}"
     },
+    "${var.custom_environment_variables}",
   ]
   secrets = [
     {
@@ -377,6 +378,7 @@ module "container_definition" {
       name      = "${local.secret_webhook_key}"
       valueFrom = "${var.webhook_ssm_parameter_name}"
     },
+    "${var.custom_environment_secrets}",
   ]
 }
 

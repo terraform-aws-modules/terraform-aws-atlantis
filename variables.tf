@@ -206,3 +206,15 @@ variable "atlantis_gitlab_hostname" {
   description = "Gitlab server hostname, defaults to gitlab.com"
   default     = "gitlab.com"
 }
+
+variable "custom_environment_secrets" {
+  type        = "list"
+  description = "Additional SSM Params that the container will use"
+  default     = []
+}
+
+variable "custom_environment_variables" {
+  type        = "list"
+  description = "Additional environment variables that the container will use"
+  default     = []
+}
