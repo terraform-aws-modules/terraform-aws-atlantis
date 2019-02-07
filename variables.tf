@@ -142,6 +142,11 @@ variable "ecs_task_memory" {
   default     = 512
 }
 
+variable "container_memory_reservation" {
+  description = "The amount of memory (in MiB) to reserve for the container"
+  default     = 128
+}
+
 variable "custom_container_definitions" {
   description = "A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used."
   default     = ""
@@ -208,13 +213,11 @@ variable "atlantis_gitlab_hostname" {
 }
 
 variable "custom_environment_secrets" {
-  type        = "list"
-  description = "Additional SSM Params that the container will use"
+  description = "List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`)"
   default     = []
 }
 
 variable "custom_environment_variables" {
-  type        = "list"
-  description = "Additional environment variables that the container will use"
+  description = "List of additional environment variables the container will use (list should contain maps with `name` and `value`)"
   default     = []
 }
