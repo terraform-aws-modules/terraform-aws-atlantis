@@ -318,7 +318,7 @@ module "container_definition" {
   container_cpu    = "${var.ecs_task_cpu}"
   container_memory = "${var.ecs_task_memory}"
 
-  //  container_memory_reservation = "${var.ecs_task_memory_reservation}"
+  container_memory_reservation = "${var.ecs_task_memory_reservation}"
 
   port_mappings = [
     {

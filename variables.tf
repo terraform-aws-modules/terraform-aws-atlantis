@@ -142,6 +142,11 @@ variable "ecs_task_memory" {
   default     = 512
 }
 
+variable "ecs_task_memory_reservation" {
+  description = "The amount of memory (in MiB) to reserve for the container"
+  default     = 128
+}
+
 variable "custom_container_definitions" {
   description = "A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used."
   default     = ""
