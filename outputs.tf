@@ -18,6 +18,11 @@ output "task_role_arn" {
   value       = "${aws_iam_role.ecs_task_execution.arn}"
 }
 
+output "vpc_id" {
+  description = "ID of the VPC that was created or passed in"
+  value       = "${local.vpc_id}"
+}
+
 output "webhook_secret" {
   description = "Webhook secret"
   value       = "${random_id.webhook.hex}"
