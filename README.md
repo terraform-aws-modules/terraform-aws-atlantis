@@ -158,6 +158,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | atlantis\_url | URL of Atlantis |
 | atlantis\_url\_events | Webhook events URL of Atlantis |
 | task\_role\_arn | The Atlantis ECS task role arn |
+| vpc\_id | ID of the VPC that was created or passed in |
 | webhook\_secret | Webhook secret |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
