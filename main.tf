@@ -255,7 +255,8 @@ module "acm" {
   create_certificate = "${var.certificate_arn == "" ? 1 : 0}"
 
   domain_name = "${var.acm_certificate_domain_name == "" ? join(".", list(var.name, var.route53_zone_name)) : var.acm_certificate_domain_name}"
-  zone_id     = "${data.aws_route53_zone.this.id}"
+
+  zone_id = "${var.certificate_arn == "" ? element(concat(data.aws_route53_zone.this.*.id, list("")), 0) : ""}"
 
   tags = "${local.tags}"
 }
