@@ -1,6 +1,6 @@
 # AWS Terraform module which runs Atlantis on AWS Fargate
 
-[Atlantis](https://www.runatlantis.io/) is tool which provides unified workflow for collaborating on Terraform through GitHub and GitLab.
+[Atlantis](https://www.runatlantis.io/) is tool which provides unified workflow for collaborating on Terraform through GitHub, GitLab and Bitbucket Cloud.
 
 This repository contains Terraform infrastructure code which creates AWS resources required to run [Atlantis](https://www.runatlantis.io/) on AWS, including:
 
@@ -16,6 +16,10 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 Depending on which SCM system you use, Github repositories or Gitlab projects has to be configured to post events to Atlantis webhook URL.
 
 See `README.md` in `examples` for Github or Gitlab for complete details.
+
+For Bitbucket Cloud webhook configuration follow instructions in [the official Atlantis documentation](https://www.runatlantis.io/docs/configuring-webhooks.html#bitbucket-cloud-bitbucket-org-webhook).
+
+TODO: For Bitbucket Cloud an IP whitelist should be implemented for the webhook url as stated in [the official Atlantis documentation](https://www.runatlantis.io/docs/security.html#bitbucket-cloud-bitbucket-org) due to lack of support for webhook secrets.
 
 ### Before using Atlantis and the code in this repository please make sure that you have read and understood the security implications described in [the official Atlantis documentation](https://www.runatlantis.io/docs/security.html).
 

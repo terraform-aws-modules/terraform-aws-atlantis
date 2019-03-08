@@ -100,6 +100,11 @@ variable "atlantis_gitlab_user_token_ssm_parameter_name" {
   default     = "/atlantis/gitlab/user/token"
 }
 
+variable "atlantis_bitbucket_user_token_ssm_parameter_name" {
+  description = "Name of SSM parameter to keep atlantis_bitbucket_user_token"
+  default     = "/atlantis/bitbucket/user/token"
+}
+
 variable "ssm_kms_key_arn" {
   description = "ARN of KMS key to use for entryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key"
   default     = ""
@@ -210,6 +215,18 @@ variable "atlantis_gitlab_user_token" {
 variable "atlantis_gitlab_hostname" {
   description = "Gitlab server hostname, defaults to gitlab.com"
   default     = "gitlab.com"
+}
+
+# Bitbucket
+
+variable "atlantis_bitbucket_user" {
+  description = "Bitbucket username that is running the Atlantis command"
+  default     = ""
+}
+
+variable "atlantis_bitbucket_user_token" {
+  description = "Bitbucket token of the user that is running the Atlantis command"
+  default     = ""
 }
 
 variable "custom_environment_secrets" {
