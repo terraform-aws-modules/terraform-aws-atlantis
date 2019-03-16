@@ -116,6 +116,9 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | alb\_ingress\_cidr\_blocks | List of IPv4 CIDR ranges to use on all ingress rules of the ALB. | list | `[ "0.0.0.0/0" ]` | no |
 | allow\_repo\_config | When true allows the use of atlantis.yaml config files within the source repos. | string | `"false"` | no |
 | atlantis\_allowed\_repo\_names | Github repositories where webhook should be created | list | `[]` | no |
+| atlantis\_bitbucket\_user | Bitbucket username that is running the Atlantis command | string | `""` | no |
+| atlantis\_bitbucket\_user\_token | Bitbucket token of the user that is running the Atlantis command | string | `""` | no |
+| atlantis\_bitbucket\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis_bitbucket_user_token | string | `"/atlantis/bitbucket/user/token"` | no |
 | atlantis\_github\_user | GitHub username that is running the Atlantis command | string | `""` | no |
 | atlantis\_github\_user\_token | GitHub token of the user that is running the Atlantis command | string | `""` | no |
 | atlantis\_github\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis_github_user_token | string | `"/atlantis/github/user/token"` | no |

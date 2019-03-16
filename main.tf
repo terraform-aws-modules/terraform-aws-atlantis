@@ -9,13 +9,14 @@ locals {
   atlantis_url        = "https://${coalesce(element(concat(aws_route53_record.atlantis.*.fqdn, list("")), 0), module.alb.dns_name)}"
   atlantis_url_events = "${local.atlantis_url}/events"
 
-  # Include only one group of secrets - for github or for gitlab
-  has_secrets     = "${var.atlantis_gitlab_user_token != "" || var.atlantis_github_user_token != "" || var.atlantis_bitbucket_user_token != ""}"
-  secret_name_key = "${local.has_secrets && var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_TOKEN" : (var.atlantis_github_user_token != "" ? "ATLANTIS_GITHUB_TOKEN" : "ATLANTIS_BITBUCKET_TOKEN")}"
+  # Include only one group of secrets - for github, gitlab or bitbucket
+  has_secrets = "${var.atlantis_gitlab_user_token != "" || var.atlantis_github_user_token != "" || var.atlantis_bitbucket_user_token != ""}"
 
-  secret_name_value_from = "${local.has_secrets && var.atlantis_gitlab_user_token != "" ? var.atlantis_gitlab_user_token_ssm_parameter_name : (var.atlantis_github_user_token != "" ? var.atlantis_github_user_token_ssm_parameter_name : var.atlantis_bitbucket_user_token_ssm_parameter_name)}"
+  secret_name_key = "${local.has_secrets ? (var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_TOKEN" : (var.atlantis_github_user_token != "" ? "ATLANTIS_GITHUB_TOKEN" : "ATLANTIS_BITBUCKET_TOKEN")) : "unknown_secret_name_key"}"
 
-  secret_webhook_key = "${local.has_secrets && var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : (var.atlantis_github_user_token != "" ? "ATLANTIS_GH_WEBHOOK_SECRET" : "ATLANTIS_BITBUCKET_WEBHOOK_SECRET")}"
+  secret_name_value_from = "${local.has_secrets ? (var.atlantis_gitlab_user_token != "" ? var.atlantis_gitlab_user_token_ssm_parameter_name : (var.atlantis_github_user_token != "" ? var.atlantis_github_user_token_ssm_parameter_name : var.atlantis_bitbucket_user_token_ssm_parameter_name)) : "unknown_secret_name_value"}"
+
+  secret_webhook_key = "${local.has_secrets ? (var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : (var.atlantis_github_user_token != "" ? "ATLANTIS_GH_WEBHOOK_SECRET" : "ATLANTIS_BITBUCKET_WEBHOOK_SECRET")) : "unknown_secret_webhook_key"}"
 
   # Container definitions
   container_definitions = "${var.custom_container_definitions == "" ? (var.atlantis_bitbucket_user_token != "" ? module.container_definition_bitbucket.json : module.container_definition_github_gitlab.json) : var.custom_container_definitions}"
@@ -59,6 +60,7 @@ locals {
     },
   ]
 
+  # Secret access tokens
   container_definition_secrets_1 = [
     {
       name      = "${local.secret_name_key}"
@@ -66,6 +68,7 @@ locals {
     },
   ]
 
+  # Webhook secrets are not supported by BitBucket
   container_definition_secrets_2 = [
     {
       name      = "${local.secret_webhook_key}"
