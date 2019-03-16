@@ -35,6 +35,10 @@ atlantis_github_user_token = ""
 atlantis_gitlab_user = ""
 atlantis_gitlab_user_token = ""
 
+# For Bitbucket
+atlantis_bitbucket_user = ""
+atlantis_bitbucket_user_token = ""
+
 # Tags
 tags = {
   Name = "atlantis"

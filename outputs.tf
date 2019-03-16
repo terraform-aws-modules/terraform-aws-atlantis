@@ -25,7 +25,7 @@ output "vpc_id" {
 
 output "webhook_secret" {
   description = "Webhook secret"
-  value       = "${random_id.webhook.hex}"
+  value       = "${random_id.webhook.*.hex}"
 }
 
 output "alb_dns_name" {
