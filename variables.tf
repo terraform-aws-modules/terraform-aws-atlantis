@@ -56,6 +56,24 @@ variable "alb_ingress_cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "alb_log_bucket_name" {
+  description = "S3 bucket (externally created) for storing load balancer access logs. Required if alb_logging_enabled is true."
+  type        = "string"
+  default     = ""
+}
+
+variable "alb_log_location_prefix" {
+  description = "S3 prefix within the log_bucket_name under which logs are stored."
+  type        = "string"
+  default     = ""
+}
+
+variable "alb_logging_enabled" {
+  description = "Controls if the ALB will log requests to S3."
+  type        = "string"
+  default     = false
+}
+
 # ACM
 variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS"

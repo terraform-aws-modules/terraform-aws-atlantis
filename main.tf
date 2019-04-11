@@ -163,7 +163,10 @@ module "alb" {
   vpc_id          = "${local.vpc_id}"
   subnets         = ["${local.public_subnet_ids}"]
   security_groups = ["${module.alb_https_sg.this_security_group_id}", "${module.alb_http_sg.this_security_group_id}"]
-  logging_enabled = false
+
+  logging_enabled     = "${var.alb_logging_enabled}"
+  log_bucket_name     = "${var.alb_log_bucket_name}"
+  log_location_prefix = "${var.alb_log_location_prefix}"
 
   https_listeners = [{
     port            = 443

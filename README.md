@@ -114,6 +114,9 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 |------|-------------|:----:|:-----:|:-----:|
 | acm\_certificate\_domain\_name | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name` | string | `""` | no |
 | alb\_ingress\_cidr\_blocks | List of IPv4 CIDR ranges to use on all ingress rules of the ALB. | list | `[ "0.0.0.0/0" ]` | no |
+| alb\_log\_bucket\_name | S3 bucket (externally created) for storing load balancer access logs. Required if alb_logging_enabled is true. | string | `""` | no |
+| alb\_log\_location\_prefix | S3 prefix within the log_bucket_name under which logs are stored. | string | `""` | no |
+| alb\_logging\_enabled | Controls if the ALB will log requests to S3. | string | `"false"` | no |
 | allow\_repo\_config | When true allows the use of atlantis.yaml config files within the source repos. | string | `"false"` | no |
 | atlantis\_allowed\_repo\_names | Github repositories where webhook should be created | list | `[]` | no |
 | atlantis\_bitbucket\_user | Bitbucket username that is running the Atlantis command | string | `""` | no |
