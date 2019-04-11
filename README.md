@@ -161,6 +161,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 
 | Name | Description |
 |------|-------------|
+| alb\_dns\_name | Dns name of alb |
 | atlantis\_allowed\_repo\_names | Github repositories where webhook should be created |
 | atlantis\_url | URL of Atlantis |
 | atlantis\_url\_events | Webhook events URL of Atlantis |
