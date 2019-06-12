@@ -32,3 +32,8 @@ output "alb_dns_name" {
   description = "Dns name of alb"
   value       = "${module.alb.dns_name}"
 }
+
+output "ecs_task_definition" {
+  description = "Task definition for ECS service (used for external triggers)"
+  value       = "${aws_ecs_service.atlantis.task_definition}"
+}
