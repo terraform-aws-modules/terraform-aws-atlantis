@@ -4,8 +4,9 @@
 
 
 <a name="v2.0.0"></a>
-## [v2.0.0] - 0001-01-01
+## [v2.0.0] - 2019-06-12
 
+- Upgraded module to support Terraform 0.12 ([#58](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/58))
 
 
 <a name="v1.18.0"></a>
