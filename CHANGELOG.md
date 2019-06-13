@@ -3,9 +3,16 @@
 
 
 
+<a name="v2.1.0"></a>
+## [v2.1.0] - 2019-06-13
+
+- Fixed task creation when ECS task definition has not been created before ([#62](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/62))
+
+
 <a name="v2.0.0"></a>
 ## [v2.0.0] - 2019-06-12
 
+- Updated CHANGELOG
 - Upgraded module to support Terraform 0.12 ([#58](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/58))
 
 
@@ -202,7 +209,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.1.0...HEAD
+[v2.1.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.0.0...v2.1.0
 [v2.0.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v1.18.0...v2.0.0
 [v1.18.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v1.17.0...v1.18.0
 [v1.17.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v1.16.0...v1.17.0
