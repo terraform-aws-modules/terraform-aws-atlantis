@@ -491,8 +491,7 @@ resource "aws_ecs_task_definition" "atlantis" {
 data "aws_ecs_task_definition" "atlantis" {
   task_definition = var.name
 
-  //  Commented out to avoid always-changed status every time during "terraform apply"
-  //  depends_on      = [aws_ecs_task_definition.atlantis]
+  depends_on = [aws_ecs_task_definition.atlantis]
 }
 
 resource "aws_ecs_service" "atlantis" {
