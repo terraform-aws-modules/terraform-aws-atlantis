@@ -290,3 +290,8 @@ variable "custom_environment_variables" {
   default     = []
 }
 
+variable "security_group_ids" {
+  description = "List of one or more security groups to be added to the load balancer"
+  type        = list(string)
+  default     = []
+}
