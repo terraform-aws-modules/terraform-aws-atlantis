@@ -161,6 +161,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | public\_subnet\_ids | A list of IDs of existing public subnets inside the VPC | list | `[]` | no |
 | public\_subnets | A list of public subnets inside the VPC | list | `[]` | no |
 | route53\_zone\_name | Route53 zone name to create ACM certificate in and main A-record, without trailing dot | string | `""` | no |
+| security\_group\_ids | List of one or more security groups to be added to the load balancer. Adding more than 3 will exceed the default limit for security groups attached | list | `[]` | no |
 | ssm\_kms\_key\_arn | ARN of KMS key to use for entryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key | string | `""` | no |
 | tags | A map of tags to use on all resources | map | `{}` | no |
 | vpc\_id | ID of an existing VPC where resources will be created | string | `""` | no |
