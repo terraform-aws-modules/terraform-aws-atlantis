@@ -5,8 +5,8 @@
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| atlantis\_allowed\_repo\_names | List of names of repositories which belong to the organization specified in `gitlab_organization` | list | n/a | yes |
-| create\_gitlab\_repository\_webhook | Whether to create Gitlab repository webhook for Atlantis | string | `"true"` | no |
+| atlantis\_allowed\_repo\_names | List of names of repositories which belong to the organization specified in `gitlab_organization` | list(string) | n/a | yes |
+| create\_gitlab\_repository\_webhook | Whether to create Gitlab repository webhook for Atlantis | bool | `"true"` | no |
 | gitlab\_base\_url | Gitlab base_url use | string | `""` | no |
 | gitlab\_organization | Gitlab organization to use when creating webhook | string | `""` | no |
 | gitlab\_token | Gitlab token to use when creating webhook | string | `""` | no |
