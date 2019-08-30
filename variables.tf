@@ -278,6 +278,12 @@ variable "atlantis_bitbucket_user_token" {
   default     = ""
 }
 
+variable "atlantis_url" {
+  description = "The URL that Atlantis is accessible at"
+  type        = string
+  default     = ""
+}
+
 variable "custom_environment_secrets" {
   description = "List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`)"
   type        = list(map(string))
