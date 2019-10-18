@@ -43,7 +43,7 @@ locals {
       value = var.atlantis_port
     },
     {
-      name  = "ATLANTIS_ATLANTIS_URL"
+      name  = "ATLANTIS_URL"
       value = local.atlantis_url
     },
     {
