@@ -112,6 +112,17 @@ variable "cloudwatch_log_retention_in_days" {
 }
 
 # SSM parameters for secrets
+variable "git_provider" {
+  description = "One of github/gitlab/bitbucket. Used to determine which git provider Atlantis will connect with and which ssm parameter to use."
+  type        = string
+}
+
+variable "preexisting_user_token_ssm_parameter" {
+  description = "This should be true if you already stored the user token in the SSM Parameter. NOTE: This must either be true or you must pass the token into the corresponding input variable for your git provider."
+  type        = bool
+  default     = false
+}
+
 variable "webhook_ssm_parameter_name" {
   description = "Name of SSM parameter to keep webhook secret"
   type        = string
