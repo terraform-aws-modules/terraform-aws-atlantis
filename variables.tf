@@ -289,6 +289,12 @@ variable "atlantis_bitbucket_user_token" {
   default     = ""
 }
 
+variable "atlantis_bitbucket_base_url" {
+  description = "Base URL of Bitbucket Server (aka Stash) installation. Must include http:// or https://. If using Bitbucket Cloud (bitbucket.org), do not set. Defaults to https://api.bitbucket.org."
+  type        = string
+  default     = "https://api.bitbucket.org"
+}
+
 variable "custom_environment_secrets" {
   description = "List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`)"
   type        = list(map(string))

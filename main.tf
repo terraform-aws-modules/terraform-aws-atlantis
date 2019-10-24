@@ -57,6 +57,10 @@ locals {
       value = var.atlantis_bitbucket_user
     },
     {
+      name  = "ATLANTIS_BITBUCKET_BASE_URL",
+      value = var.atlantis_bitbucket_base_url
+    },
+    {
       name  = "ATLANTIS_REPO_WHITELIST"
       value = join(",", var.atlantis_repo_whitelist)
     },
