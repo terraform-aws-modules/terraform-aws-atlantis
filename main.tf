@@ -179,6 +179,8 @@ module "alb" {
   log_bucket_name     = var.alb_log_bucket_name
   log_location_prefix = var.alb_log_location_prefix
 
+  load_balancer_is_internal = true
+
   https_listeners = [
     {
       port            = 443
