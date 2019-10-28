@@ -105,15 +105,16 @@ data "aws_route53_zone" "this" {
 # Secret for webhook
 ###################
 resource "random_id" "webhook" {
+  count       = var.preexisting_webhook_ssm_parameter ? 0 : 1
   byte_length = "64"
 }
 
 resource "aws_ssm_parameter" "webhook" {
-  count = var.atlantis_bitbucket_user_token != "" ? 0 : 1
+  count = var.preexisting_webhook_ssm_parameter ? 0 : 1
 
   name  = var.webhook_ssm_parameter_name
   type  = "SecureString"
-  value = random_id.webhook.hex
+  value = random_id.webhook.0.hex
 }
 
 resource "aws_ssm_parameter" "atlantis_github_user_token" {

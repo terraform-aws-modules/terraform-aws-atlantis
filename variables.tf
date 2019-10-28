@@ -123,6 +123,12 @@ variable "preexisting_user_token_ssm_parameter" {
   default     = false
 }
 
+variable "preexisting_webhook_ssm_parameter" {
+  description = "This should be true if you already stored the webhook secret in the SSM Parameter. If false, one will be randomly generated"
+  type        = bool
+  default     = false
+}
+
 variable "webhook_ssm_parameter_name" {
   description = "Name of SSM parameter to keep webhook secret"
   type        = string
