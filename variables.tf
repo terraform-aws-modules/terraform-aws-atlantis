@@ -29,6 +29,12 @@ variable "private_subnet_ids" {
   default     = []
 }
 
+variable "internal_alb" {
+  description = "Whether or not the ALB will be marked as 'internal' (ie. not exposed to the public internet). Should be true if your 'public_subnet_ids' are actually private."
+  type        = bool
+  default     = false
+}
+
 variable "cidr" {
   description = "The CIDR block for the VPC which will be created if `vpc_id` is not specified"
   type        = string
