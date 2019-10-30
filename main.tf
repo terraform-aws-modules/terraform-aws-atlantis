@@ -136,7 +136,7 @@ module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "v1.53.0"
 
-  create_vpc = "${var.vpc_id == ""}"
+  create_vpc = false
 
   name = "${var.name}"
 
