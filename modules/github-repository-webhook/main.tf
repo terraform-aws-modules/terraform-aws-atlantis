@@ -9,7 +9,7 @@ resource "github_repository_webhook" "this" {
   repository = "${var.atlantis_allowed_repo_names[count.index]}"
 
   configuration {
-    url          = "${var.webhook_url}"
+    url          = "${var.webhook_url}?secret=${sha1(var.webhook_secret)}"
     content_type = "application/json"
     insecure_ssl = false
     secret       = "${var.webhook_secret}"

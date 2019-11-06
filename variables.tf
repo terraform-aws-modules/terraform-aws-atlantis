@@ -3,6 +3,10 @@ variable "name" {
   default     = "atlantis"
 }
 
+variable "aws_profile" {
+  description = "Optional, the AWS profile to use with local-exec AWS CLI commands"
+}
+
 variable "tags" {
   description = "A map of tags to use on all resources"
   default     = {}
@@ -88,6 +92,11 @@ variable "acm_certificate_domain_name" {
 # Route53
 variable "route53_zone_name" {
   description = "Route53 zone name to create ACM certificate in and main A-record, without trailing dot"
+  default     = ""
+}
+
+variable "route53_internal_zone_name" {
+  description = "Route53 internal zone name to create ACM certificate in and main A-record, without trailing dot"
   default     = ""
 }
 

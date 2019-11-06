@@ -83,12 +83,13 @@ data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}
 
-data "aws_route53_zone" "this" {
+data "aws_route53_zone" "external-zone" {
   count = "${var.create_route53_record}"
 
   name         = "${var.route53_zone_name}"
   private_zone = false
 }
+
 
 ###################
 # Secret for webhook
@@ -194,9 +195,168 @@ module "alb" {
 
   tags = "${local.tags}"
 }
+module "alb-internal" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "v3.5.0"
 
+  load_balancer_name = "${var.name}-internal"
+  load_balancer_is_internal	= true
+
+  vpc_id          = "${local.vpc_id}"
+  subnets         = ["${local.private_subnet_ids}"]
+  security_groups = ["${module.alb_https_sg.this_security_group_id}", "${module.alb_http_sg.this_security_group_id}"]
+
+  logging_enabled     = "${var.alb_logging_enabled}"
+  log_bucket_name     = "${var.alb_log_bucket_name}"
+  log_location_prefix = "${var.alb_log_location_prefix}"
+
+  https_listeners = [{
+    port            = 443
+    certificate_arn = "${var.certificate_arn == "" ? module.acm.this_acm_certificate_arn : var.certificate_arn}"
+  }]
+
+  https_listeners_count = 1
+
+  http_tcp_listeners = [{
+    port     = 80
+    protocol = "HTTP"
+  }]
+
+  http_tcp_listeners_count = 1
+
+  target_groups = [{
+    name                 = "${var.name}-internal-tg"
+    backend_protocol     = "HTTP"
+    backend_port         = "${var.atlantis_port}"
+    target_type          = "ip"
+    deregistration_delay = 10
+  }]
+
+  target_groups_count = 1
+
+  tags = "${local.tags}"
+}
+
+####################
+# ALB Listener Rules
+####################
+### External load balancer rules - HTTP Listener ###
 resource "aws_lb_listener_rule" "redirect_http_to_https" {
   listener_arn = "${module.alb.http_tcp_listener_arns[0]}"
+
+  action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+
+  condition {
+    field  = "path-pattern"
+    values = ["*"]
+  }
+}
+
+### External load balancer rules - HTTPS Listener ###
+### There is no support for advanced ALB routing, so doing hacky things here.
+resource "local_file" "default-rule-arn" {
+    content     = ""
+    filename = "/tmp/default-rule-arn.txt"
+}
+
+resource "null_resource" "update-rule" {
+  triggers = {
+    always_run = "${timestamp()}"
+  }
+  provisioner "local-exec" {
+    command = <<EOF
+      aws ${var.aws_profile != "" ? "--profile ${var.aws_profile}" : var.aws_profile } elbv2 describe-rules \
+        --listener-arn="${element(module.alb.https_listener_arns, 0)}" \
+        | jq '.Rules[] | select(.IsDefault == true) | .RuleArn' > "/tmp/default-rule-arn.txt"
+      # Modify default rule to return fixed response
+      aws ${var.aws_profile != "" ? "--profile ${var.aws_profile}" : var.aws_profile } elbv2 modify-rule \
+        --rule-arn="${trimspace(file(local_file.default-rule-arn.filename))}" \
+        --actions='
+        [
+          {
+              "Type": "fixed-response",
+              "FixedResponseConfig": {
+                  "MessageBody": "You are not allowed here, stranger",
+                  "ContentType": "plain/text",
+                  "StatusCode": "503"
+              }
+          }
+        ]'
+      # Create the browser-redirect rule    
+      aws ${var.aws_profile != "" ? "--profile ${var.aws_profile}" : var.aws_profile } elbv2 create-rule \
+        --listener-arn="${element(module.alb.https_listener_arns, 0)}" \
+        --priority=60 \
+        --conditions='
+          [
+            {
+                "Field": "http-request-method",
+                "HttpRequestMethodConfig": {
+                    "Values": [
+                        "GET"
+                    ]
+                }
+            }
+          ]' \
+        --actions='
+        [
+          {
+              "Type": "redirect",
+              "RedirectConfig": {
+                  "Protocol": "HTTPS",
+                  "Port": "443",
+                  "Host": "${aws_route53_record.atlantis-internal.fqdn}",
+                  "Path": "/#{path}",
+                  "Query": "#{query}",
+                  "StatusCode": "HTTP_302"
+              }
+          }
+        ]'
+      # Create the github-POST-forward rule    
+      aws ${var.aws_profile != "" ? "--profile ${var.aws_profile}" : var.aws_profile } elbv2 create-rule \
+        --listener-arn="${element(module.alb.https_listener_arns, 0)}" \
+        --priority=40 \
+        --conditions='
+          [
+            {
+              "Field": "query-string",
+              "QueryStringConfig": {
+                "Values": [
+                  {
+                    "Key": "secret",
+                    "Value": "${sha1(random_id.webhook.hex)}"
+                  }
+                ]
+              }
+            },
+            {
+              "Field": "http-request-method",
+              "HttpRequestMethodConfig": {
+                "Values": ["POST"]
+              }
+            }
+          ]' \
+        --actions='
+        [
+          {
+              "Type": "forward",
+              "TargetGroupArn": "${element(module.alb.target_group_arns, 0)}"
+          }
+        ]'
+EOF
+  }
+}
+
+### Internal load balancer rules - HTTP Listener ###
+resource "aws_lb_listener_rule" "redirect_http_to_https_internal" {
+  listener_arn = "${module.alb-internal.http_tcp_listener_arns[0]}"
 
   action {
     type = "redirect"
@@ -279,7 +439,7 @@ module "acm" {
 
   domain_name = "${var.acm_certificate_domain_name == "" ? join(".", list(var.name, var.route53_zone_name)) : var.acm_certificate_domain_name}"
 
-  zone_id = "${var.certificate_arn == "" ? element(concat(data.aws_route53_zone.this.*.id, list("")), 0) : ""}"
+  zone_id = "${var.certificate_arn == "" ? element(concat(data.aws_route53_zone.external-zone.*.id, list("")), 0) : ""}"
 
   tags = "${local.tags}"
 }
@@ -290,13 +450,27 @@ module "acm" {
 resource "aws_route53_record" "atlantis" {
   count = "${var.create_route53_record}"
 
-  zone_id = "${data.aws_route53_zone.this.zone_id}"
+  zone_id = "${data.aws_route53_zone.external-zone.zone_id}"
   name    = "${var.name}"
   type    = "A"
 
   alias {
     name                   = "${module.alb.dns_name}"
     zone_id                = "${module.alb.load_balancer_zone_id}"
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "atlantis-internal" {
+  count = "${var.create_route53_record}"
+
+  zone_id = "${data.aws_route53_zone.external-zone.zone_id}"
+  name    = "${var.name}-private"
+  type    = "A"
+
+  alias {
+    name                   = "${module.alb-internal.dns_name}"
+    zone_id                = "${module.alb-internal.load_balancer_zone_id}"
     evaluate_target_health = true
   }
 }
@@ -479,6 +653,12 @@ resource "aws_ecs_service" "atlantis" {
     container_name   = "${var.name}"
     container_port   = "${var.atlantis_port}"
     target_group_arn = "${element(module.alb.target_group_arns, 0)}"
+  }
+
+  load_balancer {
+    container_name   = "${var.name}"
+    container_port   = "${var.atlantis_port}"
+    target_group_arn = "${element(module.alb-internal.target_group_arns, 0)}"
   }
 }
 
