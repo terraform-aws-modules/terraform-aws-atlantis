@@ -288,7 +288,7 @@ module "atlantis_sg" {
 ###################
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v2.0.0"
+  version = "v2.4.0"
 
   create_certificate = var.certificate_arn == ""
 
@@ -528,4 +528,3 @@ resource "aws_cloudwatch_log_group" "atlantis" {
 
   tags = local.tags
 }
-
