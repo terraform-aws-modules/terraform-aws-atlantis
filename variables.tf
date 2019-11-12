@@ -278,6 +278,12 @@ variable "atlantis_bitbucket_user_token" {
   default     = ""
 }
 
+variable "atlantis_bitbucket_base_url" {
+  description = "Base URL of Bitbucket Server, use for Bitbucket on prem (Stash)"
+  type        = string
+  default     = ""
+}
+
 variable "custom_environment_secrets" {
   description = "List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`)"
   type        = list(map(string))
