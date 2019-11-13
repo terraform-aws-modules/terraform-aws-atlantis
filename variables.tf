@@ -295,3 +295,9 @@ variable "security_group_ids" {
   type        = list(string)
   default     = []
 }
+
+variable "aws_ssm_path" {
+  description = "AWS SSM or AWS Govcloud SSM"
+  type        = string
+  default     = "aws"
+}
