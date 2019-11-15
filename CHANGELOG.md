@@ -3,9 +3,16 @@
 
 
 
+<a name="v2.4.0"></a>
+## [v2.4.0] - 2019-11-15
+
+- Govcloud ([#84](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/84))
+
+
 <a name="v2.3.0"></a>
 ## [v2.3.0] - 2019-11-12
 
+- Updated CHANGELOG
 - Updated version of terraform-aws-acm module to v2.4.0 ([#81](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/81))
 
 
@@ -224,7 +231,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.3.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.4.0...HEAD
+[v2.4.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.3.0...v2.4.0
 [v2.3.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.2.0...v2.3.0
 [v2.2.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.1.0...v2.2.0
 [v2.1.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.0.0...v2.1.0
