@@ -191,6 +191,12 @@ variable "ecs_security_group_ids" {
   default     = []
 }
 
+variable "ecs_task_role_name" {
+  description = "Override the name of the task execution role"
+  type        = string
+  default     = ""
+}
+
 variable "container_memory_reservation" {
   description = "The amount of memory (in MiB) to reserve for the container"
   type        = number
