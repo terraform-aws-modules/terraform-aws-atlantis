@@ -185,6 +185,18 @@ variable "ecs_task_memory" {
   default     = 512
 }
 
+variable "ecs_security_group_ids" {
+  description = "List of one or more security groups to be added to the ECS service"
+  type        = list(string)
+  default     = []
+}
+
+variable "ecs_task_role_name" {
+  description = "Override the name of the task execution role"
+  type        = string
+  default     = ""
+}
+
 variable "container_memory_reservation" {
   description = "The amount of memory (in MiB) to reserve for the container"
   type        = number

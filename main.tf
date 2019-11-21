@@ -342,7 +342,7 @@ data "aws_iam_policy_document" "ecs_tasks" {
 }
 
 resource "aws_iam_role" "ecs_task_execution" {
-  name               = "${var.name}-ecs_task_execution"
+  name               = coalesce(var.ecs_task_role_name, "${var.name}-ecs_task_execution")
   assume_role_policy = data.aws_iam_policy_document.ecs_tasks.json
 }
 
@@ -508,7 +508,7 @@ resource "aws_ecs_service" "atlantis" {
 
   network_configuration {
     subnets          = local.private_subnet_ids
-    security_groups  = [module.atlantis_sg.this_security_group_id]
+    security_groups  = concat([module.atlantis_sg.this_security_group_id], var.ecs_security_group_ids)
     assign_public_ip = var.ecs_service_assign_public_ip
   }
 
