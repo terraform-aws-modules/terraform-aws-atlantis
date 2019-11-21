@@ -139,6 +139,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | atlantis\_port | Local port Atlantis should be running on. Default value is most likely fine. | number | `"4141"` | no |
 | atlantis\_repo\_whitelist | List of allowed repositories Atlantis can be used with | list(string) | n/a | yes |
 | atlantis\_version | Verion of Atlantis to run. If not specified latest will be used | string | `"latest"` | no |
+| aws\_ssm\_path | AWS ARN prefix for SSM (public AWS region or Govcloud). Valid options: aws, aws-us-gov. | string | `"aws"` | no |
 | azs | A list of availability zones in the region | list(string) | `[]` | no |
 | certificate\_arn | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | string | `""` | no |
 | cidr | The CIDR block for the VPC which will be created if `vpc_id` is not specified | string | `""` | no |
@@ -148,12 +149,14 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | custom\_container\_definitions | A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used. | string | `""` | no |
 | custom\_environment\_secrets | List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`) | list(map(string)) | `[]` | no |
 | custom\_environment\_variables | List of additional environment variables the container will use (list should contain maps with `name` and `value`) | list(map(string)) | `[]` | no |
+| ecs\_security\_group\_ids | List of one or more security groups to be added to the ECS service | list(string) | `[]` | no |
 | ecs\_service\_assign\_public\_ip | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | bool | `"false"` | no |
 | ecs\_service\_deployment\_maximum\_percent | The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment | number | `"200"` | no |
 | ecs\_service\_deployment\_minimum\_healthy\_percent | The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment | number | `"50"` | no |
 | ecs\_service\_desired\_count | The number of instances of the task definition to place and keep running | number | `"1"` | no |
 | ecs\_task\_cpu | The number of cpu units used by the task | number | `"256"` | no |
 | ecs\_task\_memory | The amount (in MiB) of memory used by the task | number | `"512"` | no |
+| ecs\_task\_role\_name | Override the name of the task execution role | string | `""` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | string | `"atlantis"` | no |
 | policies\_arn | A list of the ARN of the policies you want to apply | list(string) | `[ "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy" ]` | no |
 | private\_subnet\_ids | A list of IDs of existing private subnets inside the VPC | list(string) | `[]` | no |
