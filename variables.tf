@@ -29,6 +29,12 @@ variable "private_subnet_ids" {
   default     = []
 }
 
+variable "internal_alb" {
+  description = "Whether or not the ALB will be marked as 'internal' (ie. not exposed to the public internet). Should be true if your 'public_subnet_ids' are actually private."
+  type        = bool
+  default     = false
+}
+
 variable "cidr" {
   description = "The CIDR block for the VPC which will be created if `vpc_id` is not specified"
   type        = string
@@ -112,6 +118,23 @@ variable "cloudwatch_log_retention_in_days" {
 }
 
 # SSM parameters for secrets
+variable "git_provider" {
+  description = "One of github/gitlab/bitbucket. Used to determine which git provider Atlantis will connect with and which ssm parameter to use."
+  type        = string
+}
+
+variable "preexisting_user_token_ssm_parameter" {
+  description = "This should be true if you already stored the user token in the SSM Parameter. NOTE: This must either be true or you must pass the token into the corresponding input variable for your git provider."
+  type        = bool
+  default     = false
+}
+
+variable "preexisting_webhook_ssm_parameter" {
+  description = "This should be true if you already stored the webhook secret in the SSM Parameter. If false, one will be randomly generated"
+  type        = bool
+  default     = false
+}
+
 variable "webhook_ssm_parameter_name" {
   description = "Name of SSM parameter to keep webhook secret"
   type        = string
@@ -276,6 +299,12 @@ variable "atlantis_bitbucket_user_token" {
   description = "Bitbucket token of the user that is running the Atlantis command"
   type        = string
   default     = ""
+}
+
+variable "atlantis_bitbucket_base_url" {
+  description = "Base URL of Bitbucket Server (aka Stash) installation. Must include http:// or https://. If using Bitbucket Cloud (bitbucket.org), do not set. Defaults to https://api.bitbucket.org."
+  type        = string
+  default     = "https://api.bitbucket.org"
 }
 
 variable "custom_environment_secrets" {
