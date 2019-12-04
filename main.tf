@@ -423,12 +423,13 @@ module "container_definition_github_gitlab" {
   ]
 
   log_configuration = {
-    log_driver = "awslogs"
+    logDriver = "awslogs"
     options = {
       awslogs-region        = data.aws_region.current.name
       awslogs-group         = aws_cloudwatch_log_group.atlantis.name
       awslogs-stream-prefix = "ecs"
     }
+    secretOptions = []
   }
 
   environment = concat(
@@ -463,12 +464,13 @@ module "container_definition_bitbucket" {
   ]
 
   log_configuration = {
-    log_driver = "awslogs"
+    logDriver = "awslogs"
     options = {
       awslogs-region        = data.aws_region.current.name
       awslogs-group         = aws_cloudwatch_log_group.atlantis.name
       awslogs-stream-prefix = "ecs"
     }
+    secretOptions = []
   }
 
   environment = concat(
