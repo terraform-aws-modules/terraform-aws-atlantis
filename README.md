@@ -179,6 +179,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | task\_role\_arn | The Atlantis ECS task role arn |
 | vpc\_id | ID of the VPC that was created or passed in |
 | webhook\_secret | Webhook secret |
+| ecs\_security\_group | Security group assigned to ECS Service in network configuration |
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
