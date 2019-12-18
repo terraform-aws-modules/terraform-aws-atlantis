@@ -592,6 +592,26 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
   )
 }
 
+data "aws_iam_policy_document" "assume_allow" {
+  statement {
+    effect = "Allow"
+
+    resources = var.allowed_assume_resources
+
+    actions = [
+      "sts:AssumeRole",
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "assume_allow" {
+  name = "AtlantisAssumeAllow"
+
+  role = aws_iam_role.ecs_task_execution.id
+
+  policy = data.aws_iam_policy_document.assume_allow.json
+}
+
 module "container_definition_github_gitlab" {
   source  = "cloudposse/ecs-container-definition/aws"
   version = "v0.58.1"

@@ -718,3 +718,9 @@ variable "runtime_platform" {
   type        = any
   default     = null
 }
+
+variable "allowed_assume_resources" {
+  description = "List of roles which can be assumed by ecs_task_execution role"
+  type        = list(string)
+  default     = []
+}
