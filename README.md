@@ -128,6 +128,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | atlantis\_bitbucket\_user | Bitbucket username that is running the Atlantis command | string | `""` | no |
 | atlantis\_bitbucket\_user\_token | Bitbucket token of the user that is running the Atlantis command | string | `""` | no |
 | atlantis\_bitbucket\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis_bitbucket_user_token | string | `"/atlantis/bitbucket/user/token"` | no |
+| atlantis\_command\_line | Command to invoke when running the Atlantis container (as a list of command line items) | list(string) | `["server"]` | no |
 | atlantis\_github\_user | GitHub username that is running the Atlantis command | string | `""` | no |
 | atlantis\_github\_user\_token | GitHub token of the user that is running the Atlantis command | string | `""` | no |
 | atlantis\_github\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis_github_user_token | string | `"/atlantis/github/user/token"` | no |

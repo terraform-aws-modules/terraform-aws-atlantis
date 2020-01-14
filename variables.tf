@@ -301,3 +301,9 @@ variable "aws_ssm_path" {
   type        = string
   default     = "aws"
 }
+
+variable "atlantis_command_line" {
+  description = "Command to invoke when running the Atlantis container (as a list of command line items)"
+  type        = list(string)
+  default     = ["server"]
+}
