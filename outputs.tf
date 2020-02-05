@@ -30,7 +30,12 @@ output "webhook_secret" {
 
 output "alb_dns_name" {
   description = "Dns name of alb"
-  value       = module.alb.dns_name
+  value       = module.alb.this_lb_dns_name
+}
+
+output "alb_zone_id" {
+  description = "Zone ID of alb"
+  value       = module.alb.this_lb_zone_id
 }
 
 output "ecs_task_definition" {

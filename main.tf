@@ -8,7 +8,7 @@ locals {
   atlantis_image = var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : var.atlantis_image
   atlantis_url = "https://${coalesce(
     element(concat(aws_route53_record.atlantis.*.fqdn, [""]), 0),
-    module.alb.dns_name,
+    module.alb.this_lb_dns_name,
     "_"
   )}"
   atlantis_url_events = "${local.atlantis_url}/events"
@@ -165,16 +165,17 @@ module "vpc" {
 ###################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v4.0.0"
+  version = "v5.0.0"
 
-  load_balancer_name = var.name
+  name = var.name
 
   vpc_id          = local.vpc_id
   subnets         = local.public_subnet_ids
   security_groups = flatten([module.alb_https_sg.this_security_group_id, module.alb_http_sg.this_security_group_id, var.security_group_ids])
 
-  logging_enabled     = var.alb_logging_enabled
-  log_bucket_name     = var.alb_log_bucket_name
+
+  access_logs = var.alb_logging_enabled ? { bucket = var.alb_log_bucket_name } : {}
+
   log_location_prefix = var.alb_log_location_prefix
 
   https_listeners = [
@@ -184,16 +185,12 @@ module "alb" {
     },
   ]
 
-  https_listeners_count = 1
-
   http_tcp_listeners = [
     {
       port     = 80
       protocol = "HTTP"
     },
   ]
-
-  http_tcp_listeners_count = 1
 
   target_groups = [
     {
@@ -204,8 +201,6 @@ module "alb" {
       deregistration_delay = 10
     },
   ]
-
-  target_groups_count = 1
 
   tags = local.tags
 }
@@ -310,8 +305,8 @@ resource "aws_route53_record" "atlantis" {
   type    = "A"
 
   alias {
-    name                   = module.alb.dns_name
-    zone_id                = module.alb.load_balancer_zone_id
+    name                   = module.alb.this_lb_dns_name
+    zone_id                = module.alb.this_lb_zone_id
     evaluate_target_health = true
   }
 }
