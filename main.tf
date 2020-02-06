@@ -6,7 +6,7 @@ locals {
 
   # Atlantis
   atlantis_image = var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : var.atlantis_image
-  atlantis_url = "https://${coalesce(
+  atlantis_url = "https://${coalesce(var.overwrite_atlantis_fqdn,
     element(concat(aws_route53_record.atlantis.*.fqdn, [""]), 0),
     module.alb.this_lb_dns_name,
     "_"

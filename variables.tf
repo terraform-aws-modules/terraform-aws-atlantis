@@ -10,6 +10,11 @@ variable "tags" {
   default     = {}
 }
 
+variable "overwrite_atlantis_fqdn" {
+  type    = "string"
+  default = null
+}
+
 # VPC
 variable "vpc_id" {
   description = "ID of an existing VPC where resources will be created"
