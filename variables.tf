@@ -280,14 +280,24 @@ variable "atlantis_bitbucket_user_token" {
 
 variable "custom_environment_secrets" {
   description = "List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`)"
-  type        = list(map(string))
-  default     = []
+  type = list(object(
+    {
+      name      = string
+      valueFrom = string
+    }
+  ))
+  default = []
 }
 
 variable "custom_environment_variables" {
   description = "List of additional environment variables the container will use (list should contain maps with `name` and `value`)"
-  type        = list(map(string))
-  default     = []
+  type = list(object(
+    {
+      name  = string
+      value = string
+    }
+  ))
+  default = []
 }
 
 variable "security_group_ids" {
