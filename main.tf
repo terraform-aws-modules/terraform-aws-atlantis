@@ -36,7 +36,7 @@ locals {
     },
     {
       name  = "ATLANTIS_LOG_LEVEL"
-      value = "debug"
+      value = var.atlantis_log_level
     },
     {
       name  = "ATLANTIS_PORT"

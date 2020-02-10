@@ -233,6 +233,12 @@ variable "allow_repo_config" {
   default     = "false"
 }
 
+variable "atlantis_log_level" {
+  description = "Log level that Atlantis will run with. Accepted values are: <debug|info|warn|error>"
+  type        = string
+  default     = "debug"
+}
+
 # Github
 variable "atlantis_github_user" {
   description = "GitHub username that is running the Atlantis command"
