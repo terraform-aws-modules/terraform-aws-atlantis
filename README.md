@@ -136,6 +136,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | atlantis\_gitlab\_user\_token | Gitlab token of the user that is running the Atlantis command | string | `""` | no |
 | atlantis\_gitlab\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis_gitlab_user_token | string | `"/atlantis/gitlab/user/token"` | no |
 | atlantis\_image | Docker image to run Atlantis with. If not specified, official Atlantis image will be used | string | `""` | no |
+| atlantis\_log\_level | Log level that Atlantis will run with. Accepted values are: <debug\|info\|warn\|error> | string | `"debug"` | no |
 | atlantis\_port | Local port Atlantis should be running on. Default value is most likely fine. | number | `"4141"` | no |
 | atlantis\_repo\_whitelist | List of allowed repositories Atlantis can be used with | list(string) | n/a | yes |
 | atlantis\_version | Verion of Atlantis to run. If not specified latest will be used | string | `"latest"` | no |
