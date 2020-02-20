@@ -301,3 +301,11 @@ variable "aws_ssm_path" {
   type        = string
   default     = "aws"
 }
+
+variable "repository_credentials" {
+  type        = "map"
+  description = "Container repository credentials; required when using a private repo.  This map currently supports a single key; \"credentialsParameter\", which should be the ARN of a Secrets Manager's secret holding the credentials. (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html)"
+  default     = {}
+}
+
+

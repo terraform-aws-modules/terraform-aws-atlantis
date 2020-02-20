@@ -438,6 +438,8 @@ module "container_definition_github_gitlab" {
     local.container_definition_secrets_2,
     var.custom_environment_secrets,
   )
+
+  repository_credentials = var.repository_credentials
 }
 
 module "container_definition_bitbucket" {
@@ -474,6 +476,8 @@ module "container_definition_bitbucket" {
     local.container_definition_secrets_1,
     var.custom_environment_secrets,
   )
+
+  repository_credentials = var.repository_credentials
 }
 
 resource "aws_ecs_task_definition" "atlantis" {

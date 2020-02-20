@@ -166,6 +166,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 | tags | A map of tags to use on all resources | map(string) | `{}` | no |
 | vpc\_id | ID of an existing VPC where resources will be created | string | `""` | no |
 | webhook\_ssm\_parameter\_name | Name of SSM parameter to keep webhook secret | string | `"/atlantis/webhook/secret"` | no |
+| repository\_credentials | Container repository credentials; required when using a private repo.  This map currently supports a single key; \"credentialsParameter\", which should be the ARN of a Secrets Manager's secret holding the credentials. (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/private-auth.html) | map(string) | `{}` | no |
 
 ## Outputs
 
