@@ -167,7 +167,8 @@ module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "v4.0.0"
 
-  load_balancer_name = var.name
+  load_balancer_name        = var.name
+  load_balancer_is_internal = var.internal
 
   vpc_id          = local.vpc_id
   subnets         = local.public_subnet_ids
@@ -528,4 +529,3 @@ resource "aws_cloudwatch_log_group" "atlantis" {
 
   tags = local.tags
 }
-
