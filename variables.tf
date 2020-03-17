@@ -136,6 +136,12 @@ variable "atlantis_bitbucket_user_token_ssm_parameter_name" {
   default     = "/atlantis/bitbucket/user/token"
 }
 
+variable "atlantis_azuredevops_user_token_ssm_parameter_name" {
+  description = "Name of SSM parameter to keep atlantis_azuredevops_user_token"
+  type        = string
+  default     = "/atlantis/azuredevops/user/token"
+}
+
 variable "ssm_kms_key_arn" {
   description = "ARN of KMS key to use for entryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key"
   type        = string
@@ -284,6 +290,25 @@ variable "atlantis_bitbucket_base_url" {
   default     = ""
 }
 
+# Azure DevOps
+variable "atlantis_azuredevops_user" {
+  description = "Azure DevOps username that is running the Atlantis command"
+  type        = string
+  default     = ""
+}
+
+variable "atlantis_azuredevops_user_token" {
+  description = "Azure DevOps token of the user that is running the Atlantis command"
+  type        = string
+  default     = ""
+}
+
+variable "atlantis_azuredevops_webhook_user" {
+  description = "Basic authentication username for Azure DevOps to authenticate via Webhook"
+  type        = string
+  default     = ""
+}
+
 variable "custom_environment_secrets" {
   description = "List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`)"
   type        = list(map(string))
@@ -306,4 +331,37 @@ variable "aws_ssm_path" {
   description = "AWS ARN prefix for SSM (public AWS region or Govcloud). Valid options: aws, aws-us-gov."
   type        = string
   default     = "aws"
+}
+
+# ECS Autoscaling
+# https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html
+variable "ecs_scale_up_cron" {
+  description = "Default scale up at 9 am weekdays, this is UTC so it doesn't adjust to daylight savings."
+  default     = "cron(30 22 ? * SUN-THU *)"
+}
+
+variable "ecs_scale_down_cron" {
+  description = "Default scale down at 5 pm every day."
+  default     = "cron(30 7 * * ? *)"
+}
+
+# Set this and `scale_down_max_capacity` to 0 to turn off service on the `scale_down_cron` schedule.
+variable "ecs_scale_down_min_capacity" {
+  description = "The mimimum number of containers to scale down to."
+  default     = 0
+}
+
+variable "ecs_scale_down_max_capacity" {
+  description = "The maximum number of containers to scale down to."
+  default     = 0
+}
+
+variable "ecs_autoscale_max_instances" {
+  description = "The maximum number of containers to scale down to."
+  default     = 1
+}
+
+variable "ecs_autoscale_min_instances" {
+  description = "The mimimum number of containers to scale down to."
+  default     = 1
 }

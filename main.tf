@@ -8,22 +8,22 @@ locals {
   atlantis_image = var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : var.atlantis_image
   atlantis_url = "https://${coalesce(
     element(concat(aws_route53_record.atlantis.*.fqdn, [""]), 0),
-    module.alb.dns_name,
+    module.alb.this_lb_dns_name,
     "_"
   )}"
   atlantis_url_events = "${local.atlantis_url}/events"
 
-  # Include only one group of secrets - for github, gitlab or bitbucket
-  has_secrets = var.atlantis_gitlab_user_token != "" || var.atlantis_github_user_token != "" || var.atlantis_bitbucket_user_token != ""
+  # Include only one group of secrets - for github, gitlab, bitbucket or azure devops
+  has_secrets = var.atlantis_gitlab_user_token != "" || var.atlantis_github_user_token != "" || var.atlantis_bitbucket_user_token != "" || var.atlantis_azuredevops_user_token != ""
 
-  secret_name_key = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_TOKEN" : var.atlantis_github_user_token != "" ? "ATLANTIS_GH_TOKEN" : "ATLANTIS_BITBUCKET_TOKEN" : "unknown_secret_name_key"
+  secret_name_key = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_TOKEN" : var.atlantis_github_user_token != "" ? "ATLANTIS_GH_TOKEN" : var.atlantis_bitbucket_user_token != "" ? "ATLANTIS_BITBUCKET_TOKEN" : "ATLANTIS_AZUREDEVOPS_TOKEN" : "unknown_secret_name_key"
 
-  secret_name_value_from = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? var.atlantis_gitlab_user_token_ssm_parameter_name : var.atlantis_github_user_token != "" ? var.atlantis_github_user_token_ssm_parameter_name : var.atlantis_bitbucket_user_token_ssm_parameter_name : "unknown_secret_name_value"
+  secret_name_value_from = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? var.atlantis_gitlab_user_token_ssm_parameter_name : var.atlantis_github_user_token != "" ? var.atlantis_github_user_token_ssm_parameter_name : var.atlantis_bitbucket_user_token != "" ? var.atlantis_bitbucket_user_token_ssm_parameter_name : var.atlantis_azuredevops_user_token_ssm_parameter_name : "unknown_secret_name_value"
 
-  secret_webhook_key = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : var.atlantis_github_user_token != "" ? "ATLANTIS_GH_WEBHOOK_SECRET" : "ATLANTIS_BITBUCKET_WEBHOOK_SECRET" : "unknown_secret_webhook_key"
+  secret_webhook_key = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : var.atlantis_github_user_token != "" ? "ATLANTIS_GH_WEBHOOK_SECRET" : var.atlantis_bitbucket_user_token != "" ? "ATLANTIS_BITBUCKET_WEBHOOK_SECRET" : "ATLANTIS_AZUREDEVOPS_WEBHOOK_PASSWORD" : "unknown_secret_webhook_key"
 
   # Container definitions
-  container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? module.container_definition_bitbucket.json : module.container_definition_github_gitlab.json : var.custom_container_definitions
+  container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? module.container_definition_bitbucket.json : module.container_definition_github_gitlab_azuredevops.json : var.custom_container_definitions
 
   container_definition_environment = [
     {
@@ -61,6 +61,14 @@ locals {
     {
       name  = "ATLANTIS_BITBUCKET_BASE_URL"
       value = var.atlantis_bitbucket_base_url
+    },
+    {
+      name  = "ATLANTIS_AZUREDEVOPS_USER"
+      value = var.atlantis_azuredevops_user
+    },
+    {
+      name  = "ATLANTIS_AZUREDEVOPS_WEBHOOK_USER"
+      value = var.atlantis_azuredevops_webhook_user
     },
     {
       name  = "ATLANTIS_REPO_WHITELIST"
@@ -142,12 +150,20 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
   value = var.atlantis_bitbucket_user_token
 }
 
+resource "aws_ssm_parameter" "atlantis_azuredevops_user_token" {
+  count = var.atlantis_azuredevops_user_token != "" ? 1 : 0
+
+  name  = var.atlantis_azuredevops_user_token_ssm_parameter_name
+  type  = "SecureString"
+  value = var.atlantis_azuredevops_user_token
+}
+
 ###################
 # VPC
 ###################
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v2.5.0"
+  version = "v2.29.0"
 
   create_vpc = var.vpc_id == ""
 
@@ -169,17 +185,18 @@ module "vpc" {
 ###################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v4.0.0"
+  version = "v5.1.0"
 
-  load_balancer_name = var.name
+  name = var.name
 
   vpc_id          = local.vpc_id
   subnets         = local.public_subnet_ids
   security_groups = flatten([module.alb_https_sg.this_security_group_id, module.alb_http_sg.this_security_group_id, var.security_group_ids])
 
-  logging_enabled     = var.alb_logging_enabled
-  log_bucket_name     = var.alb_log_bucket_name
-  log_location_prefix = var.alb_log_location_prefix
+  access_logs = {
+    bucket = var.alb_log_bucket_name
+    prefix = var.alb_log_location_prefix
+  }
 
   https_listeners = [
     {
@@ -188,16 +205,12 @@ module "alb" {
     },
   ]
 
-  https_listeners_count = 1
-
   http_tcp_listeners = [
     {
       port     = 80
       protocol = "HTTP"
     },
   ]
-
-  http_tcp_listeners_count = 1
 
   target_groups = [
     {
@@ -208,8 +221,6 @@ module "alb" {
       deregistration_delay = 10
     },
   ]
-
-  target_groups_count = 1
 
   tags = local.tags
 }
@@ -228,8 +239,9 @@ resource "aws_lb_listener_rule" "redirect_http_to_https" {
   }
 
   condition {
-    field  = "path-pattern"
-    values = ["*"]
+    path_pattern {
+      values = ["*"]
+    }
   }
 }
 
@@ -238,7 +250,7 @@ resource "aws_lb_listener_rule" "redirect_http_to_https" {
 ###################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v3.0.1"
+  version = "v3.4.0"
 
   name        = "${var.name}-alb-https"
   vpc_id      = local.vpc_id
@@ -251,7 +263,7 @@ module "alb_https_sg" {
 
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
-  version = "v3.0.1"
+  version = "v3.4.0"
 
   name        = "${var.name}-alb-http"
   vpc_id      = local.vpc_id
@@ -264,7 +276,7 @@ module "alb_http_sg" {
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v3.0.1"
+  version = "v3.4.0"
 
   name        = var.name
   vpc_id      = local.vpc_id
@@ -292,7 +304,7 @@ module "atlantis_sg" {
 ###################
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v2.4.0"
+  version = "v2.5.0"
 
   create_certificate = var.certificate_arn == ""
 
@@ -314,8 +326,8 @@ resource "aws_route53_record" "atlantis" {
   type    = "A"
 
   alias {
-    name                   = module.alb.dns_name
-    zone_id                = module.alb.load_balancer_zone_id
+    name                   = module.alb.this_lb_dns_name
+    zone_id                = module.alb.this_lb_zone_id
     evaluate_target_health = true
   }
 }
@@ -367,6 +379,7 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
       "arn:${var.aws_ssm_path}:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.atlantis_github_user_token_ssm_parameter_name}",
       "arn:${var.aws_ssm_path}:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.atlantis_gitlab_user_token_ssm_parameter_name}",
       "arn:${var.aws_ssm_path}:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.atlantis_bitbucket_user_token_ssm_parameter_name}",
+      "arn:${var.aws_ssm_path}:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.atlantis_azuredevops_user_token_ssm_parameter_name}",
     ]
 
     actions = [
@@ -390,7 +403,7 @@ data "aws_iam_policy_document" "ecs_task_access_secrets_with_kms" {
 }
 
 resource "aws_iam_role_policy" "ecs_task_access_secrets" {
-  count = var.atlantis_github_user_token != "" || var.atlantis_gitlab_user_token != "" || var.atlantis_bitbucket_user_token != "" ? 1 : 0
+  count = var.atlantis_github_user_token != "" || var.atlantis_gitlab_user_token != "" || var.atlantis_bitbucket_user_token != "" || var.atlantis_azuredevops_user_token != "" ? 1 : 0
 
   name = "ECSTaskAccessSecretsPolicy"
 
@@ -407,9 +420,9 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
   )
 }
 
-module "container_definition_github_gitlab" {
+module "container_definition_github_gitlab_azuredevops" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.15.0"
+  version = "v0.23.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -426,10 +439,14 @@ module "container_definition_github_gitlab" {
     },
   ]
 
-  log_options = {
-    "awslogs-region"        = data.aws_region.current.name
-    "awslogs-group"         = aws_cloudwatch_log_group.atlantis.name
-    "awslogs-stream-prefix" = "ecs"
+  log_configuration = {
+    logDriver = "awslogs"
+    options = {
+      "awslogs-region" : data.aws_region.current.name,
+      "awslogs-group" : aws_cloudwatch_log_group.atlantis.name,
+      "awslogs-stream-prefix" : "ecs"
+    }
+    secretOptions = null
   }
 
   environment = concat(
@@ -446,7 +463,7 @@ module "container_definition_github_gitlab" {
 
 module "container_definition_bitbucket" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.15.0"
+  version = "v0.23.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -463,10 +480,14 @@ module "container_definition_bitbucket" {
     },
   ]
 
-  log_options = {
-    "awslogs-region"        = data.aws_region.current.name
-    "awslogs-group"         = aws_cloudwatch_log_group.atlantis.name
-    "awslogs-stream-prefix" = "ecs"
+  log_configuration = {
+    logDriver = "awslogs"
+    options = {
+      "awslogs-region" : data.aws_region.current.name,
+      "awslogs-group" : aws_cloudwatch_log_group.atlantis.name,
+      "awslogs-stream-prefix" : "ecs"
+    }
+    secretOptions = null
   }
 
   environment = concat(
@@ -524,6 +545,49 @@ resource "aws_ecs_service" "atlantis" {
 }
 
 ###################
+# ECS Autoscaling
+###################
+resource "aws_appautoscaling_target" "app_scale_target" {
+  service_namespace  = "ecs"
+  resource_id        = "service/${module.ecs.this_ecs_cluster_id}/${aws_ecs_service.atlantis.name}"
+  scalable_dimension = "ecs:service:DesiredCount"
+  max_capacity       = var.ecs_autoscale_max_instances
+  min_capacity       = var.ecs_autoscale_min_instances
+}
+
+# Scales service back up to preferred running capacity defined by the
+# `ecs_autoscale_min_instances` and `ecs_autoscale_max_instances` variables
+resource "aws_appautoscaling_scheduled_action" "app_autoscale_time_up" {
+  name = "app-autoscale-time-up-${var.name}"
+
+  service_namespace  = aws_appautoscaling_target.app_scale_target.service_namespace
+  resource_id        = aws_appautoscaling_target.app_scale_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.app_scale_target.scalable_dimension
+  schedule           = var.ecs_scale_up_cron
+
+  scalable_target_action {
+    min_capacity = aws_appautoscaling_target.app_scale_target.min_capacity
+    max_capacity = aws_appautoscaling_target.app_scale_target.max_capacity
+  }
+}
+
+# Scales service down to capacity defined by the
+# `scale_down_min_capacity` and `scale_down_max_capacity` variables.
+resource "aws_appautoscaling_scheduled_action" "app_autoscale_time_down" {
+  name = "app-autoscale-time-down-${var.name}"
+
+  service_namespace  = aws_appautoscaling_target.app_scale_target.service_namespace
+  resource_id        = aws_appautoscaling_target.app_scale_target.resource_id
+  scalable_dimension = aws_appautoscaling_target.app_scale_target.scalable_dimension
+  schedule           = var.ecs_scale_down_cron
+
+  scalable_target_action {
+    min_capacity = var.ecs_scale_down_min_capacity
+    max_capacity = var.ecs_scale_down_max_capacity
+  }
+}
+
+###################
 # Cloudwatch logs
 ###################
 resource "aws_cloudwatch_log_group" "atlantis" {
@@ -532,4 +596,3 @@ resource "aws_cloudwatch_log_group" "atlantis" {
 
   tags = local.tags
 }
-

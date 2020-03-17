@@ -30,7 +30,7 @@ output "webhook_secret" {
 
 output "alb_dns_name" {
   description = "Dns name of alb"
-  value       = module.alb.dns_name
+  value       = module.alb.this_lb_dns_name
 }
 
 output "ecs_task_definition" {
