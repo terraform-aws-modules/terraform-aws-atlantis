@@ -1,7 +1,4 @@
 .terraform
+terraform.tfstate
 *.tfstate*
 terraform.tfvars
-
-tls/
-generate-tls/
-terraform/
