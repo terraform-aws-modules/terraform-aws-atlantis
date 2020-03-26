@@ -3,9 +3,17 @@
 
 
 
+<a name="v2.5.0"></a>
+## [v2.5.0] - 2020-02-22
+
+- Updated pre-commit-terraform with README
+- feat: add support for bitbucket stash base url ([#79](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/79))
+
+
 <a name="v2.4.0"></a>
 ## [v2.4.0] - 2019-11-15
 
+- Updated CHANGELOG
 - Govcloud ([#84](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/84))
 
 
@@ -231,7 +239,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.4.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.5.0...HEAD
+[v2.5.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.4.0...v2.5.0
 [v2.4.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.3.0...v2.4.0
 [v2.3.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.2.0...v2.3.0
 [v2.2.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.1.0...v2.2.0
