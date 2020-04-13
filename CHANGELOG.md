@@ -1,6 +1,17 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+
 <a name="unreleased"></a>
 ## [Unreleased]
 
+
+
+<a name="v2.6.0"></a>
+## [v2.6.0] - 2020-04-13
+
+- docs: Fixed README after terraform-docs was updated
+- feat: Added tags to cluster, task, ssm, role, and fmt ([#115](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/115))
 
 
 <a name="v2.5.0"></a>
@@ -13,21 +24,18 @@
 <a name="v2.4.0"></a>
 ## [v2.4.0] - 2019-11-15
 
-- Updated CHANGELOG
 - Govcloud ([#84](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/84))
 
 
 <a name="v2.3.0"></a>
 ## [v2.3.0] - 2019-11-12
 
-- Updated CHANGELOG
 - Updated version of terraform-aws-acm module to v2.4.0 ([#81](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/81))
 
 
 <a name="v2.2.0"></a>
 ## [v2.2.0] - 2019-07-21
 
-- Updated CHANGELOG
 - Update documentation a bit after merge
 - Add capability to attach additional security groups to ALB ([#66](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/66))
 
@@ -35,21 +43,18 @@
 <a name="v2.1.0"></a>
 ## [v2.1.0] - 2019-06-13
 
-- Updated CHANGELOG
 - Fixed task creation when ECS task definition has not been created before ([#62](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/62))
 
 
 <a name="v2.0.0"></a>
 ## [v2.0.0] - 2019-06-12
 
-- Updated CHANGELOG
 - Upgraded module to support Terraform 0.12 ([#58](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/58))
 
 
 <a name="v1.18.0"></a>
 ## [v1.18.0] - 2019-06-12
 
-- Updated CHANGELOG
 - Add Task Definition Output ([#53](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/53))
 
 
@@ -88,14 +93,12 @@
 ## [v1.12.0] - 2019-02-14
 
 - Fixed documentation after [#38](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/38)
-- Merge pull request [#38](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/38) from kilbergr/kilbergr_add-vpc-to-outputs
 - add vpc_id to outputs
 
 
 <a name="v1.11.0"></a>
 ## [v1.11.0] - 2019-02-07
 
-- Merge pull request [#37](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/37) from terraform-aws-modules/pr/35
 - Follow up for [#35](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/35) and [#36](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/36)
 - adding custom secrets and environment variables
 
@@ -103,7 +106,6 @@
 <a name="v1.10.0"></a>
 ## [v1.10.0] - 2019-02-01
 
-- Merge pull request [#32](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/32) from chenrui333/refresh-module-versions
 - Update acm module version for DNS validation issue
 - Update `cloudposse/ecs-container-definition/aws` to `v0.7.0`
 - Merge branch 'master' into refresh-module-versions
@@ -114,7 +116,6 @@
 ## [v1.9.0] - 2019-01-18
 
 - Updated pre-commit
-- Merge pull request [#30](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/30) from waeltken/http-to-https-redirect
 - Adjust comments on ALB security groups
 - Add http -> https redirect on the ALB
 
@@ -122,7 +123,6 @@
 <a name="v1.8.0"></a>
 ## [v1.8.0] - 2019-01-07
 
-- Merge pull request [#29](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/29) from waeltken/add-gitlab-hostname
 - Add variable to configure gitlab hostname
 
 
@@ -135,7 +135,6 @@
 <a name="v1.7.0"></a>
 ## [v1.7.0] - 2018-12-31
 
-- Merge pull request [#28](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/28) from terraform-aws-modules/refactor_container_definition
 - Added secrets and refactored container definition section
 
 
@@ -148,10 +147,8 @@
 <a name="v1.6.0"></a>
 ## [v1.6.0] - 2018-12-14
 
-- Merge pull request [#27](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/27) from terraform-aws-modules/gitlab-and-ssm
 - Cleanup before merge
 - Added support for gitlab and SSM parameter store
-- Merge pull request [#26](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/26) from chenrui333/fix-readme
 - Fix README
 
 
@@ -164,8 +161,6 @@
 <a name="v1.5.0"></a>
 ## [v1.5.0] - 2018-09-28
 
-- Merge pull request [#20](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/20) from exosite/master
-- Merge pull request [#21](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/21) from ldormoy/master
 - updates README
 - fixes typo variable name
 - allows custom value for alb ingress_cidr_blocks
@@ -183,8 +178,6 @@
 ## [v1.4.0] - 2018-09-07
 
 - Fixes after [#18](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/18)
-- Merge pull request [#18](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/18) from ldormoy/master
-- Merge pull request [#1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/1) from ldormoy/support-multiple-policies
 - allow ECS task role to get multiple policiy attachments
 - [#7](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/7) updates README with policy_arn input
 - [#7](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/7) pass ECs task exec. policy as input variable
@@ -193,7 +186,6 @@
 <a name="v1.3.0"></a>
 ## [v1.3.0] - 2018-08-19
 
-- Merge pull request [#17](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/17) from bitflight-public/master
 - Added a task role to the container
 - setthe maximum count to 200, and the minimum to 50%, so that there is no atlantis outage when deploying
 - added Task role output. Added the atlantis config in repo support
@@ -219,11 +211,9 @@
 <a name="v1.1.0"></a>
 ## [v1.1.0] - 2018-05-26
 
-- Merge pull request [#12](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/12) from terraform-aws-modules/reuse_vps
 - README fixes
 - README fixes
 - Allow reuse existing VPC and subnets
-- Merge pull request [#11](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/11) from terraform-aws-modules/github_webhook
 - Format tfvars
 - Added github-repository-webhook
 
@@ -239,7 +229,8 @@
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.5.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.6.0...HEAD
+[v2.6.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.5.0...v2.6.0
 [v2.5.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.4.0...v2.5.0
 [v2.4.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.3.0...v2.4.0
 [v2.3.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.2.0...v2.3.0
