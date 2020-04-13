@@ -116,6 +116,8 @@ resource "aws_ssm_parameter" "webhook" {
   name  = var.webhook_ssm_parameter_name
   type  = "SecureString"
   value = random_id.webhook.hex
+
+  tags = local.tags
 }
 
 resource "aws_ssm_parameter" "atlantis_github_user_token" {
@@ -124,6 +126,8 @@ resource "aws_ssm_parameter" "atlantis_github_user_token" {
   name  = var.atlantis_github_user_token_ssm_parameter_name
   type  = "SecureString"
   value = var.atlantis_github_user_token
+
+  tags = local.tags
 }
 
 resource "aws_ssm_parameter" "atlantis_gitlab_user_token" {
@@ -132,6 +136,8 @@ resource "aws_ssm_parameter" "atlantis_gitlab_user_token" {
   name  = var.atlantis_gitlab_user_token_ssm_parameter_name
   type  = "SecureString"
   value = var.atlantis_gitlab_user_token
+
+  tags = local.tags
 }
 
 resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
@@ -140,6 +146,8 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
   name  = var.atlantis_bitbucket_user_token_ssm_parameter_name
   type  = "SecureString"
   value = var.atlantis_bitbucket_user_token
+
+  tags = local.tags
 }
 
 ###################
@@ -328,6 +336,8 @@ module "ecs" {
   version = "v2.0.0"
 
   name = var.name
+
+  tags = local.tags
 }
 
 data "aws_iam_policy_document" "ecs_tasks" {
@@ -348,6 +358,8 @@ data "aws_iam_policy_document" "ecs_tasks" {
 resource "aws_iam_role" "ecs_task_execution" {
   name               = "${var.name}-ecs_task_execution"
   assume_role_policy = data.aws_iam_policy_document.ecs_tasks.json
+
+  tags = local.tags
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
@@ -490,6 +502,8 @@ resource "aws_ecs_task_definition" "atlantis" {
   memory                   = var.ecs_task_memory
 
   container_definitions = local.container_definitions
+
+  tags = local.tags
 }
 
 data "aws_ecs_task_definition" "atlantis" {
@@ -532,4 +546,3 @@ resource "aws_cloudwatch_log_group" "atlantis" {
 
   tags = local.tags
 }
-
