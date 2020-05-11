@@ -135,7 +135,7 @@ No requirements.
 | alb\_log\_location\_prefix | S3 prefix within the log\_bucket\_name under which logs are stored. | `string` | `""` | no |
 | alb\_logging\_enabled | Controls if the ALB will log requests to S3. | `bool` | `false` | no |
 | allow\_repo\_config | When true allows the use of atlantis.yaml config files within the source repos. | `string` | `"false"` | no |
-| atlantis\_allowed\_repo\_names | Github repositories where webhook should be created | `list(string)` | `[]` | no |
+| atlantis\_allowed\_repo\_names | Git repositories where webhook should be created | `list(string)` | `[]` | no |
 | atlantis\_bitbucket\_base\_url | Base URL of Bitbucket Server, use for Bitbucket on prem (Stash) | `string` | `""` | no |
 | atlantis\_bitbucket\_user | Bitbucket username that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_bitbucket\_user\_token | Bitbucket token of the user that is running the Atlantis command | `string` | `""` | no |
@@ -175,7 +175,7 @@ No requirements.
 | public\_subnets | A list of public subnets inside the VPC | `list(string)` | `[]` | no |
 | route53\_zone\_name | Route53 zone name to create ACM certificate in and main A-record, without trailing dot | `string` | `""` | no |
 | security\_group\_ids | List of one or more security groups to be added to the load balancer | `list(string)` | `[]` | no |
-| ssm\_kms\_key\_arn | ARN of KMS key to use for entryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key | `string` | `""` | no |
+| ssm\_kms\_key\_arn | ARN of KMS key to use for encryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key | `string` | `""` | no |
 | tags | A map of tags to use on all resources | `map(string)` | `{}` | no |
 | vpc\_id | ID of an existing VPC where resources will be created | `string` | `""` | no |
 | webhook\_ssm\_parameter\_name | Name of SSM parameter to keep webhook secret | `string` | `"/atlantis/webhook/secret"` | no |
@@ -185,7 +185,7 @@ No requirements.
 | Name | Description |
 |------|-------------|
 | alb\_dns\_name | Dns name of alb |
-| atlantis\_allowed\_repo\_names | Github repositories where webhook should be created |
+| atlantis\_allowed\_repo\_names | Git repositories where webhook should be created |
 | atlantis\_url | URL of Atlantis |
 | atlantis\_url\_events | Webhook events URL of Atlantis |
 | ecs\_task\_definition | Task definition for ECS service (used for external triggers) |
