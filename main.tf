@@ -59,10 +59,6 @@ locals {
       value = var.atlantis_bitbucket_user
     },
     {
-      name  = "ATLANTIS_BITBUCKET_BASE_URL"
-      value = var.atlantis_bitbucket_base_url
-    },
-    {
       name  = "ATLANTIS_REPO_WHITELIST"
       value = join(",", var.atlantis_repo_whitelist)
     },
@@ -116,8 +112,6 @@ resource "aws_ssm_parameter" "webhook" {
   name  = var.webhook_ssm_parameter_name
   type  = "SecureString"
   value = random_id.webhook.hex
-
-  tags = local.tags
 }
 
 resource "aws_ssm_parameter" "atlantis_github_user_token" {
@@ -126,8 +120,6 @@ resource "aws_ssm_parameter" "atlantis_github_user_token" {
   name  = var.atlantis_github_user_token_ssm_parameter_name
   type  = "SecureString"
   value = var.atlantis_github_user_token
-
-  tags = local.tags
 }
 
 resource "aws_ssm_parameter" "atlantis_gitlab_user_token" {
@@ -136,8 +128,6 @@ resource "aws_ssm_parameter" "atlantis_gitlab_user_token" {
   name  = var.atlantis_gitlab_user_token_ssm_parameter_name
   type  = "SecureString"
   value = var.atlantis_gitlab_user_token
-
-  tags = local.tags
 }
 
 resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
@@ -146,8 +136,6 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
   name  = var.atlantis_bitbucket_user_token_ssm_parameter_name
   type  = "SecureString"
   value = var.atlantis_bitbucket_user_token
-
-  tags = local.tags
 }
 
 ###################
@@ -336,8 +324,6 @@ module "ecs" {
   version = "v2.0.0"
 
   name = var.name
-
-  tags = local.tags
 }
 
 data "aws_iam_policy_document" "ecs_tasks" {
@@ -358,8 +344,6 @@ data "aws_iam_policy_document" "ecs_tasks" {
 resource "aws_iam_role" "ecs_task_execution" {
   name               = "${var.name}-ecs_task_execution"
   assume_role_policy = data.aws_iam_policy_document.ecs_tasks.json
-
-  tags = local.tags
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
@@ -421,7 +405,7 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 
 module "container_definition_github_gitlab" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.15.0"
+  version = "v0.23.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -438,10 +422,14 @@ module "container_definition_github_gitlab" {
     },
   ]
 
-  log_options = {
-    "awslogs-region"        = data.aws_region.current.name
-    "awslogs-group"         = aws_cloudwatch_log_group.atlantis.name
-    "awslogs-stream-prefix" = "ecs"
+  log_configuration = {
+    logDriver = "awslogs"
+    options = {
+      awslogs-region        = data.aws_region.current.name
+      awslogs-group         = aws_cloudwatch_log_group.atlantis.name
+      awslogs-stream-prefix = "ecs"
+    }
+    secretOptions = []
   }
 
   environment = concat(
@@ -458,7 +446,7 @@ module "container_definition_github_gitlab" {
 
 module "container_definition_bitbucket" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.15.0"
+  version = "v0.23.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -475,10 +463,14 @@ module "container_definition_bitbucket" {
     },
   ]
 
-  log_options = {
-    "awslogs-region"        = data.aws_region.current.name
-    "awslogs-group"         = aws_cloudwatch_log_group.atlantis.name
-    "awslogs-stream-prefix" = "ecs"
+  log_configuration = {
+    logDriver = "awslogs"
+    options = {
+      awslogs-region        = data.aws_region.current.name
+      awslogs-group         = aws_cloudwatch_log_group.atlantis.name
+      awslogs-stream-prefix = "ecs"
+    }
+    secretOptions = []
   }
 
   environment = concat(
@@ -502,8 +494,6 @@ resource "aws_ecs_task_definition" "atlantis" {
   memory                   = var.ecs_task_memory
 
   container_definitions = local.container_definitions
-
-  tags = local.tags
 }
 
 data "aws_ecs_task_definition" "atlantis" {
@@ -546,3 +536,4 @@ resource "aws_cloudwatch_log_group" "atlantis" {
 
   tags = local.tags
 }
+
