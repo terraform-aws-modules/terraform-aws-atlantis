@@ -9,7 +9,7 @@ output "atlantis_url_events" {
 }
 
 output "atlantis_allowed_repo_names" {
-  description = "Github repositories where webhook should be created"
+  description = "Git repositories where webhook should be created"
   value       = var.atlantis_allowed_repo_names
 }
 

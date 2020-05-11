@@ -15,12 +15,22 @@ $ terraform apply
 Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+No requirements.
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| terraform | n/a |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| gitlab\_base\_url | Gitlab base_url | string | `""` | no |
-| gitlab\_token | Gitlab token | string | n/a | yes |
+|------|-------------|------|---------|:--------:|
+| gitlab\_base\_url | Gitlab base\_url | `string` | `""` | no |
+| gitlab\_token | Gitlab token | `string` | n/a | yes |
 
 ## Outputs
 

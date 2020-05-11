@@ -143,7 +143,7 @@ variable "atlantis_bitbucket_user_token_ssm_parameter_name" {
 }
 
 variable "ssm_kms_key_arn" {
-  description = "ARN of KMS key to use for entryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key"
+  description = "ARN of KMS key to use for encryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key"
   type        = string
   default     = ""
 }
@@ -228,7 +228,7 @@ variable "atlantis_repo_whitelist" {
 }
 
 variable "atlantis_allowed_repo_names" {
-  description = "Github repositories where webhook should be created"
+  description = "Git repositories where webhook should be created"
   type        = list(string)
   default     = []
 }
@@ -280,6 +280,12 @@ variable "atlantis_bitbucket_user" {
 
 variable "atlantis_bitbucket_user_token" {
   description = "Bitbucket token of the user that is running the Atlantis command"
+  type        = string
+  default     = ""
+}
+
+variable "atlantis_bitbucket_base_url" {
+  description = "Base URL of Bitbucket Server, use for Bitbucket on prem (Stash)"
   type        = string
   default     = ""
 }
