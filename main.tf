@@ -143,7 +143,7 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
 ###################
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v2.5.0"
+  version = "v2.33.0"
 
   create_vpc = var.vpc_id == ""
 
@@ -220,7 +220,7 @@ module "alb" {
 ###################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v3.0.1"
+  version = "v3.9.0"
 
   name        = "${var.name}-alb-https"
   vpc_id      = local.vpc_id
@@ -233,7 +233,7 @@ module "alb_https_sg" {
 
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
-  version = "v3.0.1"
+  version = "v3.9.0"
 
   name        = "${var.name}-alb-http"
   vpc_id      = local.vpc_id
@@ -246,13 +246,13 @@ module "alb_http_sg" {
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v3.0.1"
+  version = "v3.9.0"
 
   name        = var.name
   vpc_id      = local.vpc_id
   description = "Security group with open port for Atlantis (${var.atlantis_port}) from ALB, egress ports are all world open"
 
-  computed_ingress_with_source_security_group_id = [
+  ingress_with_source_security_group_id = [
     {
       from_port                = var.atlantis_port
       to_port                  = var.atlantis_port
@@ -261,8 +261,6 @@ module "atlantis_sg" {
       source_security_group_id = module.alb_https_sg.this_security_group_id
     },
   ]
-
-  number_of_computed_ingress_with_source_security_group_id = 1
 
   egress_rules = ["all-all"]
 
@@ -274,7 +272,7 @@ module "atlantis_sg" {
 ###################
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v2.4.0"
+  version = "v2.5.0"
 
   create_certificate = var.certificate_arn == ""
 
