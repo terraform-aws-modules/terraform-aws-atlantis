@@ -291,7 +291,7 @@ resource "aws_route53_record" "atlantis" {
   count = var.create_route53_record ? 1 : 0
 
   zone_id = data.aws_route53_zone.this[0].zone_id
-  name    = var.name
+  name    = var.route53_record_name != null ? var.route53_record_name : var.name
   type    = "A"
 
   alias {
