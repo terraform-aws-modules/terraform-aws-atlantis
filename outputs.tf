@@ -37,3 +37,8 @@ output "ecs_task_definition" {
   description = "Task definition for ECS service (used for external triggers)"
   value       = aws_ecs_service.atlantis.task_definition
 }
+
+output "ecs_security_group" {
+  description = "Security group assigned to ECS Service in network configuration"
+  value       = module.atlantis_sg.this_security_group_id
+}

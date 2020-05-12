@@ -190,6 +190,7 @@ No requirements.
 | atlantis\_allowed\_repo\_names | Git repositories where webhook should be created |
 | atlantis\_url | URL of Atlantis |
 | atlantis\_url\_events | Webhook events URL of Atlantis |
+| ecs\_security\_group | Security group assigned to ECS Service in network configuration |
 | ecs\_task\_definition | Task definition for ECS service (used for external triggers) |
 | task\_role\_arn | The Atlantis ECS task role arn |
 | vpc\_id | ID of the VPC that was created or passed in |
