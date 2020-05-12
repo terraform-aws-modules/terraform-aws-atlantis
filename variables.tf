@@ -110,6 +110,12 @@ variable "route53_zone_name" {
   default     = ""
 }
 
+variable "route53_record_name" {
+  description = "Name of Route53 record to create ACM certificate in and main A-record. If null is specified, var.name is used instead. Provide empty string to point root domain name to ALB."
+  type        = string
+  default     = null
+}
+
 variable "create_route53_record" {
   description = "Whether to create Route53 record for Atlantis"
   type        = bool

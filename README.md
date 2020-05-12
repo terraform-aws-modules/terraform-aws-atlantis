@@ -176,6 +176,7 @@ No requirements.
 | private\_subnets | A list of private subnets inside the VPC | `list(string)` | `[]` | no |
 | public\_subnet\_ids | A list of IDs of existing public subnets inside the VPC | `list(string)` | `[]` | no |
 | public\_subnets | A list of public subnets inside the VPC | `list(string)` | `[]` | no |
+| route53\_record\_name | Name of Route53 record to create ACM certificate in and main A-record. If null is specified, var.name is used instead. Provide empty string to point root domain name to ALB. | `string` | `null` | no |
 | route53\_zone\_name | Route53 zone name to create ACM certificate in and main A-record, without trailing dot | `string` | `""` | no |
 | security\_group\_ids | List of one or more security groups to be added to the load balancer | `list(string)` | `[]` | no |
 | ssm\_kms\_key\_arn | ARN of KMS key to use for encryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key | `string` | `""` | no |
