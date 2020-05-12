@@ -4,6 +4,12 @@ variable "name" {
   default     = "atlantis"
 }
 
+variable "internal" {
+  description = "Whether the load balancer is internal or external"
+  type        = bool
+  default     = false
+}
+
 variable "tags" {
   description = "A map of tags to use on all resources"
   type        = map(string)

@@ -8,7 +8,7 @@ locals {
   atlantis_image = var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : var.atlantis_image
   atlantis_url = "https://${coalesce(
     element(concat(aws_route53_record.atlantis.*.fqdn, [""]), 0),
-    module.alb.dns_name,
+    module.alb.this_lb_dns_name,
     "_"
   )}"
   atlantis_url_events = "${local.atlantis_url}/events"
@@ -165,35 +165,42 @@ module "vpc" {
 ###################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v4.0.0"
+  version = "v5.5.0"
 
-  load_balancer_name = var.name
+  name     = var.name
+  internal = var.internal
 
   vpc_id          = local.vpc_id
   subnets         = local.public_subnet_ids
   security_groups = flatten([module.alb_https_sg.this_security_group_id, module.alb_http_sg.this_security_group_id, var.security_group_ids])
 
-  logging_enabled     = var.alb_logging_enabled
-  log_bucket_name     = var.alb_log_bucket_name
-  log_location_prefix = var.alb_log_location_prefix
+  access_logs = {
+    enabled = var.alb_logging_enabled
+    bucket  = var.alb_log_bucket_name
+    prefix  = var.alb_log_location_prefix
+  }
 
   https_listeners = [
     {
-      port            = 443
-      certificate_arn = var.certificate_arn == "" ? module.acm.this_acm_certificate_arn : var.certificate_arn
+      target_group_index = 0
+      port               = 443
+      protocol           = "HTTPS"
+      certificate_arn    = var.certificate_arn == "" ? module.acm.this_acm_certificate_arn : var.certificate_arn
     },
   ]
-
-  https_listeners_count = 1
 
   http_tcp_listeners = [
     {
-      port     = 80
-      protocol = "HTTP"
+      port        = 80
+      protocol    = "HTTP"
+      action_type = "redirect"
+      redirect = {
+        port        = 443
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
+      }
     },
   ]
-
-  http_tcp_listeners_count = 1
 
   target_groups = [
     {
@@ -205,29 +212,7 @@ module "alb" {
     },
   ]
 
-  target_groups_count = 1
-
   tags = local.tags
-}
-
-resource "aws_lb_listener_rule" "redirect_http_to_https" {
-  listener_arn = module.alb.http_tcp_listener_arns[0]
-
-  action {
-    type = "redirect"
-
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }
-  }
-
-  condition {
-    path_pattern {
-      values = ["*"]
-    }
-  }
 }
 
 ###################
@@ -311,8 +296,8 @@ resource "aws_route53_record" "atlantis" {
   type    = "A"
 
   alias {
-    name                   = module.alb.dns_name
-    zone_id                = module.alb.load_balancer_zone_id
+    name                   = module.alb.this_lb_dns_name
+    zone_id                = module.alb.this_lb_zone_id
     evaluate_target_health = true
   }
 }
@@ -537,4 +522,3 @@ resource "aws_cloudwatch_log_group" "atlantis" {
 
   tags = local.tags
 }
-
