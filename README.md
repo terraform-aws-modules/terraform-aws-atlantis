@@ -140,6 +140,7 @@ No requirements.
 | atlantis\_bitbucket\_user | Bitbucket username that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_bitbucket\_user\_token | Bitbucket token of the user that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_bitbucket\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis\_bitbucket\_user\_token | `string` | `"/atlantis/bitbucket/user/token"` | no |
+| atlantis\_fqdn | FQDN of Atlantis to use. Set this only to override Route53 and ALB's DNS name. | `string` | `null` | no |
 | atlantis\_github\_user | GitHub username that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_github\_user\_token | GitHub token of the user that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_github\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis\_github\_user\_token | `string` | `"/atlantis/github/user/token"` | no |
@@ -160,8 +161,8 @@ No requirements.
 | container\_memory\_reservation | The amount of memory (in MiB) to reserve for the container | `number` | `128` | no |
 | create\_route53\_record | Whether to create Route53 record for Atlantis | `bool` | `true` | no |
 | custom\_container\_definitions | A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used. | `string` | `""` | no |
-| custom\_environment\_secrets | List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`) | `list(map(string))` | `[]` | no |
-| custom\_environment\_variables | List of additional environment variables the container will use (list should contain maps with `name` and `value`) | `list(map(string))` | `[]` | no |
+| custom\_environment\_secrets | List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`) | <pre>list(object(<br>    {<br>      name      = string<br>      valueFrom = string<br>    }<br>  ))</pre> | `[]` | no |
+| custom\_environment\_variables | List of additional environment variables the container will use (list should contain maps with `name` and `value`) | <pre>list(object(<br>    {<br>      name  = string<br>      value = string<br>    }<br>  ))</pre> | `[]` | no |
 | ecs\_service\_assign\_public\_ip | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | `bool` | `false` | no |
 | ecs\_service\_deployment\_maximum\_percent | The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment | `number` | `200` | no |
 | ecs\_service\_deployment\_minimum\_healthy\_percent | The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment | `number` | `50` | no |
@@ -187,6 +188,7 @@ No requirements.
 | Name | Description |
 |------|-------------|
 | alb\_dns\_name | Dns name of alb |
+| alb\_zone\_id | Zone ID of alb |
 | atlantis\_allowed\_repo\_names | Git repositories where webhook should be created |
 | atlantis\_url | URL of Atlantis |
 | atlantis\_url\_events | Webhook events URL of Atlantis |

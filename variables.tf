@@ -16,6 +16,12 @@ variable "tags" {
   default     = {}
 }
 
+variable "atlantis_fqdn" {
+  description = "FQDN of Atlantis to use. Set this only to override Route53 and ALB's DNS name."
+  type        = string
+  default     = null
+}
+
 # VPC
 variable "vpc_id" {
   description = "ID of an existing VPC where resources will be created"
@@ -298,14 +304,24 @@ variable "atlantis_bitbucket_base_url" {
 
 variable "custom_environment_secrets" {
   description = "List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`)"
-  type        = list(map(string))
-  default     = []
+  type = list(object(
+    {
+      name      = string
+      valueFrom = string
+    }
+  ))
+  default = []
 }
 
 variable "custom_environment_variables" {
   description = "List of additional environment variables the container will use (list should contain maps with `name` and `value`)"
-  type        = list(map(string))
-  default     = []
+  type = list(object(
+    {
+      name  = string
+      value = string
+    }
+  ))
+  default = []
 }
 
 variable "security_group_ids" {

@@ -33,6 +33,11 @@ output "alb_dns_name" {
   value       = module.alb.this_lb_dns_name
 }
 
+output "alb_zone_id" {
+  description = "Zone ID of alb"
+  value       = module.alb.this_lb_zone_id
+}
+
 output "ecs_task_definition" {
   description = "Task definition for ECS service (used for external triggers)"
   value       = aws_ecs_service.atlantis.task_definition
