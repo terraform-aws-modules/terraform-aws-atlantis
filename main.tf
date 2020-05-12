@@ -173,7 +173,6 @@ module "alb" {
   vpc_id          = local.vpc_id
   subnets         = local.public_subnet_ids
   security_groups = flatten([module.alb_https_sg.this_security_group_id, module.alb_http_sg.this_security_group_id, var.security_group_ids])
-  ip_address_type = "dualstack"
 
   access_logs = {
     enabled = var.alb_logging_enabled
