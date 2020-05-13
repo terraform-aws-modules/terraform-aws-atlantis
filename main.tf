@@ -199,6 +199,8 @@ module "alb" {
       port               = 443
       protocol           = "HTTPS"
       certificate_arn    = var.certificate_arn == "" ? module.acm.this_acm_certificate_arn : var.certificate_arn
+      action_type        = length(keys(var.alb_authenticate_oidc)) > 0 ? "authenticate-oidc" : "forward"
+      authenticate_oidc  = var.alb_authenticate_oidc
     },
   ]
 
