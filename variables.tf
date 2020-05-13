@@ -96,6 +96,36 @@ variable "alb_authenticate_oidc" {
   default     = {}
 }
 
+variable "allow_unauthenticated_access" {
+  description = "Whether to create ALB listener rule to allow unauthenticated access for certain CIDR blocks (eg. allow GitHub webhooks to bypass OIDC authentication)"
+  type        = bool
+  default     = false
+}
+
+variable "allow_unauthenticated_access_priority" {
+  description = "ALB listener rule priority for allow unauthenticated access rule"
+  type        = number
+  default     = 10
+}
+
+variable "allow_github_webhooks" {
+  description = "Whether to allow access for GitHub webhooks"
+  type        = bool
+  default     = false
+}
+
+variable "github_webhooks_cidr_blocks" {
+  description = "List of CIDR blocks used by GitHub webhooks" # This is hardcoded to avoid dependency on github provider. Source: https://api.github.com/meta
+  type        = list(string)
+  default     = ["140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22"]
+}
+
+variable "whitelist_unauthenticated_cidr_blocks" {
+  description = "List of allowed CIDR blocks to bypass authentication"
+  type        = list(string)
+  default     = []
+}
+
 # ACM
 variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS"
