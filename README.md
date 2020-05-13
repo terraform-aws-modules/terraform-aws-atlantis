@@ -119,6 +119,13 @@ alb_authenticate_oidc = {
 
 Read more in [this post](https://medium.com/@sandrinodm/securing-your-applications-with-aws-alb-built-in-authentication-and-auth0-310ad84c8595).
 
+If you are using GitHub, you may allow it to trigger webhooks without authentication on ALB:
+
+```
+allow_unauthenticated_access = true
+allow_github_webhooks        = true
+```
+
 ## Notes
 
 1. AWS Route53 zone is not created by this module, so zone specified as a value in `route53_zone_name` should be created before using this module. Check documentation for [aws_route53_zone](https://www.terraform.io/docs/providers/aws/r/route53_zone.html).
@@ -154,7 +161,9 @@ No requirements.
 | alb\_log\_bucket\_name | S3 bucket (externally created) for storing load balancer access logs. Required if alb\_logging\_enabled is true. | `string` | `""` | no |
 | alb\_log\_location\_prefix | S3 prefix within the log\_bucket\_name under which logs are stored. | `string` | `""` | no |
 | alb\_logging\_enabled | Controls if the ALB will log requests to S3. | `bool` | `false` | no |
+| allow\_github\_webhooks | Whether to allow access for GitHub webhooks | `bool` | `false` | no |
 | allow\_repo\_config | When true allows the use of atlantis.yaml config files within the source repos. | `string` | `"false"` | no |
+| allow\_unauthenticated\_access | Whether to create ALB listener rule to allow unauthenticated access for certain CIDR blocks (eg. allow GitHub webhooks to bypass OIDC authentication) | `bool` | `false` | no |
 | atlantis\_allowed\_repo\_names | Git repositories where webhook should be created | `list(string)` | `[]` | no |
 | atlantis\_bitbucket\_base\_url | Base URL of Bitbucket Server, use for Bitbucket on prem (Stash) | `string` | `""` | no |
 | atlantis\_bitbucket\_user | Bitbucket username that is running the Atlantis command | `string` | `""` | no |
@@ -189,6 +198,7 @@ No requirements.
 | ecs\_service\_desired\_count | The number of instances of the task definition to place and keep running | `number` | `1` | no |
 | ecs\_task\_cpu | The number of cpu units used by the task | `number` | `256` | no |
 | ecs\_task\_memory | The amount (in MiB) of memory used by the task | `number` | `512` | no |
+| github\_webhooks\_cidr\_blocks | List of CIDR blocks used by GitHub webhooks | `list(string)` | <pre>[<br>  "140.82.112.0/20",<br>  "185.199.108.0/22",<br>  "192.30.252.0/22"<br>]</pre> | no |
 | internal | Whether the load balancer is internal or external | `bool` | `false` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | `string` | `"atlantis"` | no |
 | policies\_arn | A list of the ARN of the policies you want to apply | `list(string)` | <pre>[<br>  "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"<br>]</pre> | no |
@@ -203,6 +213,7 @@ No requirements.
 | tags | A map of tags to use on all resources | `map(string)` | `{}` | no |
 | vpc\_id | ID of an existing VPC where resources will be created | `string` | `""` | no |
 | webhook\_ssm\_parameter\_name | Name of SSM parameter to keep webhook secret | `string` | `"/atlantis/webhook/secret"` | no |
+| whitelist\_unauthenticated\_cidr\_blocks | List of allowed CIDR blocks to bypass authentication | `list(string)` | `[]` | no |
 
 ## Outputs
 
