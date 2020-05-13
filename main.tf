@@ -230,6 +230,25 @@ module "alb" {
   tags = local.tags
 }
 
+# Forward action for certain CIDR blocks to bypass authentication (eg. GitHub webhooks)
+resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
+  count = var.allow_unauthenticated_access ? 1 : 0
+
+  listener_arn = module.alb.https_listener_arns[0]
+  priority     = var.allow_unauthenticated_access_priority
+
+  action {
+    type             = "forward"
+    target_group_arn = module.alb.target_group_arns[0]
+  }
+
+  condition {
+    source_ip {
+      values = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.whitelist_unauthenticated_cidr_blocks)))
+    }
+  }
+}
+
 ###################
 # Security groups
 ###################
