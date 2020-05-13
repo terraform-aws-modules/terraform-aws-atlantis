@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.15.0"></a>
+## [v2.15.0] - 2020-05-13
+
+- feat: Added ALB authentication feature with OpenID Connect (eg, Auth0) ([#122](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/122))
+
+
 <a name="v2.14.0"></a>
 ## [v2.14.0] - 2020-05-12
 
@@ -279,7 +285,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.14.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.15.0...HEAD
+[v2.15.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.14.0...v2.15.0
 [v2.14.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.13.0...v2.14.0
 [v2.13.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.12.0...v2.13.0
 [v2.12.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.11.0...v2.12.0
