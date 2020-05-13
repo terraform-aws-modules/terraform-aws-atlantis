@@ -501,19 +501,10 @@ resource "aws_ecs_task_definition" "atlantis" {
   tags = local.tags
 }
 
-data "aws_ecs_task_definition" "atlantis" {
-  task_definition = var.name
-
-  depends_on = [aws_ecs_task_definition.atlantis]
-}
-
 resource "aws_ecs_service" "atlantis" {
   name    = var.name
   cluster = module.ecs.this_ecs_cluster_id
-  task_definition = "${data.aws_ecs_task_definition.atlantis.family}:${max(
-    aws_ecs_task_definition.atlantis.revision,
-    data.aws_ecs_task_definition.atlantis.revision,
-  )}"
+  task_definition = "${aws_ecs_task_definition.atlantis.family}:${aws_ecs_task_definition.atlantis.revision}"
   desired_count                      = var.ecs_service_desired_count
   launch_type                        = "FARGATE"
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
