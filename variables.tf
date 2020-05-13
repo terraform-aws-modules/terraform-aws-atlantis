@@ -102,6 +102,12 @@ variable "allow_unauthenticated_access" {
   default     = false
 }
 
+variable "allow_unauthenticated_access_priority" {
+  description = "ALB listener rule priority for allow unauthenticated access rule"
+  type        = number
+  default     = 10
+}
+
 variable "allow_github_webhooks" {
   description = "Whether to allow access for GitHub webhooks"
   type        = bool

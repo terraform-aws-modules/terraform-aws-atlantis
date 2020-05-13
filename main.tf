@@ -235,7 +235,7 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
   count = var.allow_unauthenticated_access ? 1 : 0
 
   listener_arn = module.alb.https_listener_arns[0]
-  priority     = 10
+  priority     = var.allow_unauthenticated_access_priority
 
   action {
     type             = "forward"
