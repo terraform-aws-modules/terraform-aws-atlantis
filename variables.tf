@@ -90,6 +90,12 @@ variable "alb_logging_enabled" {
   default     = false
 }
 
+variable "alb_authenticate_oidc" {
+  description = "Map of Authenticate OIDC parameters to protect ALB (eg, using Auth0). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-oidc-action"
+  type        = any
+  default     = {}
+}
+
 # ACM
 variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS"
