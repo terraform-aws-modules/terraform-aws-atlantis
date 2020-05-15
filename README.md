@@ -171,6 +171,7 @@ No requirements.
 | atlantis\_bitbucket\_user\_token | Bitbucket token of the user that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_bitbucket\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis\_bitbucket\_user\_token | `string` | `"/atlantis/bitbucket/user/token"` | no |
 | atlantis\_fqdn | FQDN of Atlantis to use. Set this only to override Route53 and ALB's DNS name. | `string` | `null` | no |
+| atlantis\_github\_hostname | GitHub hostname | `string` | `""` | no |
 | atlantis\_github\_user | GitHub username that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_github\_user\_token | GitHub token of the user that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_github\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis\_github\_user\_token | `string` | `"/atlantis/github/user/token"` | no |
