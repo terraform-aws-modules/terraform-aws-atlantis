@@ -294,6 +294,12 @@ variable "atlantis_log_level" {
 }
 
 # Github
+variable "atlantis_github_hostname" {
+  description = "GitHub hostname (for on-prem installations)"
+  type        = string
+  default     = ""
+}
+
 variable "atlantis_github_user" {
   description = "GitHub username that is running the Atlantis command"
   type        = string
