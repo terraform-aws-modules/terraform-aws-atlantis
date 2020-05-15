@@ -48,6 +48,10 @@ locals {
       value = local.atlantis_url
     },
     {
+      name  = "ATLANTIS_GH_HOSTNAME"
+      value = var.atlantis_github_hostname
+    },
+    {
       name  = "ATLANTIS_GH_USER"
       value = var.atlantis_github_user
     },
