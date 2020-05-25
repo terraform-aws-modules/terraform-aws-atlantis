@@ -365,6 +365,10 @@ variable "firelens_configuration" {
     options = map(string)
   })
   default = null
+variable "ecs_task_execution_iam_role_arn" {
+  description = "ARN of existing IAM role to use for ECS task execution"
+  type        = string
+  default     = ""
 }
 
 # Atlantis

@@ -228,6 +228,7 @@ allow_github_webhooks        = true
 | ecs\_service\_deployment\_minimum\_healthy\_percent | The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment | `number` | `50` | no |
 | ecs\_service\_desired\_count | The number of instances of the task definition to place and keep running | `number` | `1` | no |
 | ecs\_task\_cpu | The number of cpu units used by the task | `number` | `256` | no |
+| ecs\_task\_execution\_iam\_role\_arn | ARN of existing IAM role to use for ECS task execution | `string` | `""` | no |
 | ecs\_task\_memory | The amount (in MiB) of memory used by the task | `number` | `512` | no |
 | entrypoint | The entry point that is passed to the container | `list(string)` | `null` | no |
 | essential | Determines whether all other containers in a task are stopped, if this container fails or stops for any reason. Due to how Terraform type casts booleans in json it is required to double quote this value | `bool` | `true` | no |
