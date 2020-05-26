@@ -126,6 +126,25 @@ variable "whitelist_unauthenticated_cidr_blocks" {
   default     = []
 }
 
+# Security Groups
+variable "alb_http_security_group_id" {
+  description = "Existing security group with HTTP ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open"
+  type        = string
+  default     = ""
+}
+
+variable "alb_https_security_group_id" {
+  description = "Existing security group with HTTPS ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open"
+  type        = string
+  default     = ""
+}
+
+variable "atlantis_security_group_id" {
+  description = "Existing security group with open port for Atlantis (var.atlantis_port) from ALB, egress ports are all world open"
+  type        = string
+  default     = ""
+}
+
 # ACM
 variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS"

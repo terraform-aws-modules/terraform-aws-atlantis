@@ -45,5 +45,5 @@ output "ecs_task_definition" {
 
 output "ecs_security_group" {
   description = "Security group assigned to ECS Service in network configuration"
-  value       = module.atlantis_sg.this_security_group_id
+  value       = local.atlantis_security_group_id
 }
