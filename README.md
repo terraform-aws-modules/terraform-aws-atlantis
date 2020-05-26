@@ -158,6 +158,9 @@ No requirements.
 | acm\_certificate\_domain\_name | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name` | `string` | `""` | no |
 | alb\_authenticate\_oidc | Map of Authenticate OIDC parameters to protect ALB (eg, using Auth0). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-oidc-action | `any` | `{}` | no |
 | alb\_ingress\_cidr\_blocks | List of IPv4 CIDR ranges to use on all ingress rules of the ALB. | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| alb\_http\_security\_group\_id | Existing security group with HTTP ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open | `string` | "" | no |
+| alb\_https\_security\_group\_id | Existing security group with HTTPS ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open | `string` | "" | no |
+| atlantis\_security\_group\_id | Existing security group with open port for Atlantis (var.atlantis_port) from ALB, egress ports are all world open | `string` | "" | no |
 | alb\_log\_bucket\_name | S3 bucket (externally created) for storing load balancer access logs. Required if alb\_logging\_enabled is true. | `string` | `""` | no |
 | alb\_log\_location\_prefix | S3 prefix within the log\_bucket\_name under which logs are stored. | `string` | `""` | no |
 | alb\_logging\_enabled | Controls if the ALB will log requests to S3. | `bool` | `false` | no |
