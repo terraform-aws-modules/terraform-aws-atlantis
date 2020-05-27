@@ -96,6 +96,12 @@ variable "alb_authenticate_oidc" {
   default     = {}
 }
 
+variable "alb_authenticate_cognito" {
+  description = "Map of AWS Cognito authentication parameters to protect ALB (eg, using SAML). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-cognito-action"
+  type        = any
+  default     = {}
+}
+
 variable "allow_unauthenticated_access" {
   description = "Whether to create ALB listener rule to allow unauthenticated access for certain CIDR blocks (eg. allow GitHub webhooks to bypass OIDC authentication)"
   type        = bool
