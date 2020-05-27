@@ -23,6 +23,9 @@ locals {
 
   secret_webhook_key = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : var.atlantis_github_user_token != "" ? "ATLANTIS_GH_WEBHOOK_SECRET" : "ATLANTIS_BITBUCKET_WEBHOOK_SECRET" : "unknown_secret_webhook_key"
 
+  # determine if the alb has authentication enabled, otherwise forward the traffic unauthenticated
+  alb_authenication_method = length(keys(var.alb_authenticate_oidc)) > 0 ? "authenticate-oidc" : length(keys(var.alb_authenticate_cognito)) > 0 ? "authenticate-cognito" : "forward"
+
   # Container definitions
   container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? module.container_definition_bitbucket.json : module.container_definition_github_gitlab.json : var.custom_container_definitions
 
@@ -178,7 +181,7 @@ module "vpc" {
 ###################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v5.5.0"
+  version = "v5.6.0"
 
   name     = var.name
   internal = var.internal
@@ -195,12 +198,13 @@ module "alb" {
 
   https_listeners = [
     {
-      target_group_index = 0
-      port               = 443
-      protocol           = "HTTPS"
-      certificate_arn    = var.certificate_arn == "" ? module.acm.this_acm_certificate_arn : var.certificate_arn
-      action_type        = length(keys(var.alb_authenticate_oidc)) > 0 ? "authenticate-oidc" : "forward"
-      authenticate_oidc  = var.alb_authenticate_oidc
+      target_group_index   = 0
+      port                 = 443
+      protocol             = "HTTPS"
+      certificate_arn      = var.certificate_arn == "" ? module.acm.this_acm_certificate_arn : var.certificate_arn
+      action_type          = local.alb_authenication_method
+      authenticate_oidc    = var.alb_authenticate_oidc
+      authenticate_cognito = var.alb_authenticate_cognito
     },
   ]
 
