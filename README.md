@@ -101,11 +101,13 @@ Make sure that both private and public subnets were created in the same set of a
 If all provided subnets are public (no NAT gateway) then `ecs_service_assign_public_ip` should be set to `true`.
 
 
-### Secure Atlantis with ALB Built-in Authentication and Auth0
+### Secure Atlantis with ALB Built-in Authentication
+
+#### Open ID Connect (OIDC)
 
 You can use service like [Auth0](https://www.auth0.com) to secure access to Atlantis and require authentication on ALB. To enable this, you need to create Auth0 application and provide correct arguments to Atlantis module. Make sure to update application hostname, client id and client secret:
 
-```
+```hcl
 alb_authenticate_oidc = {
   issuer = "https://youruser.eu.auth0.com/"
   token_endpoint = "https://youruser.eu.auth0.com/oauth/token"
@@ -119,9 +121,26 @@ alb_authenticate_oidc = {
 
 Read more in [this post](https://medium.com/@sandrinodm/securing-your-applications-with-aws-alb-built-in-authentication-and-auth0-310ad84c8595).
 
-If you are using GitHub, you may allow it to trigger webhooks without authentication on ALB:
 
+#### AWS Cognito
+
+The AWS Cognito service allows you to define SAML providers (e.g., GSuite). The Atlantis ALB can then be configured to require SAML authentication. To enable this, specify the following arguments containing attributes for your Cognito configuration.
+
+```hcl
+alb_authenticate_cognito = {
+  user_pool_arn               = "arn:aws:cognito-idp:us-west-2:1234567890:userpool/us-west-2_aBcDeFG"
+  cognito_user_pool_client_id = "clientid123"
+  cognito_user_pool_domain    = "sso.your-corp.com"
+}
 ```
+
+Read more in [this post](https://medium.com/@alsmola/alb-authentication-with-g-suite-saml-using-cognito-858e35564dc8) and a helpful [SAML Cognito Terraform module](https://github.com/alloy-commons/alloy-open-source/tree/master/terraform-modules/gsuite-saml-cognito).
+
+#### Allow GitHub Webhooks Unauthenticated Access
+
+If you are using one of the authentication methods above along with commercial GitHub, you'll need to allow unauthenticated access to GitHub's Webhook static IPs:
+
+```hcl
 allow_unauthenticated_access = true
 allow_github_webhooks        = true
 ```
