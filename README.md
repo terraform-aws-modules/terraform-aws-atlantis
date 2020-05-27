@@ -103,7 +103,7 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 
 ### Secure Atlantis with ALB Built-in Authentication
 
-#### Open ID Connect (OIDC)
+#### OpenID Connect (OIDC)
 
 You can use service like [Auth0](https://www.auth0.com) to secure access to Atlantis and require authentication on ALB. To enable this, you need to create Auth0 application and provide correct arguments to Atlantis module. Make sure to update application hostname, client id and client secret:
 
