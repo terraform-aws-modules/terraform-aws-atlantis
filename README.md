@@ -101,11 +101,13 @@ Make sure that both private and public subnets were created in the same set of a
 If all provided subnets are public (no NAT gateway) then `ecs_service_assign_public_ip` should be set to `true`.
 
 
-### Secure Atlantis with ALB Built-in Authentication and Auth0
+### Secure Atlantis with ALB Built-in Authentication
+
+#### OpenID Connect (OIDC)
 
 You can use service like [Auth0](https://www.auth0.com) to secure access to Atlantis and require authentication on ALB. To enable this, you need to create Auth0 application and provide correct arguments to Atlantis module. Make sure to update application hostname, client id and client secret:
 
-```
+```hcl
 alb_authenticate_oidc = {
   issuer = "https://youruser.eu.auth0.com/"
   token_endpoint = "https://youruser.eu.auth0.com/oauth/token"
@@ -119,9 +121,28 @@ alb_authenticate_oidc = {
 
 Read more in [this post](https://medium.com/@sandrinodm/securing-your-applications-with-aws-alb-built-in-authentication-and-auth0-310ad84c8595).
 
-If you are using GitHub, you may allow it to trigger webhooks without authentication on ALB:
 
+#### AWS Cognito with SAML
+
+The AWS Cognito service allows you to define SAML applications tied to an identity provider (e.g., GSuite). The Atlantis ALB can then be configured to require an authenticated user managed by your identity provider.
+
+To configure AWS Cognito connecting to a GSuite SAML application, you can use the [gsuite-saml-cognito](https://github.com/alloy-commons/alloy-open-source/tree/master/terraform-modules/gsuite-saml-cognito#example-usage) Terraform module.
+
+To enable Cognito authentication on the Atlantis ALB, specify the following arguments containing attributes from your Cognito configuration.
+
+```hcl
+alb_authenticate_cognito = {
+  user_pool_arn               = "arn:aws:cognito-idp:us-west-2:1234567890:userpool/us-west-2_aBcDeFG"
+  cognito_user_pool_client_id = "clientid123"
+  cognito_user_pool_domain    = "sso.your-corp.com"
+}
 ```
+
+#### Allow GitHub Webhooks Unauthenticated Access
+
+If you are using one of the authentication methods above along with managed GitHub (not self-hosted enterprise version), you'll need to allow unauthenticated access to GitHub's Webhook static IPs:
+
+```hcl
 allow_unauthenticated_access = true
 allow_github_webhooks        = true
 ```
@@ -156,6 +177,7 @@ No requirements.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | acm\_certificate\_domain\_name | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name` | `string` | `""` | no |
+| alb\_authenticate\_cognito | Map of AWS Cognito authentication parameters to protect ALB (eg, using SAML). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-cognito-action | `any` | `{}` | no |
 | alb\_authenticate\_oidc | Map of Authenticate OIDC parameters to protect ALB (eg, using Auth0). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-oidc-action | `any` | `{}` | no |
 | alb\_ingress\_cidr\_blocks | List of IPv4 CIDR ranges to use on all ingress rules of the ALB. | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | alb\_log\_bucket\_name | S3 bucket (externally created) for storing load balancer access logs. Required if alb\_logging\_enabled is true. | `string` | `""` | no |
