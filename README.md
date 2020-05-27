@@ -122,9 +122,13 @@ alb_authenticate_oidc = {
 Read more in [this post](https://medium.com/@sandrinodm/securing-your-applications-with-aws-alb-built-in-authentication-and-auth0-310ad84c8595).
 
 
-#### AWS Cognito
+#### AWS Cognito with SAML
 
-The AWS Cognito service allows you to define SAML providers (e.g., GSuite). The Atlantis ALB can then be configured to require SAML authentication. To enable this, specify the following arguments containing attributes for your Cognito configuration.
+The AWS Cognito service allows you to define SAML applications tied to an identity provider (e.g., GSuite). The Atlantis ALB can then be configured to require an authenticated user managed by your identity provider.
+
+To configure AWS Cognito connecting to a GSuite SAML application, you can use the [gsuite-saml-cognito](https://github.com/alloy-commons/alloy-open-source/tree/master/terraform-modules/gsuite-saml-cognito#example-usage) Terraform module.
+
+To enable Cognito authentication on the Atlantis ALB, specify the following arguments containing attributes from your Cognito configuration.
 
 ```hcl
 alb_authenticate_cognito = {
@@ -134,11 +138,9 @@ alb_authenticate_cognito = {
 }
 ```
 
-Read more in [this post](https://medium.com/@alsmola/alb-authentication-with-g-suite-saml-using-cognito-858e35564dc8) and a helpful [SAML Cognito Terraform module](https://github.com/alloy-commons/alloy-open-source/tree/master/terraform-modules/gsuite-saml-cognito).
-
 #### Allow GitHub Webhooks Unauthenticated Access
 
-If you are using one of the authentication methods above along with commercial GitHub, you'll need to allow unauthenticated access to GitHub's Webhook static IPs:
+If you are using one of the authentication methods above along with managed GitHub (not self-hosted enterprise version), you'll need to allow unauthenticated access to GitHub's Webhook static IPs:
 
 ```hcl
 allow_unauthenticated_access = true
