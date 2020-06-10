@@ -244,6 +244,18 @@ variable "atlantis_bitbucket_user_token_ssm_parameter_name" {
   default     = "/atlantis/bitbucket/user/token"
 }
 
+variable "atlantis_azuredevops_user_token_ssm_parameter_name" {
+  description = "Name of SSM parameter to keep atlantis_azuredevops_user_token"
+  type        = string
+  default     = "/atlantis/azuredevops/user/token"
+}
+
+variable "atlantis_azuredevops_webhook_password_ssm_parameter_name" {
+  description = "Name of SSM parameter to keep atlantis_azuredevops_webhook_password"
+  type        = string
+  default     = "/atlantis/azuredevops/webhook/password"
+}
+
 variable "ssm_kms_key_arn" {
   description = "ARN of KMS key to use for encryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key"
   type        = string
@@ -570,6 +582,31 @@ variable "atlantis_bitbucket_user_token" {
 
 variable "atlantis_bitbucket_base_url" {
   description = "Base URL of Bitbucket Server, use for Bitbucket on prem (Stash)"
+  type        = string
+  default     = ""
+}
+
+# AzureDevOps
+variable "atlantis_azuredevops_user" {
+  description = "AzureDevOps username that is running the Atlantis command"
+  type        = string
+  default     = ""
+}
+
+variable "atlantis_azuredevops_user_token" {
+  description = "AzureDevOps token of the user that is running the Atlantis command"
+  type        = string
+  default     = ""
+}
+
+variable "atlantis_azuredevops_webhook_user" {
+  description = "AzureDevOps username that is running the Atlantis webhook"
+  type        = string
+  default     = ""
+}
+
+variable "atlantis_azuredevops_webhook_password" {
+  description = "AzureDevOps password of the user that is running the Atlantis webhook"
   type        = string
   default     = ""
 }

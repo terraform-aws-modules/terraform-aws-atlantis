@@ -42,6 +42,12 @@ atlantis_bitbucket_user_token = ""
 # For Bitbucket on prem (Stash)
 # atlantis_bitbucket_base_url = ""
 
+# For AzureDevOps
+atlantis_azuredevops_user = ""
+atlantis_azuredevops_user_token = ""
+atlantis_azuredevops_webhook_user = ""
+atlantis_azuredevops_webhook_password = ""
+
 # Tags
 tags = {
   Name = "atlantis"
