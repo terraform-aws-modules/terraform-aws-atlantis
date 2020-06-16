@@ -431,7 +431,7 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 
 module "container_definition_github_gitlab" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.23.0"
+  version = "v0.31.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -472,7 +472,7 @@ module "container_definition_github_gitlab" {
 
 module "container_definition_bitbucket" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.23.0"
+  version = "v0.31.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
