@@ -132,9 +132,9 @@ To enable Cognito authentication on the Atlantis ALB, specify the following argu
 
 ```hcl
 alb_authenticate_cognito = {
-  user_pool_arn               = "arn:aws:cognito-idp:us-west-2:1234567890:userpool/us-west-2_aBcDeFG"
-  cognito_user_pool_client_id = "clientid123"
-  cognito_user_pool_domain    = "sso.your-corp.com"
+  user_pool_arn       = "arn:aws:cognito-idp:us-west-2:1234567890:userpool/us-west-2_aBcDeFG"
+  user_pool_client_id = "clientid123"
+  user_pool_domain    = "sso.your-corp.com"
 }
 ```
 
