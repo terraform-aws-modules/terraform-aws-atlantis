@@ -205,7 +205,6 @@ No requirements.
 | atlantis\_port | Local port Atlantis should be running on. Default value is most likely fine. | `number` | `4141` | no |
 | atlantis\_repo\_whitelist | List of allowed repositories Atlantis can be used with | `list(string)` | n/a | yes |
 | atlantis\_version | Verion of Atlantis to run. If not specified latest will be used | `string` | `"latest"` | no |
-| aws\_ssm\_path | AWS ARN prefix for SSM (public AWS region or Govcloud). Valid options: aws, aws-us-gov. | `string` | `"aws"` | no |
 | azs | A list of availability zones in the region | `list(string)` | `[]` | no |
 | certificate\_arn | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | `string` | `""` | no |
 | cidr | The CIDR block for the VPC which will be created if `vpc_id` is not specified | `string` | `""` | no |

@@ -377,9 +377,3 @@ variable "security_group_ids" {
   type        = list(string)
   default     = []
 }
-
-variable "aws_ssm_path" {
-  description = "AWS ARN prefix for SSM (public AWS region or Govcloud). Valid options: aws, aws-us-gov."
-  type        = string
-  default     = "aws"
-}
