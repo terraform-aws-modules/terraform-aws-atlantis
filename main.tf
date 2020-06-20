@@ -382,11 +382,11 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
   statement {
     effect = "Allow"
 
-    resources = coalescelist(
+    resources = flatten(list(
       aws_ssm_parameter.webhook.*.arn,
       aws_ssm_parameter.atlantis_github_user_token.*.arn,
       aws_ssm_parameter.atlantis_gitlab_user_token.*.arn,
-    aws_ssm_parameter.atlantis_bitbucket_user_token.*.arn)
+    aws_ssm_parameter.atlantis_bitbucket_user_token.*.arn))
 
     actions = [
       "ssm:GetParameters",
