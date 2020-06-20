@@ -98,8 +98,6 @@ locals {
 
 data "aws_region" "current" {}
 
-data "aws_caller_identity" "current" {}
-
 data "aws_route53_zone" "this" {
   count = var.create_route53_record ? 1 : 0
 
@@ -384,12 +382,11 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
   statement {
     effect = "Allow"
 
-    resources = [
-      "arn:${var.aws_ssm_path}:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.webhook_ssm_parameter_name}",
-      "arn:${var.aws_ssm_path}:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.atlantis_github_user_token_ssm_parameter_name}",
-      "arn:${var.aws_ssm_path}:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.atlantis_gitlab_user_token_ssm_parameter_name}",
-      "arn:${var.aws_ssm_path}:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.atlantis_bitbucket_user_token_ssm_parameter_name}",
-    ]
+    resources = coalescelist(
+      aws_ssm_parameter.webhook.*.arn,
+      aws_ssm_parameter.atlantis_github_user_token.*.arn,
+      aws_ssm_parameter.atlantis_gitlab_user_token.*.arn,
+      aws_ssm_parameter.atlantis_bitbucket_user_token.*.arn)
 
     actions = [
       "ssm:GetParameters",
