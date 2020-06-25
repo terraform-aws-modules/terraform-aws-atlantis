@@ -220,6 +220,7 @@ No requirements.
 | ecs\_service\_desired\_count | The number of instances of the task definition to place and keep running | `number` | `1` | no |
 | ecs\_task\_cpu | The number of cpu units used by the task | `number` | `256` | no |
 | ecs\_task\_memory | The amount (in MiB) of memory used by the task | `number` | `512` | no |
+| hide\_prev\_github\_plan\_comments | Enables atlantis server --hide-prev-plan-comments hiding previous plan comments on update | `bool` | `false` | no |
 | github\_webhooks\_cidr\_blocks | List of CIDR blocks used by GitHub webhooks | `list(string)` | <pre>[<br>  "140.82.112.0/20",<br>  "185.199.108.0/22",<br>  "192.30.252.0/22"<br>]</pre> | no |
 | internal | Whether the load balancer is internal or external | `bool` | `false` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | `string` | `"atlantis"` | no |

@@ -377,3 +377,9 @@ variable "security_group_ids" {
   type        = list(string)
   default     = []
 }
+
+variable "hide_prev_github_plan_comments" {
+  description = "Enables atlantis server --hide-prev-plan-comments hiding previous plan comments on update"
+  type        = bool
+  default     = false
+}

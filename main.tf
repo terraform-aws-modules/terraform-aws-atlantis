@@ -70,6 +70,10 @@ locals {
       name  = "ATLANTIS_REPO_WHITELIST"
       value = join(",", var.atlantis_repo_whitelist)
     },
+    {
+      name  = "ATLANTIS_HIDE_PREV_PLAN_COMMENTS"
+      value = var.hide_prev_github_plan_comments
+    },
   ]
 
   # Secret access tokens
