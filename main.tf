@@ -70,6 +70,10 @@ locals {
       name  = "ATLANTIS_REPO_WHITELIST"
       value = join(",", var.atlantis_repo_whitelist)
     },
+    {
+      name  = "ATLANTIS_HIDE_PREV_PLAN_COMMENTS"
+      value = var.atlantis_hide_prev_plan_comments
+    },
   ]
 
   # Secret access tokens
@@ -550,7 +554,7 @@ resource "aws_ecs_service" "atlantis" {
     container_port   = var.atlantis_port
     target_group_arn = element(module.alb.target_group_arns, 0)
   }
-    
+
   tags = local.tags
 }
 

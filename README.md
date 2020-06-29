@@ -200,6 +200,7 @@ No requirements.
 | atlantis\_gitlab\_user | Gitlab username that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_gitlab\_user\_token | Gitlab token of the user that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_gitlab\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis\_gitlab\_user\_token | `string` | `"/atlantis/gitlab/user/token"` | no |
+| atlantis\_hide\_prev\_plan\_comments | Enables atlantis server --hide-prev-plan-comments hiding previous plan comments on update | `string` | `"false"` | no |
 | atlantis\_image | Docker image to run Atlantis with. If not specified, official Atlantis image will be used | `string` | `""` | no |
 | atlantis\_log\_level | Log level that Atlantis will run with. Accepted values are: <debug\|info\|warn\|error> | `string` | `"debug"` | no |
 | atlantis\_port | Local port Atlantis should be running on. Default value is most likely fine. | `number` | `4141` | no |
