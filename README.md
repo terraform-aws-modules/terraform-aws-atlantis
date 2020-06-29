@@ -200,6 +200,7 @@ No requirements.
 | atlantis\_gitlab\_user | Gitlab username that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_gitlab\_user\_token | Gitlab token of the user that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_gitlab\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis\_gitlab\_user\_token | `string` | `"/atlantis/gitlab/user/token"` | no |
+| atlantis\_hide\_prev\_plan\_comments | Enables atlantis server --hide-prev-plan-comments hiding previous plan comments on update | `string` | `"false"` | no |
 | atlantis\_image | Docker image to run Atlantis with. If not specified, official Atlantis image will be used | `string` | `""` | no |
 | atlantis\_log\_level | Log level that Atlantis will run with. Accepted values are: <debug\|info\|warn\|error> | `string` | `"debug"` | no |
 | atlantis\_port | Local port Atlantis should be running on. Default value is most likely fine. | `number` | `4141` | no |
@@ -221,7 +222,6 @@ No requirements.
 | ecs\_task\_cpu | The number of cpu units used by the task | `number` | `256` | no |
 | ecs\_task\_memory | The amount (in MiB) of memory used by the task | `number` | `512` | no |
 | github\_webhooks\_cidr\_blocks | List of CIDR blocks used by GitHub webhooks | `list(string)` | <pre>[<br>  "140.82.112.0/20",<br>  "185.199.108.0/22",<br>  "192.30.252.0/22"<br>]</pre> | no |
-| hide\_prev\_github\_plan\_comments | Enables atlantis server --hide-prev-plan-comments hiding previous plan comments on update | `bool` | `false` | no |
 | internal | Whether the load balancer is internal or external | `bool` | `false` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | `string` | `"atlantis"` | no |
 | policies\_arn | A list of the ARN of the policies you want to apply | `list(string)` | <pre>[<br>  "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"<br>]</pre> | no |

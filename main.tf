@@ -72,7 +72,7 @@ locals {
     },
     {
       name  = "ATLANTIS_HIDE_PREV_PLAN_COMMENTS"
-      value = var.hide_prev_github_plan_comments
+      value = var.atlantis_hide_prev_plan_comments
     },
   ]
 
@@ -554,7 +554,7 @@ resource "aws_ecs_service" "atlantis" {
     container_port   = var.atlantis_port
     target_group_arn = element(module.alb.target_group_arns, 0)
   }
-    
+
   tags = local.tags
 }
 
