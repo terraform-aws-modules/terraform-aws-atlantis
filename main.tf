@@ -246,7 +246,7 @@ module "alb_https_sg" {
 
   ingress_cidr_blocks = var.alb_ingress_cidr_blocks
 
-  tags = local.tags
+  tags = merge(local.tags, var.tags_sgs_additional)
 }
 
 module "alb_http_sg" {
@@ -259,7 +259,7 @@ module "alb_http_sg" {
 
   ingress_cidr_blocks = var.alb_ingress_cidr_blocks
 
-  tags = local.tags
+  tags = merge(local.tags, var.tags_sgs_additional)
 }
 
 module "atlantis_sg" {
@@ -284,7 +284,7 @@ module "atlantis_sg" {
 
   egress_rules = ["all-all"]
 
-  tags = local.tags
+  tags = merge(local.tags, var.tags_sgs_additional)
 }
 
 ###################
