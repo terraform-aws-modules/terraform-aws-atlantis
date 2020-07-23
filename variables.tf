@@ -10,6 +10,12 @@ variable "tags" {
   default     = {}
 }
 
+variable "tags_sgs_additional" {
+  description = "Additional tags to put on the security groups that are wide open"
+  type        = map(string)
+  default     = {}
+}
+
 # VPC
 variable "vpc_id" {
   description = "ID of an existing VPC where resources will be created"
