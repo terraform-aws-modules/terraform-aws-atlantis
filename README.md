@@ -132,9 +132,9 @@ To enable Cognito authentication on the Atlantis ALB, specify the following argu
 
 ```hcl
 alb_authenticate_cognito = {
-  user_pool_arn               = "arn:aws:cognito-idp:us-west-2:1234567890:userpool/us-west-2_aBcDeFG"
-  cognito_user_pool_client_id = "clientid123"
-  cognito_user_pool_domain    = "sso.your-corp.com"
+  user_pool_arn       = "arn:aws:cognito-idp:us-west-2:1234567890:userpool/us-west-2_aBcDeFG"
+  user_pool_client_id = "clientid123"
+  user_pool_domain    = "sso.your-corp.com"
 }
 ```
 
@@ -200,12 +200,12 @@ No requirements.
 | atlantis\_gitlab\_user | Gitlab username that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_gitlab\_user\_token | Gitlab token of the user that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_gitlab\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis\_gitlab\_user\_token | `string` | `"/atlantis/gitlab/user/token"` | no |
+| atlantis\_hide\_prev\_plan\_comments | Enables atlantis server --hide-prev-plan-comments hiding previous plan comments on update | `string` | `"false"` | no |
 | atlantis\_image | Docker image to run Atlantis with. If not specified, official Atlantis image will be used | `string` | `""` | no |
 | atlantis\_log\_level | Log level that Atlantis will run with. Accepted values are: <debug\|info\|warn\|error> | `string` | `"debug"` | no |
 | atlantis\_port | Local port Atlantis should be running on. Default value is most likely fine. | `number` | `4141` | no |
 | atlantis\_repo\_whitelist | List of allowed repositories Atlantis can be used with | `list(string)` | n/a | yes |
 | atlantis\_version | Verion of Atlantis to run. If not specified latest will be used | `string` | `"latest"` | no |
-| aws\_ssm\_path | AWS ARN prefix for SSM (public AWS region or Govcloud). Valid options: aws, aws-us-gov. | `string` | `"aws"` | no |
 | azs | A list of availability zones in the region | `list(string)` | `[]` | no |
 | certificate\_arn | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | `string` | `""` | no |
 | cidr | The CIDR block for the VPC which will be created if `vpc_id` is not specified | `string` | `""` | no |

@@ -299,6 +299,12 @@ variable "atlantis_log_level" {
   default     = "debug"
 }
 
+variable "atlantis_hide_prev_plan_comments" {
+  description = "Enables atlantis server --hide-prev-plan-comments hiding previous plan comments on update"
+  type        = string
+  default     = "false"
+}
+
 # Github
 variable "atlantis_github_user" {
   description = "GitHub username that is running the Atlantis command"
@@ -376,10 +382,4 @@ variable "security_group_ids" {
   description = "List of one or more security groups to be added to the load balancer"
   type        = list(string)
   default     = []
-}
-
-variable "aws_ssm_path" {
-  description = "AWS ARN prefix for SSM (public AWS region or Govcloud). Valid options: aws, aws-us-gov."
-  type        = string
-  default     = "aws"
 }

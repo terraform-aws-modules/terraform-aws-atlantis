@@ -7,6 +7,25 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.20.0"></a>
+## [v2.20.0] - 2020-06-29
+
+- feat: Allow hide-prev-plan-comments  ([#138](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/138))
+
+
+<a name="v2.19.0"></a>
+## [v2.19.0] - 2020-06-23
+
+- feat: Add tags to aws_ecs_service resource ([#136](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/136))
+
+
+<a name="v2.18.0"></a>
+## [v2.18.0] - 2020-06-20
+
+- feat: Refactor to use SSM ARNs directly from resources ([#135](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/135))
+- fix: cognito variables expect "user_pool_client_id" and "user_pool_domain" ([#134](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/134))
+
+
 <a name="v2.17.0"></a>
 ## [v2.17.0] - 2020-05-27
 
@@ -297,7 +316,10 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.17.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.20.0...HEAD
+[v2.20.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.19.0...v2.20.0
+[v2.19.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.18.0...v2.19.0
+[v2.18.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.17.0...v2.18.0
 [v2.17.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.16.0...v2.17.0
 [v2.16.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.15.0...v2.16.0
 [v2.15.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.14.0...v2.15.0
