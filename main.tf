@@ -432,7 +432,7 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 
 module "container_definition_github_gitlab" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.23.0"
+  version = "v0.37.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -440,6 +440,29 @@ module "container_definition_github_gitlab" {
   container_cpu                = var.ecs_task_cpu
   container_memory             = var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
+
+  entrypoint             = var.entrypoint
+  command                = var.command
+  working_directory      = var.working_directory
+  repository_credentials = var.repository_credentials
+  docker_labels          = var.docker_labels
+  start_timeout          = var.start_timeout
+  stop_timeout           = var.stop_timeout
+  container_depends_on   = var.container_depends_on
+
+  essential                = var.essential
+  readonly_root_filesystem = var.readonly_root_filesystem
+  mount_points             = var.mount_points
+  volumes_from             = var.volumes_from
+  links                    = var.links
+
+  user            = var.user
+  privileged      = var.privileged
+  ulimits         = var.ulimits
+  system_controls = var.system_controls
+
+  dns_servers        = var.dns_servers
+  dns_search_domains = var.dns_search_domains
 
   port_mappings = [
     {
@@ -458,6 +481,7 @@ module "container_definition_github_gitlab" {
     }
     secretOptions = []
   }
+  firelens_configuration = var.firelens_configuration
 
   environment = concat(
     local.container_definition_environment,
@@ -473,7 +497,7 @@ module "container_definition_github_gitlab" {
 
 module "container_definition_bitbucket" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.23.0"
+  version = "v0.37.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -481,6 +505,29 @@ module "container_definition_bitbucket" {
   container_cpu                = var.ecs_task_cpu
   container_memory             = var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
+
+  entrypoint             = var.entrypoint
+  command                = var.command
+  working_directory      = var.working_directory
+  repository_credentials = var.repository_credentials
+  docker_labels          = var.docker_labels
+  start_timeout          = var.start_timeout
+  stop_timeout           = var.stop_timeout
+  container_depends_on   = var.container_depends_on
+
+  essential                = var.essential
+  readonly_root_filesystem = var.readonly_root_filesystem
+  mount_points             = var.mount_points
+  volumes_from             = var.volumes_from
+  links                    = var.links
+
+  user            = var.user
+  privileged      = var.privileged
+  ulimits         = var.ulimits
+  system_controls = var.system_controls
+
+  dns_servers        = var.dns_servers
+  dns_search_domains = var.dns_search_domains
 
   port_mappings = [
     {
@@ -499,6 +546,7 @@ module "container_definition_bitbucket" {
     }
     secretOptions = []
   }
+  firelens_configuration = var.firelens_configuration
 
   environment = concat(
     local.container_definition_environment,
