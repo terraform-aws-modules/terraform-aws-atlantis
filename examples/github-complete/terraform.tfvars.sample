@@ -1,0 +1,6 @@
+domain = "mydomain.com"
+personal_ip = "69.100.100.100/32"
+github_organization = "myorg"
+github_user = "atlantis"
+github_token = "mygithubpersonalaccesstokenforatlantis"
+allowed_repo_names = ["repo1", "repo2"]

@@ -161,7 +161,7 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
 ###################
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v2.33.0"
+  version = "v2.44.0"
 
   create_vpc = var.vpc_id == ""
 
@@ -260,7 +260,7 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
 ###################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v3.9.0"
+  version = "v3.13.0"
 
   name        = "${var.name}-alb-https"
   vpc_id      = local.vpc_id
@@ -273,7 +273,7 @@ module "alb_https_sg" {
 
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
-  version = "v3.9.0"
+  version = "v3.13.0"
 
   name        = "${var.name}-alb-http"
   vpc_id      = local.vpc_id
@@ -286,7 +286,7 @@ module "alb_http_sg" {
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v3.9.0"
+  version = "v3.13.0"
 
   name        = var.name
   vpc_id      = local.vpc_id
@@ -312,7 +312,7 @@ module "atlantis_sg" {
 ###################
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v2.5.0"
+  version = "v2.9.0"
 
   create_certificate = var.certificate_arn == ""
 
@@ -345,9 +345,10 @@ resource "aws_route53_record" "atlantis" {
 ###################
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "v2.0.0"
+  version = "v2.3.0"
 
-  name = var.name
+  name               = var.name
+  container_insights = var.ecs_container_insights
 
   tags = local.tags
 }
@@ -441,28 +442,20 @@ module "container_definition_github_gitlab" {
   container_memory             = var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
 
-  entrypoint             = var.entrypoint
-  command                = var.command
-  working_directory      = var.working_directory
-  repository_credentials = var.repository_credentials
-  docker_labels          = var.docker_labels
-  start_timeout          = var.start_timeout
-  stop_timeout           = var.stop_timeout
-  container_depends_on   = var.container_depends_on
-
+  user                     = var.user
+  ulimits                  = var.ulimits
+  entrypoint               = var.entrypoint
+  command                  = var.command
+  working_directory        = var.working_directory
+  repository_credentials   = var.repository_credentials
+  docker_labels            = var.docker_labels
+  start_timeout            = var.start_timeout
+  stop_timeout             = var.stop_timeout
+  container_depends_on     = var.container_depends_on
   essential                = var.essential
   readonly_root_filesystem = var.readonly_root_filesystem
   mount_points             = var.mount_points
   volumes_from             = var.volumes_from
-  links                    = var.links
-
-  user            = var.user
-  privileged      = var.privileged
-  ulimits         = var.ulimits
-  system_controls = var.system_controls
-
-  dns_servers        = var.dns_servers
-  dns_search_domains = var.dns_search_domains
 
   port_mappings = [
     {
@@ -506,28 +499,20 @@ module "container_definition_bitbucket" {
   container_memory             = var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
 
-  entrypoint             = var.entrypoint
-  command                = var.command
-  working_directory      = var.working_directory
-  repository_credentials = var.repository_credentials
-  docker_labels          = var.docker_labels
-  start_timeout          = var.start_timeout
-  stop_timeout           = var.stop_timeout
-  container_depends_on   = var.container_depends_on
-
+  user                     = var.user
+  ulimits                  = var.ulimits
+  entrypoint               = var.entrypoint
+  command                  = var.command
+  working_directory        = var.working_directory
+  repository_credentials   = var.repository_credentials
+  docker_labels            = var.docker_labels
+  start_timeout            = var.start_timeout
+  stop_timeout             = var.stop_timeout
+  container_depends_on     = var.container_depends_on
   essential                = var.essential
   readonly_root_filesystem = var.readonly_root_filesystem
   mount_points             = var.mount_points
   volumes_from             = var.volumes_from
-  links                    = var.links
-
-  user            = var.user
-  privileged      = var.privileged
-  ulimits         = var.ulimits
-  system_controls = var.system_controls
-
-  dns_servers        = var.dns_servers
-  dns_search_domains = var.dns_search_domains
 
   port_mappings = [
     {

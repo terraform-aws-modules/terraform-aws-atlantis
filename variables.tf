@@ -215,6 +215,12 @@ variable "policies_arn" {
   default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
 
+variable "ecs_container_insights" {
+  description = "Controls if ECS Cluster has container insights enabled"
+  type        = bool
+  default     = false
+}
+
 variable "ecs_service_desired_count" {
   description = "The number of instances of the task definition to place and keep running"
   type        = number
@@ -336,21 +342,9 @@ variable "volumes_from" {
   default = []
 }
 
-variable "links" {
-  description = "List of container names this container can communicate with without port mappings"
-  type        = list(string)
-  default     = null
-}
-
 variable "user" {
   description = "The user to run as inside the container. Can be any of these formats: user, user:group, uid, uid:gid, user:gid, uid:group. The default (null) will use the container's configured `USER` directive or root if not set."
   type        = string
-  default     = null
-}
-
-variable "privileged" {
-  description = "When this variable is `true`, the container is given elevated privileges on the host container instance (similar to the root user). This parameter is not supported for Windows containers or tasks using the Fargate launch type."
-  type        = bool
   default     = null
 }
 
@@ -362,24 +356,6 @@ variable "ulimits" {
     softLimit = number
   }))
   default = null
-}
-
-variable "system_controls" {
-  description = "A list of namespaced kernel parameters to set in the container, mapping to the --sysctl option to docker run. This is a list of maps: { namespace = \"\", value = \"\"}"
-  type        = list(map(string))
-  default     = null
-}
-
-variable "dns_servers" {
-  description = "Container DNS servers. This is a list of strings specifying the IP addresses of the DNS servers"
-  type        = list(string)
-  default     = null
-}
-
-variable "dns_search_domains" {
-  description = "Container DNS search domains. A list of DNS search domains that are presented to the container"
-  type        = list(string)
-  default     = null
 }
 
 # https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html
