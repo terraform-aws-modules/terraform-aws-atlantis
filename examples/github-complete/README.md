@@ -25,16 +25,26 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 ⚠️ This example will create resources which cost money. Run `terraform destroy` when you don't need these resources. ⚠️
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+No requirements.
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| aws | n/a |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| allowed\_repo\_names | Repositories that Atlantis will listen for events from and a webhook will be installed | list(string) | n/a | yes |
-| domain | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance | string | n/a | yes |
-| github\_organization | Github organization | string | n/a | yes |
-| github\_token | Github token | string | n/a | yes |
-| github\_user | Github user for Atlantis to utilize when performing Github activities | string | n/a | yes |
-| personal\_ip | Your current, personally ip to restrict access to Atlantis UI ending with `/32` for subnet | string | n/a | yes |
+|------|-------------|------|---------|:--------:|
+| allowed\_repo\_names | Repositories that Atlantis will listen for events from and a webhook will be installed | `list(string)` | n/a | yes |
+| domain | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance | `string` | n/a | yes |
+| github\_organization | Github organization | `string` | n/a | yes |
+| github\_token | Github token | `string` | n/a | yes |
+| github\_user | Github user for Atlantis to utilize when performing Github activities | `string` | n/a | yes |
+| personal\_ip | Your current, personally ip to restrict access to Atlantis UI ending with `/32` for subnet | `string` | n/a | yes |
 
 ## Outputs
 
@@ -42,7 +52,7 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 |------|-------------|
 | atlantis\_allowed\_repo\_names | Git repositories where webhook should be created |
 | atlantis\_url | URL of Atlantis |
-| ecs\_task\_definition | Task definition for ECS service \(used for external triggers\) |
+| ecs\_task\_definition | Task definition for ECS service (used for external triggers) |
 | github\_webhook\_secret | Github webhook secret |
 | github\_webhook\_urls | Github webhook URL |
 | task\_role\_arn | The Atlantis ECS task role arn |
