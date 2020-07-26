@@ -57,7 +57,7 @@ $ cd terraform-aws-atlantis
 ### Run Atlantis as a Terraform module
 
 This way allows integration with your existing Terraform configurations.
- 
+
 ```hcl
 module "atlantis" {
   source  = "terraform-aws-modules/atlantis/aws"
@@ -157,6 +157,7 @@ allow_github_webhooks        = true
 
 ## Examples
 
+* [Complete Atlantis with GitHub webhook](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-complete)
 * [GitHub repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook)
 * [GitLab repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/gitlab-repository-webhook)
 
@@ -265,7 +266,12 @@ No requirements.
 | atlantis\_url\_events | Webhook events URL of Atlantis |
 | ecs\_security\_group | Security group assigned to ECS Service in network configuration |
 | ecs\_task\_definition | Task definition for ECS service (used for external triggers) |
+| private\_subnet\_ids | IDs of the VPC private subnets that were created or passed in |
+| public\_subnet\_ids | IDs of the VPC public subnets that were created or passed in |
 | task\_role\_arn | The Atlantis ECS task role arn |
+| task\_role\_id | The Atlantis ECS task role id |
+| task\_role\_name | The Atlantis ECS task role name |
+| task\_role\_unique\_id | The stable and unique string identifying the Atlantis ECS task role. |
 | vpc\_id | ID of the VPC that was created or passed in |
 | webhook\_secret | Webhook secret |
 
