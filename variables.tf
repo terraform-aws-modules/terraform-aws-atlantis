@@ -16,8 +16,20 @@ variable "tags" {
   default     = {}
 }
 
-variable "tags_sgs_additional" {
-  description = "Additional tags to put on the security groups that are wide open"
+variable "alb_https_security_group_tags" {
+  description = "Additional tags to put on the https security group"
+  type        = map(string)
+  default     = {}
+}
+
+variable "alb_http_security_group_tags" {
+  description = "Additional tags to put on the http security group"
+  type        = map(string)
+  default     = {}
+}
+
+variable "atlantis_security_group_tags" {
+  description = "Additional tags to put on the atlantis security group"
   type        = map(string)
   default     = {}
 }
