@@ -7,8 +7,9 @@ locals {
   # Atlantis
   atlantis_image = var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : var.atlantis_image
   atlantis_url = "https://${coalesce(
+    var.atlantis_fqdn,
     element(concat(aws_route53_record.atlantis.*.fqdn, [""]), 0),
-    module.alb.dns_name,
+    module.alb.this_lb_dns_name,
     "_"
   )}"
   atlantis_url_events = "${local.atlantis_url}/events"
@@ -24,6 +25,9 @@ locals {
 
   secret_webhook_key = local.has_secrets || local.secrets_group != "" ? var.atlantis_gitlab_user_token != "" || local.secrets_group == "GITLAB" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : var.atlantis_github_user_token != "" || local.secrets_group == "GITHUB" ? "ATLANTIS_GH_WEBHOOK_SECRET" : "ATLANTIS_BITBUCKET_WEBHOOK_SECRET" : "unknown_secret_webhook_key"
 
+  # determine if the alb has authentication enabled, otherwise forward the traffic unauthenticated
+  alb_authenication_method = length(keys(var.alb_authenticate_oidc)) > 0 ? "authenticate-oidc" : length(keys(var.alb_authenticate_cognito)) > 0 ? "authenticate-cognito" : "forward"
+
   # Container definitions
   container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? module.container_definition_bitbucket.json : module.container_definition_github_gitlab.json : var.custom_container_definitions
 
@@ -38,7 +42,7 @@ locals {
     },
     {
       name  = "ATLANTIS_LOG_LEVEL"
-      value = "debug"
+      value = var.atlantis_log_level
     },
     {
       name  = "ATLANTIS_PORT"
@@ -61,8 +65,16 @@ locals {
       value = var.atlantis_bitbucket_user
     },
     {
+      name  = "ATLANTIS_BITBUCKET_BASE_URL"
+      value = var.atlantis_bitbucket_base_url
+    },
+    {
       name  = "ATLANTIS_REPO_WHITELIST"
       value = join(",", var.atlantis_repo_whitelist)
+    },
+    {
+      name  = "ATLANTIS_HIDE_PREV_PLAN_COMMENTS"
+      value = var.atlantis_hide_prev_plan_comments
     },
   ]
 
@@ -92,8 +104,6 @@ locals {
 
 data "aws_region" "current" {}
 
-data "aws_caller_identity" "current" {}
-
 data "aws_route53_zone" "this" {
   count = var.create_route53_record ? 1 : 0
 
@@ -114,6 +124,8 @@ resource "aws_ssm_parameter" "webhook" {
   name  = var.webhook_ssm_parameter_name
   type  = "SecureString"
   value = random_id.webhook.hex
+
+  tags = local.tags
 }
 
 resource "aws_ssm_parameter" "atlantis_github_user_token" {
@@ -122,6 +134,8 @@ resource "aws_ssm_parameter" "atlantis_github_user_token" {
   name  = var.atlantis_github_user_token_ssm_parameter_name
   type  = "SecureString"
   value = var.atlantis_github_user_token
+
+  tags = local.tags
 }
 
 resource "aws_ssm_parameter" "atlantis_gitlab_user_token" {
@@ -130,6 +144,8 @@ resource "aws_ssm_parameter" "atlantis_gitlab_user_token" {
   name  = var.atlantis_gitlab_user_token_ssm_parameter_name
   type  = "SecureString"
   value = var.atlantis_gitlab_user_token
+
+  tags = local.tags
 }
 
 resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
@@ -138,6 +154,8 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
   name  = var.atlantis_bitbucket_user_token_ssm_parameter_name
   type  = "SecureString"
   value = var.atlantis_bitbucket_user_token
+
+  tags = local.tags
 }
 
 ###################
@@ -145,7 +163,7 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
 ###################
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v2.5.0"
+  version = "v2.33.0"
 
   create_vpc = var.vpc_id == ""
 
@@ -167,35 +185,45 @@ module "vpc" {
 ###################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v4.0.0"
+  version = "v5.6.0"
 
-  load_balancer_name = var.name
+  name     = var.name
+  internal = var.internal
 
   vpc_id          = local.vpc_id
   subnets         = local.public_subnet_ids
   security_groups = flatten([module.alb_https_sg.this_security_group_id, module.alb_http_sg.this_security_group_id, var.security_group_ids])
 
-  logging_enabled     = var.alb_logging_enabled
-  log_bucket_name     = var.alb_log_bucket_name
-  log_location_prefix = var.alb_log_location_prefix
+  access_logs = {
+    enabled = var.alb_logging_enabled
+    bucket  = var.alb_log_bucket_name
+    prefix  = var.alb_log_location_prefix
+  }
 
   https_listeners = [
     {
-      port            = 443
-      certificate_arn = var.certificate_arn == "" ? module.acm.this_acm_certificate_arn : var.certificate_arn
+      target_group_index   = 0
+      port                 = 443
+      protocol             = "HTTPS"
+      certificate_arn      = var.certificate_arn == "" ? module.acm.this_acm_certificate_arn : var.certificate_arn
+      action_type          = local.alb_authenication_method
+      authenticate_oidc    = var.alb_authenticate_oidc
+      authenticate_cognito = var.alb_authenticate_cognito
     },
   ]
-
-  https_listeners_count = 1
 
   http_tcp_listeners = [
     {
-      port     = 80
-      protocol = "HTTP"
+      port        = 80
+      protocol    = "HTTP"
+      action_type = "redirect"
+      redirect = {
+        port        = 443
+        protocol    = "HTTPS"
+        status_code = "HTTP_301"
+      }
     },
   ]
-
-  http_tcp_listeners_count = 1
 
   target_groups = [
     {
@@ -207,27 +235,25 @@ module "alb" {
     },
   ]
 
-  target_groups_count = 1
-
   tags = local.tags
 }
 
-resource "aws_lb_listener_rule" "redirect_http_to_https" {
-  listener_arn = module.alb.http_tcp_listener_arns[0]
+# Forward action for certain CIDR blocks to bypass authentication (eg. GitHub webhooks)
+resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
+  count = var.allow_unauthenticated_access ? 1 : 0
+
+  listener_arn = module.alb.https_listener_arns[0]
+  priority     = var.allow_unauthenticated_access_priority
 
   action {
-    type = "redirect"
-
-    redirect {
-      port        = "443"
-      protocol    = "HTTPS"
-      status_code = "HTTP_301"
-    }
+    type             = "forward"
+    target_group_arn = module.alb.target_group_arns[0]
   }
 
   condition {
-    field  = "path-pattern"
-    values = ["*"]
+    source_ip {
+      values = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.whitelist_unauthenticated_cidr_blocks)))
+    }
   }
 }
 
@@ -236,7 +262,7 @@ resource "aws_lb_listener_rule" "redirect_http_to_https" {
 ###################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v3.0.1"
+  version = "v3.9.0"
 
   name        = "${var.name}-alb-https"
   vpc_id      = local.vpc_id
@@ -249,7 +275,7 @@ module "alb_https_sg" {
 
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
-  version = "v3.0.1"
+  version = "v3.9.0"
 
   name        = "${var.name}-alb-http"
   vpc_id      = local.vpc_id
@@ -262,13 +288,13 @@ module "alb_http_sg" {
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v3.0.1"
+  version = "v3.9.0"
 
   name        = var.name
   vpc_id      = local.vpc_id
   description = "Security group with open port for Atlantis (${var.atlantis_port}) from ALB, egress ports are all world open"
 
-  computed_ingress_with_source_security_group_id = [
+  ingress_with_source_security_group_id = [
     {
       from_port                = var.atlantis_port
       to_port                  = var.atlantis_port
@@ -277,8 +303,6 @@ module "atlantis_sg" {
       source_security_group_id = module.alb_https_sg.this_security_group_id
     },
   ]
-
-  number_of_computed_ingress_with_source_security_group_id = 1
 
   egress_rules = ["all-all"]
 
@@ -290,7 +314,7 @@ module "atlantis_sg" {
 ###################
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v2.0.0"
+  version = "v2.5.0"
 
   create_certificate = var.certificate_arn == ""
 
@@ -308,12 +332,12 @@ resource "aws_route53_record" "atlantis" {
   count = var.create_route53_record ? 1 : 0
 
   zone_id = data.aws_route53_zone.this[0].zone_id
-  name    = var.name
+  name    = var.route53_record_name != null ? var.route53_record_name : var.name
   type    = "A"
 
   alias {
-    name                   = module.alb.dns_name
-    zone_id                = module.alb.load_balancer_zone_id
+    name                   = module.alb.this_lb_dns_name
+    zone_id                = module.alb.this_lb_zone_id
     evaluate_target_health = true
   }
 }
@@ -326,6 +350,8 @@ module "ecs" {
   version = "v2.0.0"
 
   name = var.name
+
+  tags = local.tags
 }
 
 data "aws_iam_policy_document" "ecs_tasks" {
@@ -346,6 +372,8 @@ data "aws_iam_policy_document" "ecs_tasks" {
 resource "aws_iam_role" "ecs_task_execution" {
   name               = "${var.name}-ecs_task_execution"
   assume_role_policy = data.aws_iam_policy_document.ecs_tasks.json
+
+  tags = local.tags
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
@@ -360,12 +388,11 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
   statement {
     effect = "Allow"
 
-    resources = [
-      "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.webhook_ssm_parameter_name}",
-      "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.atlantis_github_user_token_ssm_parameter_name}",
-      "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.atlantis_gitlab_user_token_ssm_parameter_name}",
-      "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter${var.atlantis_bitbucket_user_token_ssm_parameter_name}",
-    ]
+    resources = flatten(list(
+      aws_ssm_parameter.webhook.*.arn,
+      aws_ssm_parameter.atlantis_github_user_token.*.arn,
+      aws_ssm_parameter.atlantis_gitlab_user_token.*.arn,
+    aws_ssm_parameter.atlantis_bitbucket_user_token.*.arn))
 
     actions = [
       "ssm:GetParameters",
@@ -407,7 +434,7 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 
 module "container_definition_github_gitlab" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.15.0"
+  version = "v0.23.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -424,10 +451,14 @@ module "container_definition_github_gitlab" {
     },
   ]
 
-  log_options = {
-    "awslogs-region"        = data.aws_region.current.name
-    "awslogs-group"         = aws_cloudwatch_log_group.atlantis.name
-    "awslogs-stream-prefix" = "ecs"
+  log_configuration = {
+    logDriver = "awslogs"
+    options = {
+      awslogs-region        = data.aws_region.current.name
+      awslogs-group         = aws_cloudwatch_log_group.atlantis.name
+      awslogs-stream-prefix = "ecs"
+    }
+    secretOptions = []
   }
 
   environment = concat(
@@ -444,7 +475,7 @@ module "container_definition_github_gitlab" {
 
 module "container_definition_bitbucket" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.15.0"
+  version = "v0.23.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -461,10 +492,14 @@ module "container_definition_bitbucket" {
     },
   ]
 
-  log_options = {
-    "awslogs-region"        = data.aws_region.current.name
-    "awslogs-group"         = aws_cloudwatch_log_group.atlantis.name
-    "awslogs-stream-prefix" = "ecs"
+  log_configuration = {
+    logDriver = "awslogs"
+    options = {
+      awslogs-region        = data.aws_region.current.name
+      awslogs-group         = aws_cloudwatch_log_group.atlantis.name
+      awslogs-stream-prefix = "ecs"
+    }
+    secretOptions = []
   }
 
   environment = concat(
@@ -488,6 +523,8 @@ resource "aws_ecs_task_definition" "atlantis" {
   memory                   = var.ecs_task_memory
 
   container_definitions = local.container_definitions
+
+  tags = local.tags
 }
 
 data "aws_ecs_task_definition" "atlantis" {
@@ -519,6 +556,8 @@ resource "aws_ecs_service" "atlantis" {
     container_port   = var.atlantis_port
     target_group_arn = element(module.alb.target_group_arns, 0)
   }
+
+  tags = local.tags
 }
 
 ###################
@@ -530,4 +569,3 @@ resource "aws_cloudwatch_log_group" "atlantis" {
 
   tags = local.tags
 }
-

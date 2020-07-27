@@ -100,6 +100,53 @@ Make sure that both private and public subnets were created in the same set of a
 
 If all provided subnets are public (no NAT gateway) then `ecs_service_assign_public_ip` should be set to `true`.
 
+
+### Secure Atlantis with ALB Built-in Authentication
+
+#### OpenID Connect (OIDC)
+
+You can use service like [Auth0](https://www.auth0.com) to secure access to Atlantis and require authentication on ALB. To enable this, you need to create Auth0 application and provide correct arguments to Atlantis module. Make sure to update application hostname, client id and client secret:
+
+```hcl
+alb_authenticate_oidc = {
+  issuer = "https://youruser.eu.auth0.com/"
+  token_endpoint = "https://youruser.eu.auth0.com/oauth/token"
+  user_info_endpoint = "https://youruser.eu.auth0.com/userinfo"
+  authorization_endpoint = "https://youruser.eu.auth0.com/authorize"
+  authentication_request_extra_params = {}
+  client_id = "clientid"
+  client_secret = "secret123"
+}
+```
+
+Read more in [this post](https://medium.com/@sandrinodm/securing-your-applications-with-aws-alb-built-in-authentication-and-auth0-310ad84c8595).
+
+
+#### AWS Cognito with SAML
+
+The AWS Cognito service allows you to define SAML applications tied to an identity provider (e.g., GSuite). The Atlantis ALB can then be configured to require an authenticated user managed by your identity provider.
+
+To configure AWS Cognito connecting to a GSuite SAML application, you can use the [gsuite-saml-cognito](https://github.com/alloy-commons/alloy-open-source/tree/master/terraform-modules/gsuite-saml-cognito#example-usage) Terraform module.
+
+To enable Cognito authentication on the Atlantis ALB, specify the following arguments containing attributes from your Cognito configuration.
+
+```hcl
+alb_authenticate_cognito = {
+  user_pool_arn       = "arn:aws:cognito-idp:us-west-2:1234567890:userpool/us-west-2_aBcDeFG"
+  user_pool_client_id = "clientid123"
+  user_pool_domain    = "sso.your-corp.com"
+}
+```
+
+#### Allow GitHub Webhooks Unauthenticated Access
+
+If you are using one of the authentication methods above along with managed GitHub (not self-hosted enterprise version), you'll need to allow unauthenticated access to GitHub's Webhook static IPs:
+
+```hcl
+allow_unauthenticated_access = true
+allow_github_webhooks        = true
+```
+
 ## Notes
 
 1. AWS Route53 zone is not created by this module, so zone specified as a value in `route53_zone_name` should be created before using this module. Check documentation for [aws_route53_zone](https://www.terraform.io/docs/providers/aws/r/route53_zone.html).
@@ -114,67 +161,93 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 * [GitLab repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/gitlab-repository-webhook)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+## Requirements
+
+No requirements.
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| aws | n/a |
+| random | n/a |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|:----:|:-----:|:-----:|
-| acm\_certificate\_domain\_name | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name` | string | `""` | no |
-| alb\_ingress\_cidr\_blocks | List of IPv4 CIDR ranges to use on all ingress rules of the ALB. | list(string) | `[ "0.0.0.0/0" ]` | no |
-| alb\_log\_bucket\_name | S3 bucket (externally created) for storing load balancer access logs. Required if alb_logging_enabled is true. | string | `""` | no |
-| alb\_log\_location\_prefix | S3 prefix within the log_bucket_name under which logs are stored. | string | `""` | no |
-| alb\_logging\_enabled | Controls if the ALB will log requests to S3. | bool | `"false"` | no |
-| allow\_repo\_config | When true allows the use of atlantis.yaml config files within the source repos. | string | `"false"` | no |
-| atlantis\_allowed\_repo\_names | Github repositories where webhook should be created | list(string) | `[]` | no |
-| atlantis\_bitbucket\_user | Bitbucket username that is running the Atlantis command | string | `""` | no |
-| atlantis\_bitbucket\_user\_token | Bitbucket token of the user that is running the Atlantis command | string | `""` | no |
-| atlantis\_bitbucket\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis_bitbucket_user_token | string | `"/atlantis/bitbucket/user/token"` | no |
-| atlantis\_github\_user | GitHub username that is running the Atlantis command | string | `""` | no |
-| atlantis\_github\_user\_token | GitHub token of the user that is running the Atlantis command | string | `""` | no |
-| atlantis\_github\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis_github_user_token | string | `"/atlantis/github/user/token"` | no |
-| atlantis\_gitlab\_hostname | Gitlab server hostname, defaults to gitlab.com | string | `"gitlab.com"` | no |
-| atlantis\_gitlab\_user | Gitlab username that is running the Atlantis command | string | `""` | no |
-| atlantis\_gitlab\_user\_token | Gitlab token of the user that is running the Atlantis command | string | `""` | no |
-| atlantis\_gitlab\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis_gitlab_user_token | string | `"/atlantis/gitlab/user/token"` | no |
-| atlantis\_image | Docker image to run Atlantis with. If not specified, official Atlantis image will be used | string | `""` | no |
-| atlantis\_port | Local port Atlantis should be running on. Default value is most likely fine. | number | `"4141"` | no |
-| atlantis\_repo\_whitelist | List of allowed repositories Atlantis can be used with | list(string) | n/a | yes |
-| atlantis\_version | Verion of Atlantis to run. If not specified latest will be used | string | `"latest"` | no |
-| azs | A list of availability zones in the region | list(string) | `[]` | no |
-| certificate\_arn | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | string | `""` | no |
-| cidr | The CIDR block for the VPC which will be created if `vpc_id` is not specified | string | `""` | no |
-| cloudwatch\_log\_retention\_in\_days | Retention period of Atlantis CloudWatch logs | number | `"7"` | no |
-| container\_memory\_reservation | The amount of memory (in MiB) to reserve for the container | number | `"128"` | no |
-| create\_route53\_record | Whether to create Route53 record for Atlantis | bool | `"true"` | no |
-| custom\_container\_definitions | A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used. | string | `""` | no |
-| custom\_environment\_secrets | List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`) | list(map(string)) | `[]` | no |
-| custom\_environment\_variables | List of additional environment variables the container will use (list should contain maps with `name` and `value`) | list(map(string)) | `[]` | no |
-| ecs\_service\_assign\_public\_ip | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | bool | `"false"` | no |
-| ecs\_service\_deployment\_maximum\_percent | The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment | number | `"200"` | no |
-| ecs\_service\_deployment\_minimum\_healthy\_percent | The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment | number | `"50"` | no |
-| ecs\_service\_desired\_count | The number of instances of the task definition to place and keep running | number | `"1"` | no |
-| ecs\_task\_cpu | The number of cpu units used by the task | number | `"256"` | no |
-| ecs\_task\_memory | The amount (in MiB) of memory used by the task | number | `"512"` | no |
-| name | Name to use on all resources created (VPC, ALB, etc) | string | `"atlantis"` | no |
-| policies\_arn | A list of the ARN of the policies you want to apply | list(string) | `[ "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy" ]` | no |
-| private\_subnet\_ids | A list of IDs of existing private subnets inside the VPC | list(string) | `[]` | no |
-| private\_subnets | A list of private subnets inside the VPC | list(string) | `[]` | no |
-| public\_subnet\_ids | A list of IDs of existing public subnets inside the VPC | list(string) | `[]` | no |
-| public\_subnets | A list of public subnets inside the VPC | list(string) | `[]` | no |
-| route53\_zone\_name | Route53 zone name to create ACM certificate in and main A-record, without trailing dot | string | `""` | no |
-| security\_group\_ids | List of one or more security groups to be added to the load balancer | list(string) | `[]` | no |
-| ssm\_kms\_key\_arn | ARN of KMS key to use for entryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key | string | `""` | no |
-| tags | A map of tags to use on all resources | map(string) | `{}` | no |
-| vpc\_id | ID of an existing VPC where resources will be created | string | `""` | no |
-| webhook\_ssm\_parameter\_name | Name of SSM parameter to keep webhook secret | string | `"/atlantis/webhook/secret"` | no |
+|------|-------------|------|---------|:--------:|
+| acm\_certificate\_domain\_name | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name` | `string` | `""` | no |
+| alb\_authenticate\_cognito | Map of AWS Cognito authentication parameters to protect ALB (eg, using SAML). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-cognito-action | `any` | `{}` | no |
+| alb\_authenticate\_oidc | Map of Authenticate OIDC parameters to protect ALB (eg, using Auth0). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-oidc-action | `any` | `{}` | no |
+| alb\_ingress\_cidr\_blocks | List of IPv4 CIDR ranges to use on all ingress rules of the ALB. | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| alb\_log\_bucket\_name | S3 bucket (externally created) for storing load balancer access logs. Required if alb\_logging\_enabled is true. | `string` | `""` | no |
+| alb\_log\_location\_prefix | S3 prefix within the log\_bucket\_name under which logs are stored. | `string` | `""` | no |
+| alb\_logging\_enabled | Controls if the ALB will log requests to S3. | `bool` | `false` | no |
+| allow\_github\_webhooks | Whether to allow access for GitHub webhooks | `bool` | `false` | no |
+| allow\_repo\_config | When true allows the use of atlantis.yaml config files within the source repos. | `string` | `"false"` | no |
+| allow\_unauthenticated\_access | Whether to create ALB listener rule to allow unauthenticated access for certain CIDR blocks (eg. allow GitHub webhooks to bypass OIDC authentication) | `bool` | `false` | no |
+| allow\_unauthenticated\_access\_priority | ALB listener rule priority for allow unauthenticated access rule | `number` | `10` | no |
+| atlantis\_allowed\_repo\_names | Git repositories where webhook should be created | `list(string)` | `[]` | no |
+| atlantis\_bitbucket\_base\_url | Base URL of Bitbucket Server, use for Bitbucket on prem (Stash) | `string` | `""` | no |
+| atlantis\_bitbucket\_user | Bitbucket username that is running the Atlantis command | `string` | `""` | no |
+| atlantis\_bitbucket\_user\_token | Bitbucket token of the user that is running the Atlantis command | `string` | `""` | no |
+| atlantis\_bitbucket\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis\_bitbucket\_user\_token | `string` | `"/atlantis/bitbucket/user/token"` | no |
+| atlantis\_fqdn | FQDN of Atlantis to use. Set this only to override Route53 and ALB's DNS name. | `string` | `null` | no |
+| atlantis\_github\_user | GitHub username that is running the Atlantis command | `string` | `""` | no |
+| atlantis\_github\_user\_token | GitHub token of the user that is running the Atlantis command | `string` | `""` | no |
+| atlantis\_github\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis\_github\_user\_token | `string` | `"/atlantis/github/user/token"` | no |
+| atlantis\_gitlab\_hostname | Gitlab server hostname, defaults to gitlab.com | `string` | `"gitlab.com"` | no |
+| atlantis\_gitlab\_user | Gitlab username that is running the Atlantis command | `string` | `""` | no |
+| atlantis\_gitlab\_user\_token | Gitlab token of the user that is running the Atlantis command | `string` | `""` | no |
+| atlantis\_gitlab\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis\_gitlab\_user\_token | `string` | `"/atlantis/gitlab/user/token"` | no |
+| atlantis\_hide\_prev\_plan\_comments | Enables atlantis server --hide-prev-plan-comments hiding previous plan comments on update | `string` | `"false"` | no |
+| atlantis\_image | Docker image to run Atlantis with. If not specified, official Atlantis image will be used | `string` | `""` | no |
+| atlantis\_log\_level | Log level that Atlantis will run with. Accepted values are: <debug\|info\|warn\|error> | `string` | `"debug"` | no |
+| atlantis\_port | Local port Atlantis should be running on. Default value is most likely fine. | `number` | `4141` | no |
+| atlantis\_repo\_whitelist | List of allowed repositories Atlantis can be used with | `list(string)` | n/a | yes |
+| atlantis\_version | Verion of Atlantis to run. If not specified latest will be used | `string` | `"latest"` | no |
+| azs | A list of availability zones in the region | `list(string)` | `[]` | no |
+| certificate\_arn | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | `string` | `""` | no |
+| cidr | The CIDR block for the VPC which will be created if `vpc_id` is not specified | `string` | `""` | no |
+| cloudwatch\_log\_retention\_in\_days | Retention period of Atlantis CloudWatch logs | `number` | `7` | no |
+| container\_memory\_reservation | The amount of memory (in MiB) to reserve for the container | `number` | `128` | no |
+| create\_route53\_record | Whether to create Route53 record for Atlantis | `bool` | `true` | no |
+| custom\_container\_definitions | A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used. | `string` | `""` | no |
+| custom\_environment\_secrets | List of additional secrets the container will use (list should contain maps with `name` and `valueFrom`) | <pre>list(object(<br>    {<br>      name      = string<br>      valueFrom = string<br>    }<br>  ))</pre> | `[]` | no |
+| custom\_environment\_variables | List of additional environment variables the container will use (list should contain maps with `name` and `value`) | <pre>list(object(<br>    {<br>      name  = string<br>      value = string<br>    }<br>  ))</pre> | `[]` | no |
+| ecs\_service\_assign\_public\_ip | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | `bool` | `false` | no |
+| ecs\_service\_deployment\_maximum\_percent | The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment | `number` | `200` | no |
+| ecs\_service\_deployment\_minimum\_healthy\_percent | The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment | `number` | `50` | no |
+| ecs\_service\_desired\_count | The number of instances of the task definition to place and keep running | `number` | `1` | no |
+| ecs\_task\_cpu | The number of cpu units used by the task | `number` | `256` | no |
+| ecs\_task\_memory | The amount (in MiB) of memory used by the task | `number` | `512` | no |
+| github\_webhooks\_cidr\_blocks | List of CIDR blocks used by GitHub webhooks | `list(string)` | <pre>[<br>  "140.82.112.0/20",<br>  "185.199.108.0/22",<br>  "192.30.252.0/22"<br>]</pre> | no |
+| internal | Whether the load balancer is internal or external | `bool` | `false` | no |
+| name | Name to use on all resources created (VPC, ALB, etc) | `string` | `"atlantis"` | no |
+| policies\_arn | A list of the ARN of the policies you want to apply | `list(string)` | <pre>[<br>  "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"<br>]</pre> | no |
+| private\_subnet\_ids | A list of IDs of existing private subnets inside the VPC | `list(string)` | `[]` | no |
+| private\_subnets | A list of private subnets inside the VPC | `list(string)` | `[]` | no |
+| public\_subnet\_ids | A list of IDs of existing public subnets inside the VPC | `list(string)` | `[]` | no |
+| public\_subnets | A list of public subnets inside the VPC | `list(string)` | `[]` | no |
+| route53\_record\_name | Name of Route53 record to create ACM certificate in and main A-record. If null is specified, var.name is used instead. Provide empty string to point root domain name to ALB. | `string` | `null` | no |
+| route53\_zone\_name | Route53 zone name to create ACM certificate in and main A-record, without trailing dot | `string` | `""` | no |
+| security\_group\_ids | List of one or more security groups to be added to the load balancer | `list(string)` | `[]` | no |
+| ssm\_kms\_key\_arn | ARN of KMS key to use for encryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key | `string` | `""` | no |
+| tags | A map of tags to use on all resources | `map(string)` | `{}` | no |
+| vpc\_id | ID of an existing VPC where resources will be created | `string` | `""` | no |
+| webhook\_ssm\_parameter\_name | Name of SSM parameter to keep webhook secret | `string` | `"/atlantis/webhook/secret"` | no |
+| whitelist\_unauthenticated\_cidr\_blocks | List of allowed CIDR blocks to bypass authentication | `list(string)` | `[]` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
 | alb\_dns\_name | Dns name of alb |
-| atlantis\_allowed\_repo\_names | Github repositories where webhook should be created |
+| alb\_zone\_id | Zone ID of alb |
+| atlantis\_allowed\_repo\_names | Git repositories where webhook should be created |
 | atlantis\_url | URL of Atlantis |
 | atlantis\_url\_events | Webhook events URL of Atlantis |
+| ecs\_security\_group | Security group assigned to ECS Service in network configuration |
 | ecs\_task\_definition | Task definition for ECS service (used for external triggers) |
 | task\_role\_arn | The Atlantis ECS task role arn |
 | vpc\_id | ID of the VPC that was created or passed in |
