@@ -1,3 +1,9 @@
+variable "region" {
+  description = "AWS region where resources will be created"
+  type        = string
+  default     = "us-east-1"
+}
+
 variable "domain" {
   description = "Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance"
   type        = string

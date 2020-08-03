@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "eu-west-1"
+  region = var.region
 }
 
 locals {
@@ -17,6 +17,8 @@ data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
 
+data "aws_elb_service_account" "current" {}
+
 ##############################################################
 # Atlantis Service
 ##############################################################
@@ -28,7 +30,7 @@ module "atlantis" {
 
   # VPC
   cidr            = "10.20.0.0/16"
-  azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
+  azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
   private_subnets = ["10.20.1.0/24", "10.20.2.0/24", "10.20.3.0/24"]
   public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
 
@@ -38,7 +40,7 @@ module "atlantis" {
   ecs_task_memory              = 1024
   container_memory_reservation = 256
 
-  entrypoint        = ["/bin/bash", "echo 'foo'", "docker-entrypoint.sh"]
+  entrypoint        = ["docker-entrypoint.sh"]
   command           = ["server"]
   working_directory = "/tmp"
   docker_labels = {
@@ -50,7 +52,7 @@ module "atlantis" {
   stop_timeout  = 30
 
   user                     = "atlantis"
-  readonly_root_filesystem = true
+  readonly_root_filesystem = false # atlantis currently mutable access to root filesystem
   ulimits = [{
     name      = "nofile"
     softLimit = 4096
@@ -94,7 +96,6 @@ module "github_repository_webhook" {
   webhook_url    = module.atlantis.atlantis_url_events
   webhook_secret = module.atlantis.webhook_secret
 }
-
 ################################################################################
 # ALB Access Log Bucket + Policy
 ################################################################################
@@ -103,7 +104,8 @@ module "atlantis_access_log_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "~> 1.9"
 
-  bucket        = "${data.aws_caller_identity.current.account_id}-atlantis-access-logs-${data.aws_region.current.name}"
+  bucket = "${data.aws_caller_identity.current.account_id}-atlantis-access-logs-${data.aws_region.current.name}"
+
   attach_policy = true
   policy        = data.aws_iam_policy_document.atlantis_access_log_bucket_policy.json
 
@@ -163,7 +165,7 @@ data "aws_iam_policy_document" "atlantis_access_log_bucket_policy" {
       type = "AWS"
       identifiers = [
         # https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-access-logs.html#access-logging-bucket-permissions
-        "arn:aws:iam::156460612806:root", # AWS logging eu-west-1 account id
+        data.aws_elb_service_account.current.arn,
       ]
     }
   }

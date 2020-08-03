@@ -45,6 +45,7 @@ No requirements.
 | github\_token | Github token | `string` | n/a | yes |
 | github\_user | Github user for Atlantis to utilize when performing Github activities | `string` | n/a | yes |
 | personal\_ip | Your current, personally ip to restrict access to Atlantis UI ending with `/32` for subnet | `string` | n/a | yes |
+| region | AWS region where resources will be created | `string` | `"us-east-1"` | no |
 
 ## Outputs
 
