@@ -164,13 +164,16 @@ allow_github_webhooks        = true
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| terraform | >= 0.12.7, < 0.14 |
+| aws | >= 2.68, < 4.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | n/a |
+| aws | >= 2.68, < 4.0 |
 | random | n/a |
 
 ## Inputs
