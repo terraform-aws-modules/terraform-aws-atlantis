@@ -268,7 +268,7 @@ module "alb_https_sg" {
 
   ingress_cidr_blocks = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.alb_ingress_cidr_blocks)))
 
-  tags = local.tags
+  tags = merge(local.tags, var.alb_https_security_group_tags)
 }
 
 module "alb_http_sg" {
@@ -281,7 +281,7 @@ module "alb_http_sg" {
 
   ingress_cidr_blocks = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.alb_ingress_cidr_blocks)))
 
-  tags = local.tags
+  tags = merge(local.tags, var.alb_http_security_group_tags)
 }
 
 module "atlantis_sg" {
@@ -304,7 +304,7 @@ module "atlantis_sg" {
 
   egress_rules = ["all-all"]
 
-  tags = local.tags
+  tags = merge(local.tags, var.atlantis_security_group_tags)
 }
 
 ###################
