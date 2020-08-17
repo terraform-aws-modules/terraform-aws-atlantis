@@ -27,7 +27,7 @@ locals {
   alb_authenication_method = length(keys(var.alb_authenticate_oidc)) > 0 ? "authenticate-oidc" : length(keys(var.alb_authenticate_cognito)) > 0 ? "authenticate-cognito" : "forward"
 
   # Container definitions
-  container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? module.container_definition_bitbucket.json : module.container_definition_github_gitlab.json : var.custom_container_definitions
+  container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? module.container_definition_bitbucket.json_map_encoded_list : module.container_definition_github_gitlab.json_map_encoded_list : var.custom_container_definitions
 
   container_definition_environment = [
     {
@@ -161,7 +161,7 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
 ###################
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v2.33.0"
+  version = "v2.47.0"
 
   create_vpc = var.vpc_id == ""
 
@@ -183,7 +183,7 @@ module "vpc" {
 ###################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v5.6.0"
+  version = "v5.7.0"
 
   name     = var.name
   internal = var.internal
@@ -260,33 +260,33 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
 ###################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v3.9.0"
+  version = "v3.15.0"
 
   name        = "${var.name}-alb-https"
   vpc_id      = local.vpc_id
   description = "Security group with HTTPS ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open"
 
-  ingress_cidr_blocks = var.alb_ingress_cidr_blocks
+  ingress_cidr_blocks = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.alb_ingress_cidr_blocks)))
 
   tags = local.tags
 }
 
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
-  version = "v3.9.0"
+  version = "v3.15.0"
 
   name        = "${var.name}-alb-http"
   vpc_id      = local.vpc_id
   description = "Security group with HTTP ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open"
 
-  ingress_cidr_blocks = var.alb_ingress_cidr_blocks
+  ingress_cidr_blocks = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.alb_ingress_cidr_blocks)))
 
   tags = local.tags
 }
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v3.9.0"
+  version = "v3.15.0"
 
   name        = var.name
   vpc_id      = local.vpc_id
@@ -312,7 +312,7 @@ module "atlantis_sg" {
 ###################
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v2.5.0"
+  version = "v2.10.0"
 
   create_certificate = var.certificate_arn == ""
 
@@ -345,9 +345,10 @@ resource "aws_route53_record" "atlantis" {
 ###################
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "v2.0.0"
+  version = "v2.3.0"
 
-  name = var.name
+  name               = var.name
+  container_insights = var.ecs_container_insights
 
   tags = local.tags
 }
@@ -432,7 +433,7 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 
 module "container_definition_github_gitlab" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.23.0"
+  version = "v0.40.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -440,6 +441,21 @@ module "container_definition_github_gitlab" {
   container_cpu                = var.ecs_task_cpu
   container_memory             = var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
+
+  user                     = var.user
+  ulimits                  = var.ulimits
+  entrypoint               = var.entrypoint
+  command                  = var.command
+  working_directory        = var.working_directory
+  repository_credentials   = var.repository_credentials
+  docker_labels            = var.docker_labels
+  start_timeout            = var.start_timeout
+  stop_timeout             = var.stop_timeout
+  container_depends_on     = var.container_depends_on
+  essential                = var.essential
+  readonly_root_filesystem = var.readonly_root_filesystem
+  mount_points             = var.mount_points
+  volumes_from             = var.volumes_from
 
   port_mappings = [
     {
@@ -458,6 +474,7 @@ module "container_definition_github_gitlab" {
     }
     secretOptions = []
   }
+  firelens_configuration = var.firelens_configuration
 
   environment = concat(
     local.container_definition_environment,
@@ -473,7 +490,7 @@ module "container_definition_github_gitlab" {
 
 module "container_definition_bitbucket" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.23.0"
+  version = "v0.40.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -481,6 +498,21 @@ module "container_definition_bitbucket" {
   container_cpu                = var.ecs_task_cpu
   container_memory             = var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
+
+  user                     = var.user
+  ulimits                  = var.ulimits
+  entrypoint               = var.entrypoint
+  command                  = var.command
+  working_directory        = var.working_directory
+  repository_credentials   = var.repository_credentials
+  docker_labels            = var.docker_labels
+  start_timeout            = var.start_timeout
+  stop_timeout             = var.stop_timeout
+  container_depends_on     = var.container_depends_on
+  essential                = var.essential
+  readonly_root_filesystem = var.readonly_root_filesystem
+  mount_points             = var.mount_points
+  volumes_from             = var.volumes_from
 
   port_mappings = [
     {
@@ -499,6 +531,7 @@ module "container_definition_bitbucket" {
     }
     secretOptions = []
   }
+  firelens_configuration = var.firelens_configuration
 
   environment = concat(
     local.container_definition_environment,
