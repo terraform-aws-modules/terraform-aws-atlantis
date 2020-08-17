@@ -1,4 +1,4 @@
-region = "eu-west-1
+region = "eu-west-1"
 domain = "mydomain.com"
 personal_ip = "x.x.x.x/32"
 github_organization = "myorg"

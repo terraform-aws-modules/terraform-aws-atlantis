@@ -287,7 +287,6 @@ variable "repository_credentials" {
   default     = null
 }
 
-
 variable "docker_labels" {
   description = "The configuration options to send to the `docker_labels`"
   type        = map(string)
