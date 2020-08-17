@@ -96,6 +96,12 @@ variable "alb_authenticate_oidc" {
   default     = {}
 }
 
+variable "alb_authenticate_cognito" {
+  description = "Map of AWS Cognito authentication parameters to protect ALB (eg, using SAML). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-cognito-action"
+  type        = any
+  default     = {}
+}
+
 variable "allow_unauthenticated_access" {
   description = "Whether to create ALB listener rule to allow unauthenticated access for certain CIDR blocks (eg. allow GitHub webhooks to bypass OIDC authentication)"
   type        = bool
@@ -228,6 +234,12 @@ variable "policies_arn" {
   default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
 
+variable "ecs_container_insights" {
+  description = "Controls if ECS Cluster has container insights enabled"
+  type        = bool
+  default     = false
+}
+
 variable "ecs_service_desired_count" {
   description = "The number of instances of the task definition to place and keep running"
   type        = number
@@ -270,6 +282,110 @@ variable "custom_container_definitions" {
   default     = ""
 }
 
+variable "entrypoint" {
+  description = "The entry point that is passed to the container"
+  type        = list(string)
+  default     = null
+}
+
+variable "command" {
+  description = "The command that is passed to the container"
+  type        = list(string)
+  default     = null
+}
+
+variable "working_directory" {
+  description = "The working directory to run commands inside the container"
+  type        = string
+  default     = null
+}
+
+variable "repository_credentials" {
+  description = "Container repository credentials; required when using a private repo.  This map currently supports a single key; \"credentialsParameter\", which should be the ARN of a Secrets Manager's secret holding the credentials"
+  type        = map(string)
+  default     = null
+}
+
+variable "docker_labels" {
+  description = "The configuration options to send to the `docker_labels`"
+  type        = map(string)
+  default     = null
+}
+
+variable "start_timeout" {
+  description = "Time duration (in seconds) to wait before giving up on resolving dependencies for a container"
+  type        = number
+  default     = 30
+}
+
+variable "stop_timeout" {
+  description = "Time duration (in seconds) to wait before the container is forcefully killed if it doesn't exit normally on its own"
+  type        = number
+  default     = 30
+}
+
+variable "container_depends_on" {
+  description = "The dependencies defined for container startup and shutdown. A container can contain multiple dependencies. When a dependency is defined for container startup, for container shutdown it is reversed. The condition can be one of START, COMPLETE, SUCCESS or HEALTHY"
+  type = list(object({
+    containerName = string
+    condition     = string
+  }))
+  default = null
+}
+
+variable "essential" {
+  description = "Determines whether all other containers in a task are stopped, if this container fails or stops for any reason. Due to how Terraform type casts booleans in json it is required to double quote this value"
+  type        = bool
+  default     = true
+}
+
+variable "readonly_root_filesystem" {
+  description = "Determines whether a container is given read-only access to its root filesystem. Due to how Terraform type casts booleans in json it is required to double quote this value"
+  type        = bool
+  default     = false
+}
+
+variable "mount_points" {
+  description = "Container mount points. This is a list of maps, where each map should contain a `containerPath` and `sourceVolume`. The `readOnly` key is optional."
+  type        = list
+  default     = []
+}
+
+variable "volumes_from" {
+  description = "A list of VolumesFrom maps which contain \"sourceContainer\" (name of the container that has the volumes to mount) and \"readOnly\" (whether the container can write to the volume)"
+  type = list(object({
+    sourceContainer = string
+    readOnly        = bool
+  }))
+  default = []
+}
+
+variable "user" {
+  description = "The user to run as inside the container. Can be any of these formats: user, user:group, uid, uid:gid, user:gid, uid:group. The default (null) will use the container's configured `USER` directive or root if not set."
+  type        = string
+  default     = null
+}
+
+variable "ulimits" {
+  description = "Container ulimit settings. This is a list of maps, where each map should contain \"name\", \"hardLimit\" and \"softLimit\""
+  type = list(object({
+    name      = string
+    hardLimit = number
+    softLimit = number
+  }))
+  default = null
+}
+
+# https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html
+variable "firelens_configuration" {
+  description = "The FireLens configuration for the container. This is used to specify and configure a log router for container logs. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html"
+  type = object({
+    type    = string
+    options = map(string)
+  })
+  default = null
+}
+
 # Atlantis
 variable "atlantis_image" {
   description = "Docker image to run Atlantis with. If not specified, official Atlantis image will be used"
@@ -310,6 +426,12 @@ variable "atlantis_log_level" {
   description = "Log level that Atlantis will run with. Accepted values are: <debug|info|warn|error>"
   type        = string
   default     = "debug"
+}
+
+variable "atlantis_hide_prev_plan_comments" {
+  description = "Enables atlantis server --hide-prev-plan-comments hiding previous plan comments on update"
+  type        = string
+  default     = "false"
 }
 
 # Github
@@ -389,10 +511,4 @@ variable "security_group_ids" {
   description = "List of one or more security groups to be added to the load balancer"
   type        = list(string)
   default     = []
-}
-
-variable "aws_ssm_path" {
-  description = "AWS ARN prefix for SSM (public AWS region or Govcloud). Valid options: aws, aws-us-gov."
-  type        = string
-  default     = "aws"
 }
