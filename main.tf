@@ -14,6 +14,11 @@ locals {
   )}"
   atlantis_url_events = "${local.atlantis_url}/events"
 
+  # Security Groups
+  alb_http_security_group_id  = var.alb_http_security_group_id == "" ? module.alb_http_sg.this_security_group_id : var.alb_http_security_group_id
+  alb_https_security_group_id = var.alb_https_security_group_id == "" ? module.alb_https_sg.this_security_group_id : var.alb_https_security_group_id
+  atlantis_security_group_id  = var.atlantis_security_group_id == "" ? module.atlantis_sg.this_security_group_id : var.atlantis_security_group_id
+
   # Include only one group of secrets - for github, gitlab or bitbucket
   has_secrets = var.atlantis_gitlab_user_token != "" || var.atlantis_github_user_token != "" || var.atlantis_bitbucket_user_token != ""
 
@@ -190,7 +195,7 @@ module "alb" {
 
   vpc_id          = local.vpc_id
   subnets         = local.public_subnet_ids
-  security_groups = flatten([module.alb_https_sg.this_security_group_id, module.alb_http_sg.this_security_group_id, var.security_group_ids])
+  security_groups = distinct(flatten([local.alb_https_security_group_id, local.alb_http_security_group_id, var.security_group_ids]))
 
   access_logs = {
     enabled = var.alb_logging_enabled
@@ -262,6 +267,8 @@ module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
   version = "v3.15.0"
 
+  create = var.alb_https_security_group_id == "" ? true : false
+
   name        = "${var.name}-alb-https"
   vpc_id      = local.vpc_id
   description = "Security group with HTTPS ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open"
@@ -274,6 +281,8 @@ module "alb_https_sg" {
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
   version = "v3.15.0"
+
+  create = var.alb_http_security_group_id == "" ? true : false
 
   name        = "${var.name}-alb-http"
   vpc_id      = local.vpc_id
@@ -288,6 +297,8 @@ module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "v3.15.0"
 
+  create = var.atlantis_security_group_id == "" ? true : false
+
   name        = var.name
   vpc_id      = local.vpc_id
   description = "Security group with open port for Atlantis (${var.atlantis_port}) from ALB, egress ports are all world open"
@@ -298,7 +309,7 @@ module "atlantis_sg" {
       to_port                  = var.atlantis_port
       protocol                 = "tcp"
       description              = "Atlantis"
-      source_security_group_id = module.alb_https_sg.this_security_group_id
+      source_security_group_id = local.alb_https_security_group_id
     },
   ]
 
@@ -578,7 +589,7 @@ resource "aws_ecs_service" "atlantis" {
 
   network_configuration {
     subnets          = local.private_subnet_ids
-    security_groups  = [module.atlantis_sg.this_security_group_id]
+    security_groups  = [local.atlantis_security_group_id]
     assign_public_ip = var.ecs_service_assign_public_ip
   }
 
