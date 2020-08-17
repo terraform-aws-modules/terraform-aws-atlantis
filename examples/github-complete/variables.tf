@@ -9,8 +9,8 @@ variable "domain" {
   type        = string
 }
 
-variable "personal_ip" {
-  description = "Your current, personally ip to restrict access to Atlantis UI ending with `/32` for subnet"
+variable "alb_ingress_cidr_blocks" {
+  description = "List of IPv4 CIDR ranges to use on all ingress rules of the ALB - use your personal IP in the form of `x.x.x.x/32` for restricted testing"
   type        = string
 }
 

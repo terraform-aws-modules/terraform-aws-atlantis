@@ -69,7 +69,7 @@ module "atlantis" {
   atlantis_allowed_repo_names = var.allowed_repo_names
 
   # ALB access
-  alb_ingress_cidr_blocks         = [var.personal_ip]
+  alb_ingress_cidr_blocks         = [var.alb_ingress_cidr_blocks]
   alb_logging_enabled             = true
   alb_log_bucket_name             = module.atlantis_access_log_bucket.this_s3_bucket_id
   alb_log_location_prefix         = "atlantis-alb"
