@@ -11,7 +11,7 @@ variable "domain" {
 
 variable "alb_ingress_cidr_blocks" {
   description = "List of IPv4 CIDR ranges to use on all ingress rules of the ALB - use your personal IP in the form of `x.x.x.x/32` for restricted testing"
-  type        = string
+  type        = list(string)
 }
 
 variable "github_token" {
