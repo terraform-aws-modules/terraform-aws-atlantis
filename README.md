@@ -186,6 +186,7 @@ allow_github_webhooks        = true
 | alb\_http\_security\_group\_tags | Additional tags to put on the http security group | `map(string)` | `{}` | no |
 | alb\_https\_security\_group\_tags | Additional tags to put on the https security group | `map(string)` | `{}` | no |
 | alb\_ingress\_cidr\_blocks | List of IPv4 CIDR ranges to use on all ingress rules of the ALB. | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
+| alb\_listener\_ssl\_policy\_default | The security policy if using HTTPS externally on the load balancer. [See](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html). | `string` | `"ELBSecurityPolicy-2016-08"` | no |
 | alb\_log\_bucket\_name | S3 bucket (externally created) for storing load balancer access logs. Required if alb\_logging\_enabled is true. | `string` | `""` | no |
 | alb\_log\_location\_prefix | S3 prefix within the log\_bucket\_name under which logs are stored. | `string` | `""` | no |
 | alb\_logging\_enabled | Controls if the ALB will log requests to S3. | `bool` | `false` | no |

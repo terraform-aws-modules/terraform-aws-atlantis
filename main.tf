@@ -198,6 +198,7 @@ module "alb" {
     prefix  = var.alb_log_location_prefix
   }
 
+  listener_ssl_policy_default = var.alb_listener_ssl_policy_default
   https_listeners = [
     {
       target_group_index   = 0

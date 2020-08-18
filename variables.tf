@@ -150,6 +150,12 @@ variable "whitelist_unauthenticated_cidr_blocks" {
   default     = []
 }
 
+variable "alb_listener_ssl_policy_default" {
+  description = "The security policy if using HTTPS externally on the load balancer. [See](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html)."
+  type        = string
+  default     = "ELBSecurityPolicy-2016-08"
+}
+
 # ACM
 variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS"
