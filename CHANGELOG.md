@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.23.0"></a>
+## [v2.23.0] - 2020-08-18
+
+- feat: add variable to set SSL listener policy ([#150](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/150))
+
+
 <a name="v2.22.0"></a>
 ## [v2.22.0] - 2020-08-17
 
@@ -328,7 +334,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.22.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.23.0...HEAD
+[v2.23.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.22.0...v2.23.0
 [v2.22.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.21.0...v2.22.0
 [v2.21.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.20.0...v2.21.0
 [v2.20.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.19.0...v2.20.0
