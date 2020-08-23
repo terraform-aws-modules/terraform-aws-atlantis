@@ -113,7 +113,7 @@ data "aws_route53_zone" "this" {
 # Secret for webhook
 ###################
 resource "random_id" "webhook" {
-  count = var.atlantis_github_webhook_secret != "" : 0 : 1
+  count = var.atlantis_github_webhook_secret != "" ? 0 : 1
 
   byte_length = "64"
 }
