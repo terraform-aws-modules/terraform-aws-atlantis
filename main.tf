@@ -589,7 +589,7 @@ resource "aws_ecs_service" "atlantis" {
     target_group_arn = element(module.alb.target_group_arns, 0)
   }
 
-  tags = local.tags
+  tags = var.use_old_arn_format ? null : local.tags
 }
 
 ###################
