@@ -86,12 +86,12 @@ locals {
   ] : []
 
   # Webhook secrets are not supported by BitBucket
-  container_definition_secrets_2 = [
+  container_definition_secrets_2 = local.secret_webhook_key != "" ? [
     {
       name      = local.secret_webhook_key
       valueFrom = var.webhook_ssm_parameter_name
     },
-  ]
+  ] : []
 
   tags = merge(
     {
