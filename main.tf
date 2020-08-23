@@ -113,6 +113,8 @@ data "aws_route53_zone" "this" {
 # Secret for webhook
 ###################
 resource "random_id" "webhook" {
+  count = var.atlantis_github_webhook_secret != "" : 0 : 1
+
   byte_length = "64"
 }
 
@@ -121,7 +123,7 @@ resource "aws_ssm_parameter" "webhook" {
 
   name  = var.webhook_ssm_parameter_name
   type  = "SecureString"
-  value = random_id.webhook.hex
+  value = coalesce(var.atlantis_github_webhook_secret, join("", random_id.webhook.*.hex))
 
   tags = local.tags
 }
