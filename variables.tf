@@ -517,3 +517,9 @@ variable "security_group_ids" {
   type        = list(string)
   default     = []
 }
+
+variable "use_old_arn_format" {
+  type        = bool
+  description = "A flag to enable/disable tagging the ecs resources that require the new longer arn format"
+  default     = false
+}
