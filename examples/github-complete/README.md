@@ -46,6 +46,7 @@ No requirements.
 | github\_token | Github token | `string` | n/a | yes |
 | github\_user | Github user for Atlantis to utilize when performing Github activities | `string` | n/a | yes |
 | region | AWS region where resources will be created | `string` | `"us-east-1"` | no |
+| trusted\_principals | A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role | | `list(string)` | n/a | no |
 
 ## Outputs
 

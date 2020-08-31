@@ -239,6 +239,12 @@ variable "policies_arn" {
   default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
 
+variable "trusted_principals" {
+  description = "A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role"
+  type        = list(string)
+  default     = []
+}
+
 variable "ecs_container_insights" {
   description = "Controls if ECS Cluster has container insights enabled"
   type        = bool
