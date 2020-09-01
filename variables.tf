@@ -452,6 +452,12 @@ variable "atlantis_github_user_token" {
   default     = ""
 }
 
+variable "atlantis_github_webhook_secret" {
+  description = "GitHub webhook secret of an app that is running the Atlantis command"
+  type        = string
+  default     = ""
+}
+
 # Gitlab
 variable "atlantis_gitlab_user" {
   description = "Gitlab username that is running the Atlantis command"
