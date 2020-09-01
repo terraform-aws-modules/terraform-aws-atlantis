@@ -203,6 +203,7 @@ allow_github_webhooks        = true
 | atlantis\_github\_user | GitHub username that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_github\_user\_token | GitHub token of the user that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_github\_user\_token\_ssm\_parameter\_name | Name of SSM parameter to keep atlantis\_github\_user\_token | `string` | `"/atlantis/github/user/token"` | no |
+| atlantis\_github\_webhook\_secret | GitHub webhook secret of an app that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_gitlab\_hostname | Gitlab server hostname, defaults to gitlab.com | `string` | `"gitlab.com"` | no |
 | atlantis\_gitlab\_user | Gitlab username that is running the Atlantis command | `string` | `""` | no |
 | atlantis\_gitlab\_user\_token | Gitlab token of the user that is running the Atlantis command | `string` | `""` | no |
