@@ -75,6 +75,10 @@ locals {
       name  = "ATLANTIS_HIDE_PREV_PLAN_COMMENTS"
       value = var.atlantis_hide_prev_plan_comments
     },
+    {
+      name  = "ATLANTIS_ALLOW_FORK_PRS"
+      value = var.atlantis_allow_fork_prs
+    },
   ]
 
   # Secret access tokens

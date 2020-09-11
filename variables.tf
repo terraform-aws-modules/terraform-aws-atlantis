@@ -523,3 +523,9 @@ variable "security_group_ids" {
   type        = list(string)
   default     = []
 }
+
+variable "atlantis_allow_fork_prs" {
+  description = "Respond to pull requests from forks. Defaults to `false`."
+  type        = string
+  default     = "false"
+}
