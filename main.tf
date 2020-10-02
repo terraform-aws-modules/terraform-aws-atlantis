@@ -19,17 +19,18 @@ locals {
 
   has_secrets = var.atlantis_gitlab_user_token != "" || var.atlantis_github_user_token != "" || var.atlantis_bitbucket_user_token != ""
 
+  # token
   secret_name_key = local.has_secrets || local.secrets_group != "" ? var.atlantis_gitlab_user_token != "" || local.secrets_group == "GITLAB" ? "ATLANTIS_GITLAB_TOKEN" : var.atlantis_github_user_token != "" || local.secrets_group == "GITHUB" ? "ATLANTIS_GH_TOKEN" : "ATLANTIS_BITBUCKET_TOKEN" : "unknown_secret_name_key"
-
   secret_name_value_from = local.has_secrets || local.secrets_group != "" ? var.atlantis_gitlab_user_token != "" || local.secrets_group == "GITLAB" ? var.atlantis_gitlab_user_token_ssm_parameter_name : var.atlantis_github_user_token != "" || local.secrets_group == "GITHUB" ? var.atlantis_github_user_token_ssm_parameter_name : var.atlantis_bitbucket_user_token_ssm_parameter_name : "unknown_secret_name_value"
 
+  # webhook
   secret_webhook_key = local.has_secrets || local.secrets_group != "" ? var.atlantis_gitlab_user_token != "" || local.secrets_group == "GITLAB" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : var.atlantis_github_user_token != "" || local.secrets_group == "GITHUB" ? "ATLANTIS_GH_WEBHOOK_SECRET" : "ATLANTIS_BITBUCKET_WEBHOOK_SECRET" : "unknown_secret_webhook_key"
 
   # determine if the alb has authentication enabled, otherwise forward the traffic unauthenticated
   alb_authenication_method = length(keys(var.alb_authenticate_oidc)) > 0 ? "authenticate-oidc" : length(keys(var.alb_authenticate_cognito)) > 0 ? "authenticate-cognito" : "forward"
 
   # Container definitions
-  container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? module.container_definition_bitbucket.json : module.container_definition_github_gitlab.json : var.custom_container_definitions
+  container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? module.container_definition_bitbucket.json_map_encoded_list : module.container_definition_github_gitlab.json_map_encoded_list : var.custom_container_definitions
 
   container_definition_environment = [
     {
@@ -79,20 +80,20 @@ locals {
   ]
 
   # Secret access tokens
-  container_definition_secrets_1 = [
+  container_definition_secrets_1 = local.secret_name_key != "" && local.secret_name_value_from != "" ? [
     {
       name      = local.secret_name_key
       valueFrom = local.secret_name_value_from
     },
-  ]
+  ] : []
 
   # Webhook secrets are not supported by BitBucket
-  container_definition_secrets_2 = [
+  container_definition_secrets_2 = local.secret_webhook_key != "" ? [
     {
       name      = local.secret_webhook_key
       valueFrom = var.webhook_ssm_parameter_name
     },
-  ]
+  ] : []
 
   tags = merge(
     {
@@ -115,6 +116,8 @@ data "aws_route53_zone" "this" {
 # Secret for webhook
 ###################
 resource "random_id" "webhook" {
+  count = var.atlantis_github_webhook_secret != "" ? 0 : 1
+
   byte_length = "64"
 }
 
@@ -123,7 +126,7 @@ resource "aws_ssm_parameter" "webhook" {
 
   name  = var.webhook_ssm_parameter_name
   type  = "SecureString"
-  value = random_id.webhook.hex
+  value = coalesce(var.atlantis_github_webhook_secret, join("", random_id.webhook.*.hex))
 
   tags = local.tags
 }
@@ -163,7 +166,7 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
 ###################
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v2.33.0"
+  version = "v2.47.0"
 
   create_vpc = var.vpc_id == ""
 
@@ -185,7 +188,7 @@ module "vpc" {
 ###################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v5.6.0"
+  version = "v5.7.0"
 
   name     = var.name
   internal = var.internal
@@ -200,6 +203,7 @@ module "alb" {
     prefix  = var.alb_log_location_prefix
   }
 
+  listener_ssl_policy_default = var.alb_listener_ssl_policy_default
   https_listeners = [
     {
       target_group_index   = 0
@@ -262,33 +266,33 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
 ###################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v3.9.0"
+  version = "v3.15.0"
 
   name        = "${var.name}-alb-https"
   vpc_id      = local.vpc_id
   description = "Security group with HTTPS ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open"
 
-  ingress_cidr_blocks = var.alb_ingress_cidr_blocks
+  ingress_cidr_blocks = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.alb_ingress_cidr_blocks)))
 
-  tags = local.tags
+  tags = merge(local.tags, var.alb_https_security_group_tags)
 }
 
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
-  version = "v3.9.0"
+  version = "v3.15.0"
 
   name        = "${var.name}-alb-http"
   vpc_id      = local.vpc_id
   description = "Security group with HTTP ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open"
 
-  ingress_cidr_blocks = var.alb_ingress_cidr_blocks
+  ingress_cidr_blocks = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.alb_ingress_cidr_blocks)))
 
-  tags = local.tags
+  tags = merge(local.tags, var.alb_http_security_group_tags)
 }
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v3.9.0"
+  version = "v3.15.0"
 
   name        = var.name
   vpc_id      = local.vpc_id
@@ -306,7 +310,7 @@ module "atlantis_sg" {
 
   egress_rules = ["all-all"]
 
-  tags = local.tags
+  tags = merge(local.tags, var.atlantis_security_group_tags)
 }
 
 ###################
@@ -314,7 +318,7 @@ module "atlantis_sg" {
 ###################
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v2.5.0"
+  version = "v2.10.0"
 
   create_certificate = var.certificate_arn == ""
 
@@ -347,9 +351,10 @@ resource "aws_route53_record" "atlantis" {
 ###################
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "v2.0.0"
+  version = "v2.3.0"
 
-  name = var.name
+  name               = var.name
+  container_insights = var.ecs_container_insights
 
   tags = local.tags
 }
@@ -434,7 +439,7 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 
 module "container_definition_github_gitlab" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.23.0"
+  version = "v0.40.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -442,6 +447,21 @@ module "container_definition_github_gitlab" {
   container_cpu                = var.ecs_task_cpu
   container_memory             = var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
+
+  user                     = var.user
+  ulimits                  = var.ulimits
+  entrypoint               = var.entrypoint
+  command                  = var.command
+  working_directory        = var.working_directory
+  repository_credentials   = var.repository_credentials
+  docker_labels            = var.docker_labels
+  start_timeout            = var.start_timeout
+  stop_timeout             = var.stop_timeout
+  container_depends_on     = var.container_depends_on
+  essential                = var.essential
+  readonly_root_filesystem = var.readonly_root_filesystem
+  mount_points             = var.mount_points
+  volumes_from             = var.volumes_from
 
   port_mappings = [
     {
@@ -460,6 +480,7 @@ module "container_definition_github_gitlab" {
     }
     secretOptions = []
   }
+  firelens_configuration = var.firelens_configuration
 
   environment = concat(
     local.container_definition_environment,
@@ -475,7 +496,7 @@ module "container_definition_github_gitlab" {
 
 module "container_definition_bitbucket" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.23.0"
+  version = "v0.40.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -483,6 +504,21 @@ module "container_definition_bitbucket" {
   container_cpu                = var.ecs_task_cpu
   container_memory             = var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
+
+  user                     = var.user
+  ulimits                  = var.ulimits
+  entrypoint               = var.entrypoint
+  command                  = var.command
+  working_directory        = var.working_directory
+  repository_credentials   = var.repository_credentials
+  docker_labels            = var.docker_labels
+  start_timeout            = var.start_timeout
+  stop_timeout             = var.stop_timeout
+  container_depends_on     = var.container_depends_on
+  essential                = var.essential
+  readonly_root_filesystem = var.readonly_root_filesystem
+  mount_points             = var.mount_points
+  volumes_from             = var.volumes_from
 
   port_mappings = [
     {
@@ -501,6 +537,7 @@ module "container_definition_bitbucket" {
     }
     secretOptions = []
   }
+  firelens_configuration = var.firelens_configuration
 
   environment = concat(
     local.container_definition_environment,
