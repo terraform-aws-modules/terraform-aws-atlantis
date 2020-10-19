@@ -1,0 +1,9 @@
+{
+    "repos":
+        [
+            {
+                "id": "github.com/tophatmonocle/terraform-service",
+                "apply_requirements": ["mergeable"]
+            }
+        ]
+}

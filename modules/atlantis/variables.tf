@@ -1,3 +1,9 @@
+variable "default_terraform_version" {
+  description = "Terraform version to default to"
+  type        = string
+  default     = "v0.13.4"
+}
+
 variable "name" {
   description = "Name to use on all resources created (VPC, ALB, etc)"
   type        = string
@@ -132,12 +138,6 @@ variable "allow_unauthenticated_access_priority" {
   default     = 10
 }
 
-variable "allow_github_webhooks" {
-  description = "Whether to allow access for GitHub webhooks"
-  type        = bool
-  default     = false
-}
-
 variable "github_webhooks_cidr_blocks" {
   description = "List of CIDR blocks used by GitHub webhooks" # This is hardcoded to avoid dependency on github provider. Source: https://api.github.com/meta
   type        = list(string)
@@ -196,28 +196,15 @@ variable "cloudwatch_log_retention_in_days" {
 }
 
 # SSM parameters for secrets
-variable "webhook_ssm_parameter_name" {
-  description = "Name of SSM parameter to keep webhook secret"
+variable "atlantis_github_webhook_secret_ssm_parameter_name" {
+  description = "Name of SSM parameter to keep Atlantis GitHub webhook secret"
   type        = string
-  default     = "/atlantis/webhook/secret"
 }
 
 variable "atlantis_github_user_token_ssm_parameter_name" {
-  description = "Name of SSM parameter to keep atlantis_github_user_token"
+  description = "Name of SSM parameter to keep Atlantis GitHub user token secret"
   type        = string
-  default     = "/atlantis/github/user/token"
-}
-
-variable "atlantis_gitlab_user_token_ssm_parameter_name" {
-  description = "Name of SSM parameter to keep atlantis_gitlab_user_token"
-  type        = string
-  default     = "/atlantis/gitlab/user/token"
-}
-
-variable "atlantis_bitbucket_user_token_ssm_parameter_name" {
-  description = "Name of SSM parameter to keep atlantis_bitbucket_user_token"
-  type        = string
-  default     = "/atlantis/bitbucket/user/token"
+  default     = ""
 }
 
 variable "ssm_kms_key_arn" {
@@ -415,16 +402,10 @@ variable "atlantis_repo_whitelist" {
   type        = list(string)
 }
 
-variable "atlantis_allowed_repo_names" {
-  description = "Git repositories where webhook should be created"
-  type        = list(string)
-  default     = []
-}
-
-variable "allow_repo_config" {
-  description = "When true allows the use of atlantis.yaml config files within the source repos."
+variable "atlantis_repo_config_json" {
+  description = "Path to a JSON server-side repo config file"
   type        = string
-  default     = "false"
+  default     = ""
 }
 
 variable "atlantis_log_level" {
@@ -446,52 +427,20 @@ variable "atlantis_github_user" {
   default     = ""
 }
 
-variable "atlantis_github_user_token" {
-  description = "GitHub token of the user that is running the Atlantis command"
+variable "atlantis_github_organization" {
+  description = "GitHub organization"
   type        = string
   default     = ""
 }
 
-variable "atlantis_github_webhook_secret" {
-  description = "GitHub webhook secret of an app that is running the Atlantis command"
+variable "atlantis_github_app_id" {
+  description = "Id of a GitHub app that is running the Atlantis command"
   type        = string
   default     = ""
 }
 
-# Gitlab
-variable "atlantis_gitlab_user" {
-  description = "Gitlab username that is running the Atlantis command"
-  type        = string
-  default     = ""
-}
-
-variable "atlantis_gitlab_user_token" {
-  description = "Gitlab token of the user that is running the Atlantis command"
-  type        = string
-  default     = ""
-}
-
-variable "atlantis_gitlab_hostname" {
-  description = "Gitlab server hostname, defaults to gitlab.com"
-  type        = string
-  default     = "gitlab.com"
-}
-
-# Bitbucket
-variable "atlantis_bitbucket_user" {
-  description = "Bitbucket username that is running the Atlantis command"
-  type        = string
-  default     = ""
-}
-
-variable "atlantis_bitbucket_user_token" {
-  description = "Bitbucket token of the user that is running the Atlantis command"
-  type        = string
-  default     = ""
-}
-
-variable "atlantis_bitbucket_base_url" {
-  description = "Base URL of Bitbucket Server, use for Bitbucket on prem (Stash)"
+variable "atlantis_github_app_key_file" {
+  description = "Path to a GitHub App PEM encoded private key file"
   type        = string
   default     = ""
 }
