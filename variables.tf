@@ -105,7 +105,7 @@ variable "private_subnets" {
 variable "alb_ingress_cidr_blocks" {
   description = "List of IPv4 CIDR ranges to use on all ingress rules of the ALB."
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+  default     = []
 }
 
 variable "alb_ingress_ipv6_cidr_blocks" {
@@ -717,4 +717,10 @@ variable "runtime_platform" {
   description = "Configuration block for runtime_platform that containers in your task may use."
   type        = any
   default     = {}
+}
+
+variable "security_group_names" {
+  description = "List of one or more security groups to be added to the load balancer"
+  type        = list(string)
+  default     = []
 }
