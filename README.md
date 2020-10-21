@@ -1,6 +1,6 @@
 # AWS Terraform module which runs Atlantis on AWS Fargate
 
-[Atlantis](https://www.runatlantis.io/) is tool which provides unified workflow for collaborating on Terraform through GitHub, GitLab and Bitbucket Cloud.
+[Atlantis](https://www.runatlantis.io/) is a tool which provides a unified workflow for collaborating on Terraform through GitHub, GitLab and Bitbucket Cloud.
 
 This repository contains Terraform infrastructure code which creates AWS resources required to run [Atlantis](https://www.runatlantis.io/) on AWS, including:
 
@@ -11,7 +11,9 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 
 [AWS Fargate](https://aws.amazon.com/fargate/) is used instead of AWS ECS/EC2 to reduce the bill, and it is also a cool AWS service.
 
-This code is in the `atlantis` [module](tree/master/modules/atlantis), and is based heavily on [terraform-aws-atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis).
+This infrastructure is specifically configured to integrate with GitHub only.
+
+The code is in the [`atlantis` module](tree/master/modules/atlantis), and is based heavily on [terraform-aws-atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis).
 
 ## Requirements/Configuration
 
@@ -25,15 +27,16 @@ This code is in the `atlantis` [module](tree/master/modules/atlantis), and is ba
 
 1. In order to run terraform commands, the ECS task will need permission to access:
     - your terraform state file 
-    - your terraform-managed resources (so that it can inspect them)
-If necessary, you should include IAM policies granting those permissions in the `policies_arn` list input to the `atlantis` module.
+    - your terraform-managed resources
+    
+    If necessary, you should include IAM policies granting those permissions in the `policies_arn` list input to the `atlantis` module.
 
 There are a number of additional infrastructure configuration options; see the `atlantis` module [README](blob/master/modules/atlantis/README.md) for details.
 
 
 ### Enabling Atlantis for a new repo
 
-1. Add the repo to the `atlantis_repo_whitelist` list input to the `atlantis` module.
+1. Add the repo to the `atlantis_repo_whitelist` list input to the `atlantis` module.  
 You can use wildcards here, eg. `"github.com/tophatmonocle/*"`. However, you probably want to only enable this for Terraform repos because Atlantis sometimes leaves comments on PRs that don't touch Terraform, including in repos that don't use Terraform at all (this is a [known issue](https://github.com/runatlantis/atlantis/issues/221), unfortunately).
 
 1. Optionally, add the repo to the [server-side config file](blob/master/server-side-repo-config/repos.json), if you have one. This will allow you to define custom apply requirements and/or Atlantis workflows for the repo. Check the [Atlantis docs](https://www.runatlantis.io/docs/server-side-repo-config.html) for more description of the configuration options.
