@@ -5,8 +5,7 @@ module "atlantis" {
 
   policies_arn = [
     "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
-    "arn:aws:iam::aws:policy/AdministratorAccess",
-    "arn:aws:iam::008963853103:policy/allow-assume-cross-account-prod-access-role"
+    "arn:aws:iam::aws:policy/AdministratorAccess"
   ]
 
   # GitHub
@@ -18,9 +17,10 @@ module "atlantis" {
   atlantis_github_app_key_file                      = "/home/atlantis/atlantis-app-key.pem"
 
   # VPC
-  vpc_id             = "vpc-d92765bf"
-  private_subnet_ids = ["subnet-f8f3d1a3", "subnet-e999fcd5"]
-  public_subnet_ids  = ["subnet-f9f3d1a2", "subnet-e899fcd4"]
+  vpc_id                  = "vpc-d92765bf"
+  private_subnet_ids      = ["subnet-f8f3d1a3", "subnet-e999fcd5"]
+  public_subnet_ids       = ["subnet-f9f3d1a2", "subnet-e899fcd4"]
+  alb_ingress_cidr_blocks = []
 
   # DNS
   route53_zone_name = "dev.tophat.com"
