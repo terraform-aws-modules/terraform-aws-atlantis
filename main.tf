@@ -75,6 +75,10 @@ locals {
       name  = "ATLANTIS_HIDE_PREV_PLAN_COMMENTS"
       value = var.atlantis_hide_prev_plan_comments
     },
+    {
+      name  = "ATLANTIS_REPO_CONFIG"
+      value = var.atlantis_repo_config
+    },
   ]
 
   # Secret access tokens

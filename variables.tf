@@ -439,6 +439,12 @@ variable "atlantis_hide_prev_plan_comments" {
   default     = "false"
 }
 
+variable "atlantis_repo_config" {
+  description = "Path to an atlantis repo config file, used to customize how Atlantis runs on each repo, via --repo-config"
+  type        = string
+  default     = ""
+}
+
 # Github
 variable "atlantis_github_user" {
   description = "GitHub username that is running the Atlantis command"
