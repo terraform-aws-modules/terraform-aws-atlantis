@@ -439,8 +439,8 @@ variable "atlantis_hide_prev_plan_comments" {
   default     = "false"
 }
 
-variable "atlantis_repo_config" {
-  description = "Path to an atlantis repo config file, used to customize how Atlantis runs on each repo, via --repo-config"
+variable "atlantis_repo_config_json" {
+  description = "Specify repo config as a JSON string"
   type        = string
   default     = ""
 }

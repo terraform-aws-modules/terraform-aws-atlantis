@@ -76,8 +76,8 @@ locals {
       value = var.atlantis_hide_prev_plan_comments
     },
     {
-      name  = "ATLANTIS_REPO_CONFIG"
-      value = var.atlantis_repo_config
+      name  = "ATLANTIS_REPO_CONFIG_JSON"
+      value = var.atlantis_repo_config_json
     },
   ]
 
