@@ -75,6 +75,10 @@ locals {
       name  = "ATLANTIS_HIDE_PREV_PLAN_COMMENTS"
       value = var.atlantis_hide_prev_plan_comments
     },
+    {
+      name  = "ATLANTIS_CHECKOUT_STRATEGY"
+      value = var.atlantis_checkout_strategy
+    },
   ]
 
   # Secret access tokens

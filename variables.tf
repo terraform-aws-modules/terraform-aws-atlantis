@@ -433,6 +433,21 @@ variable "atlantis_log_level" {
   default     = "debug"
 }
 
+variable "atlantis_checkout_strategy" {
+  description = """
+    Configure atlantis server --checkout-strategy
+
+    How to check out pull requests. Accepts either 'branch' (default) or 'merge'.
+    If set to branch, Atlantis will check out the source branch of the pull request.
+    If set to merge, Atlantis will check out the destination branch of the pull request (ex. master)
+    and then locally perform a git merge of the source branch.
+    This effectively means Atlantis operates on the repo as it will look
+    after the pull request is merged.
+  """
+  type = string
+  default = "branch"
+}
+
 variable "atlantis_hide_prev_plan_comments" {
   description = "Enables atlantis server --hide-prev-plan-comments hiding previous plan comments on update"
   type        = string
