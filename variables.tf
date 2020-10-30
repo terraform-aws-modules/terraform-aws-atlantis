@@ -381,6 +381,12 @@ variable "ulimits" {
   default = null
 }
 
+variable "external_task_definition_updates" {
+  description = "Enable to allow the task definition to be updated outside of this Terraform module. This should be enabled when using a deployment tool such as ecs-deploy which updates the task definition and will then keep the ECS service using the latest version of the task definition."
+  type        = bool
+  default     = false
+}
+
 # https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html
 variable "firelens_configuration" {
   description = "The FireLens configuration for the container. This is used to specify and configure a log router for container logs. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html"
