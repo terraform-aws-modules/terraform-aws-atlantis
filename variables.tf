@@ -239,6 +239,12 @@ variable "policies_arn" {
   default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
 
+variable "ecs_fargate_spot" {
+  description = "Whether to run ECS Fargate Spot or not"
+  type        = bool
+  default     = false
+}
+
 variable "ecs_container_insights" {
   description = "Controls if ECS Cluster has container insights enabled"
   type        = bool

@@ -16,12 +16,6 @@ variable "gitlab_token" {
   default     = ""
 }
 
-variable "gitlab_organization" {
-  description = "Gitlab organization to use when creating webhook"
-  type        = string
-  default     = ""
-}
-
 variable "atlantis_allowed_repo_names" {
   description = "List of names of repositories which belong to the organization specified in `gitlab_organization`"
   type        = list(string)

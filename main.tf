@@ -349,10 +349,16 @@ resource "aws_route53_record" "atlantis" {
 ###################
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "v2.3.0"
+  version = "v2.5.0"
 
   name               = var.name
   container_insights = var.ecs_container_insights
+
+  capacity_providers = ["FARGATE", "FARGATE_SPOT"]
+
+  default_capacity_provider_strategy = {
+    capacity_provider = var.ecs_fargate_spot ? "FARGATE_SPOT" : "FARGATE"
+  }
 
   tags = local.tags
 }
@@ -386,7 +392,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
   policy_arn = element(var.policies_arn, count.index)
 }
 
-// ref: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html
+# ref: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html
 data "aws_iam_policy_document" "ecs_task_access_secrets" {
   statement {
     effect = "Allow"
@@ -576,7 +582,7 @@ resource "aws_ecs_service" "atlantis" {
     data.aws_ecs_task_definition.atlantis.revision,
   )}"
   desired_count                      = var.ecs_service_desired_count
-  launch_type                        = "FARGATE"
+  launch_type                        = var.ecs_fargate_spot ? null : "FARGATE"
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
   deployment_minimum_healthy_percent = var.ecs_service_deployment_minimum_healthy_percent
 
@@ -590,6 +596,14 @@ resource "aws_ecs_service" "atlantis" {
     container_name   = var.name
     container_port   = var.atlantis_port
     target_group_arn = element(module.alb.target_group_arns, 0)
+  }
+
+  dynamic "capacity_provider_strategy" {
+    for_each = var.ecs_fargate_spot ? [true] : []
+    content {
+      capacity_provider = "FARGATE_SPOT"
+      weight            = 100
+    }
   }
 
   tags = local.tags
