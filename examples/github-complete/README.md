@@ -27,13 +27,16 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| terraform | >= 0.12.7 |
+| aws | >= 2.68 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | n/a |
+| aws | >= 2.68 |
 
 ## Inputs
 

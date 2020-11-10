@@ -166,15 +166,16 @@ allow_github_webhooks        = true
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.7, < 0.14 |
-| aws | >= 2.68, < 4.0 |
+| terraform | >= 0.12.7 |
+| aws | >= 2.68 |
+| random | >= 2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 2.68, < 4.0 |
-| random | n/a |
+| aws | >= 2.68 |
+| random | >= 2.0 |
 
 ## Inputs
 
@@ -228,6 +229,7 @@ allow_github_webhooks        = true
 | custom\_environment\_variables | List of additional environment variables the container will use (list should contain maps with `name` and `value`) | <pre>list(object(<br>    {<br>      name  = string<br>      value = string<br>    }<br>  ))</pre> | `[]` | no |
 | docker\_labels | The configuration options to send to the `docker_labels` | `map(string)` | `null` | no |
 | ecs\_container\_insights | Controls if ECS Cluster has container insights enabled | `bool` | `false` | no |
+| ecs\_fargate\_spot | Whether to run ECS Fargate Spot or not | `bool` | `false` | no |
 | ecs\_service\_assign\_public\_ip | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | `bool` | `false` | no |
 | ecs\_service\_deployment\_maximum\_percent | The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment | `number` | `200` | no |
 | ecs\_service\_deployment\_minimum\_healthy\_percent | The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment | `number` | `50` | no |
