@@ -11,7 +11,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 - [AWS Elastic Cloud Service (ECS)](https://aws.amazon.com/ecs/) and [AWS Fargate](https://aws.amazon.com/fargate/) running Atlantis Docker image
 - AWS Parameter Store to keep secrets and access them in ECS task natively
 
-[AWS Fargate](https://aws.amazon.com/fargate/) is used instead of AWS ECS/EC2 to reduce the bill, and it is also a cool AWS service.
+[AWS Fargate](https://aws.amazon.com/fargate/) with optional support for [Fargate Spot](https://aws.amazon.com/blogs/aws/aws-fargate-spot-now-generally-available/) is used to reduce the bill, and it is also a cool AWS service.
 
 Depending on which SCM system you use, Github repositories or Gitlab projects has to be configured to post events to Atlantis webhook URL.
 
