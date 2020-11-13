@@ -293,6 +293,12 @@ variable "custom_container_definitions" {
   default     = ""
 }
 
+variable "extra_container_definitions" {
+  description = "A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition"
+  type        = list(any)
+  default     = []
+}
+
 variable "entrypoint" {
   description = "The entry point that is passed to the container"
   type        = list(string)
