@@ -424,7 +424,7 @@ data "aws_iam_policy_document" "ecs_task_access_secrets_with_kms" {
 }
 
 resource "aws_iam_role_policy" "ecs_task_access_secrets" {
-  count = var.atlantis_github_user_token != "" || var.atlantis_gitlab_user_token != "" || var.atlantis_bitbucket_user_token != "" ? 1 : 0
+  count = var.atlantis_github_webhook_secret != "" || var.atlantis_github_user_token != "" || var.atlantis_gitlab_user_token != "" || var.atlantis_bitbucket_user_token != "" ? 1 : 0
 
   name = "ECSTaskAccessSecretsPolicy"
 
