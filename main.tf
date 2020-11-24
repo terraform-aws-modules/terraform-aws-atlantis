@@ -592,10 +592,13 @@ resource "aws_ecs_service" "atlantis" {
     assign_public_ip = var.ecs_service_assign_public_ip
   }
 
-  load_balancer {
-    container_name   = var.name
-    container_port   = var.atlantis_port
-    target_group_arn = element(module.alb.target_group_arns, 0)
+  dynamic "load_balancer" {
+    for_each = concat(module.alb.target_group_arns, var.additional_target_group_arns)
+    content {
+      container_name = var.name
+      container_port = var.atlantis_port
+      target_group_arn = load_balancer.value
+    }
   }
 
   dynamic "capacity_provider_strategy" {

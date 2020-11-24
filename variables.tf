@@ -535,3 +535,9 @@ variable "security_group_ids" {
   type        = list(string)
   default     = []
 }
+
+variable "additional_target_group_arns" {
+  description = "List of additional target group arns to connect with the ecs_service"
+  type        = list(string)
+  default     = []
+}
