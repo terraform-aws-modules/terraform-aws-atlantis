@@ -60,7 +60,7 @@ module "atlantis" {
   }]
 
   # Security
-  trusted_principals = ["ssm.amazonaws.com"] # Convenient if you want to enable SSM access into Atlantis for troubleshooting etc
+  trusted_principals = var.trusted_principals
 
   # DNS
   route53_zone_name = var.domain
