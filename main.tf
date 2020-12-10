@@ -373,7 +373,7 @@ data "aws_iam_policy_document" "ecs_tasks" {
 
     principals {
       type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
+      identifiers = compact(distinct(concat(["ecs-tasks.amazonaws.com"], var.trusted_principals)))
     }
   }
 }

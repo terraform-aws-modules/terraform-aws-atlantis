@@ -59,6 +59,9 @@ module "atlantis" {
     hardLimit = 16384
   }]
 
+  # Security
+  trusted_principals = var.trusted_principals
+
   # DNS
   route53_zone_name = var.domain
 

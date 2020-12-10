@@ -239,6 +239,12 @@ variable "policies_arn" {
   default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
 
+variable "trusted_principals" {
+  description = "A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role"
+  type        = list(string)
+  default     = []
+}
+
 variable "ecs_fargate_spot" {
   description = "Whether to run ECS Fargate Spot or not"
   type        = bool
