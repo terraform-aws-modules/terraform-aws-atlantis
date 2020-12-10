@@ -245,6 +245,12 @@ variable "trusted_principals" {
   default     = []
 }
 
+variable "ecs_fargate_spot" {
+  description = "Whether to run ECS Fargate Spot or not"
+  type        = bool
+  default     = false
+}
+
 variable "ecs_container_insights" {
   description = "Controls if ECS Cluster has container insights enabled"
   type        = bool
@@ -291,6 +297,12 @@ variable "custom_container_definitions" {
   description = "A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used."
   type        = string
   default     = ""
+}
+
+variable "extra_container_definitions" {
+  description = "A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition"
+  type        = list(any)
+  default     = []
 }
 
 variable "entrypoint" {
@@ -454,6 +466,12 @@ variable "atlantis_github_user" {
 
 variable "atlantis_github_user_token" {
   description = "GitHub token of the user that is running the Atlantis command"
+  type        = string
+  default     = ""
+}
+
+variable "atlantis_github_webhook_secret" {
+  description = "GitHub webhook secret of an app that is running the Atlantis command"
   type        = string
   default     = ""
 }

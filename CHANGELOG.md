@@ -7,6 +7,24 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.26.0"></a>
+## [v2.26.0] - 2020-11-13
+
+- feat: allow for extra_container_definitions ([#162](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/162))
+
+
+<a name="v2.25.0"></a>
+## [v2.25.0] - 2020-11-10
+
+- feat: Added support for Fargate Spot ([#164](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/164))
+
+
+<a name="v2.24.0"></a>
+## [v2.24.0] - 2020-09-01
+
+- feat: Use atlantis bot instead of a github user ([#151](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/151))
+
+
 <a name="v2.23.0"></a>
 ## [v2.23.0] - 2020-08-18
 
@@ -334,7 +352,10 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.23.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.26.0...HEAD
+[v2.26.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.25.0...v2.26.0
+[v2.25.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.24.0...v2.25.0
+[v2.24.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.23.0...v2.24.0
 [v2.23.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.22.0...v2.23.0
 [v2.22.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.21.0...v2.22.0
 [v2.21.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.20.0...v2.21.0

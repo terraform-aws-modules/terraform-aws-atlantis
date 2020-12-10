@@ -17,17 +17,18 @@ locals {
   # Include only one group of secrets - for github, gitlab or bitbucket
   has_secrets = var.atlantis_gitlab_user_token != "" || var.atlantis_github_user_token != "" || var.atlantis_bitbucket_user_token != ""
 
-  secret_name_key = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_TOKEN" : var.atlantis_github_user_token != "" ? "ATLANTIS_GH_TOKEN" : "ATLANTIS_BITBUCKET_TOKEN" : "unknown_secret_name_key"
+  # token
+  secret_name_key        = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_TOKEN" : var.atlantis_github_user_token != "" ? "ATLANTIS_GH_TOKEN" : "ATLANTIS_BITBUCKET_TOKEN" : ""
+  secret_name_value_from = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? var.atlantis_gitlab_user_token_ssm_parameter_name : var.atlantis_github_user_token != "" ? var.atlantis_github_user_token_ssm_parameter_name : var.atlantis_bitbucket_user_token_ssm_parameter_name : ""
 
-  secret_name_value_from = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? var.atlantis_gitlab_user_token_ssm_parameter_name : var.atlantis_github_user_token != "" ? var.atlantis_github_user_token_ssm_parameter_name : var.atlantis_bitbucket_user_token_ssm_parameter_name : "unknown_secret_name_value"
-
-  secret_webhook_key = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : var.atlantis_github_user_token != "" ? "ATLANTIS_GH_WEBHOOK_SECRET" : "ATLANTIS_BITBUCKET_WEBHOOK_SECRET" : "unknown_secret_webhook_key"
+  # webhook
+  secret_webhook_key = local.has_secrets || var.atlantis_github_webhook_secret != "" ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : var.atlantis_github_user_token != "" || var.atlantis_github_webhook_secret != "" ? "ATLANTIS_GH_WEBHOOK_SECRET" : "ATLANTIS_BITBUCKET_WEBHOOK_SECRET" : ""
 
   # determine if the alb has authentication enabled, otherwise forward the traffic unauthenticated
   alb_authenication_method = length(keys(var.alb_authenticate_oidc)) > 0 ? "authenticate-oidc" : length(keys(var.alb_authenticate_cognito)) > 0 ? "authenticate-cognito" : "forward"
 
   # Container definitions
-  container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? module.container_definition_bitbucket.json_map_encoded_list : module.container_definition_github_gitlab.json_map_encoded_list : var.custom_container_definitions
+  container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? jsonencode(concat([module.container_definition_bitbucket.json_map_object], var.extra_container_definitions)) : jsonencode(concat([module.container_definition_github_gitlab.json_map_object], var.extra_container_definitions)) : var.custom_container_definitions
 
   container_definition_environment = [
     {
@@ -77,20 +78,20 @@ locals {
   ]
 
   # Secret access tokens
-  container_definition_secrets_1 = [
+  container_definition_secrets_1 = local.secret_name_key != "" && local.secret_name_value_from != "" ? [
     {
       name      = local.secret_name_key
       valueFrom = local.secret_name_value_from
     },
-  ]
+  ] : []
 
   # Webhook secrets are not supported by BitBucket
-  container_definition_secrets_2 = [
+  container_definition_secrets_2 = local.secret_webhook_key != "" ? [
     {
       name      = local.secret_webhook_key
       valueFrom = var.webhook_ssm_parameter_name
     },
-  ]
+  ] : []
 
   tags = merge(
     {
@@ -113,6 +114,8 @@ data "aws_route53_zone" "this" {
 # Secret for webhook
 ###################
 resource "random_id" "webhook" {
+  count = var.atlantis_github_webhook_secret != "" ? 0 : 1
+
   byte_length = "64"
 }
 
@@ -121,7 +124,7 @@ resource "aws_ssm_parameter" "webhook" {
 
   name  = var.webhook_ssm_parameter_name
   type  = "SecureString"
-  value = random_id.webhook.hex
+  value = coalesce(var.atlantis_github_webhook_secret, join("", random_id.webhook.*.hex))
 
   tags = local.tags
 }
@@ -346,10 +349,16 @@ resource "aws_route53_record" "atlantis" {
 ###################
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "v2.3.0"
+  version = "v2.5.0"
 
   name               = var.name
   container_insights = var.ecs_container_insights
+
+  capacity_providers = ["FARGATE", "FARGATE_SPOT"]
+
+  default_capacity_provider_strategy = {
+    capacity_provider = var.ecs_fargate_spot ? "FARGATE_SPOT" : "FARGATE"
+  }
 
   tags = local.tags
 }
@@ -383,7 +392,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
   policy_arn = element(var.policies_arn, count.index)
 }
 
-// ref: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html
+# ref: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html
 data "aws_iam_policy_document" "ecs_task_access_secrets" {
   statement {
     effect = "Allow"
@@ -573,7 +582,7 @@ resource "aws_ecs_service" "atlantis" {
     data.aws_ecs_task_definition.atlantis.revision,
   )}"
   desired_count                      = var.ecs_service_desired_count
-  launch_type                        = "FARGATE"
+  launch_type                        = var.ecs_fargate_spot ? null : "FARGATE"
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
   deployment_minimum_healthy_percent = var.ecs_service_deployment_minimum_healthy_percent
 
@@ -587,6 +596,14 @@ resource "aws_ecs_service" "atlantis" {
     container_name   = var.name
     container_port   = var.atlantis_port
     target_group_arn = element(module.alb.target_group_arns, 0)
+  }
+
+  dynamic "capacity_provider_strategy" {
+    for_each = var.ecs_fargate_spot ? [true] : []
+    content {
+      capacity_provider = "FARGATE_SPOT"
+      weight            = 100
+    }
   }
 
   tags = local.tags
