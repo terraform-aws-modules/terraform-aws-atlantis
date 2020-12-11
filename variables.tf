@@ -126,6 +126,12 @@ variable "allow_unauthenticated_access" {
   default     = false
 }
 
+variable "allow_unauthenticated_access_path_pattern" {
+  description = "The pattern to allow unauthenticated access (eg. allow GitHub webhooks for /events)"
+  type        = string
+  default     = "*"
+}
+
 variable "allow_unauthenticated_access_priority" {
   description = "ALB listener rule priority for allow unauthenticated access rule"
   type        = number

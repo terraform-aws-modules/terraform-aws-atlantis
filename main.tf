@@ -253,6 +253,12 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
   }
 
   condition {
+    path_pattern {
+      values = [var.allow_unauthenticated_access_path_pattern]
+    }
+  }
+
+  condition {
     source_ip {
       values = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.whitelist_unauthenticated_cidr_blocks)))
     }
