@@ -61,6 +61,7 @@ module "atlantis" {
 
   # Security
   trusted_principals = var.trusted_principals
+  trusted_entities   = [data.aws_caller_identity.caller_arn]
 
   # DNS
   route53_zone_name = var.domain
