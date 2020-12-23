@@ -574,6 +574,7 @@ resource "aws_ecs_service" "atlantis" {
   )}"
   desired_count                      = var.ecs_service_desired_count
   launch_type                        = "FARGATE"
+  platform_version                   = var.ecs_service_fargate_platform_version
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
   deployment_minimum_healthy_percent = var.ecs_service_deployment_minimum_healthy_percent
 
