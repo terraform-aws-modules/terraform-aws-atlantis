@@ -275,6 +275,12 @@ variable "ecs_service_deployment_minimum_healthy_percent" {
   default     = 50
 }
 
+variable "ecs_service_fargate_platform_version" {
+  description = "The Fargate platform version on which to run the Atlantis service. Defaults to LATEST" 
+  type        = string
+  default     = "LATEST"
+}
+
 variable "ecs_task_cpu" {
   description = "The number of cpu units used by the task"
   type        = number
