@@ -3,13 +3,16 @@
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| terraform | >= 0.12.7 |
+| github | >= 2.4.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| github | n/a |
+| github | >= 2.4.1 |
 
 ## Inputs
 

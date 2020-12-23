@@ -27,13 +27,16 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| terraform | >= 0.12.7 |
+| aws | >= 2.68 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | n/a |
+| aws | >= 2.68 |
 
 ## Inputs
 
@@ -46,6 +49,7 @@ No requirements.
 | github\_token | Github token | `string` | n/a | yes |
 | github\_user | Github user for Atlantis to utilize when performing Github activities | `string` | n/a | yes |
 | region | AWS region where resources will be created | `string` | `"us-east-1"` | no |
+| trusted\_principals | A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role | `list(string)` | n/a | yes |
 
 ## Outputs
 

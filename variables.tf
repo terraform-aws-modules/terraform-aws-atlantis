@@ -239,6 +239,18 @@ variable "policies_arn" {
   default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
 
+variable "trusted_principals" {
+  description = "A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role"
+  type        = list(string)
+  default     = []
+}
+
+variable "ecs_fargate_spot" {
+  description = "Whether to run ECS Fargate Spot or not"
+  type        = bool
+  default     = false
+}
+
 variable "ecs_container_insights" {
   description = "Controls if ECS Cluster has container insights enabled"
   type        = bool
@@ -285,6 +297,12 @@ variable "custom_container_definitions" {
   description = "A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used."
   type        = string
   default     = ""
+}
+
+variable "extra_container_definitions" {
+  description = "A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition"
+  type        = list(any)
+  default     = []
 }
 
 variable "entrypoint" {
