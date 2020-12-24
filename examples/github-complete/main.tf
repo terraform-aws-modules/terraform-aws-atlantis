@@ -35,6 +35,7 @@ module "atlantis" {
   public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
 
   # ECS
+  ecs_service_platform_version = "LATEST"
   ecs_container_insights       = true
   ecs_task_cpu                 = 512
   ecs_task_memory              = 1024
