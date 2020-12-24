@@ -79,6 +79,7 @@ module "atlantis" {
   alb_listener_ssl_policy_default = "ELBSecurityPolicy-TLS-1-2-2017-01"
 
   allow_unauthenticated_access = true
+  allow_unauthenticated_access_path_pattern = "/events"
   allow_github_webhooks        = true
   allow_repo_config            = true
 
