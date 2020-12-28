@@ -164,7 +164,7 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
 ###################
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v2.47.0"
+  version = "v2.64.0"
 
   create_vpc = var.vpc_id == ""
 
@@ -186,7 +186,7 @@ module "vpc" {
 ###################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v5.7.0"
+  version = "v5.10.0"
 
   name     = var.name
   internal = var.internal
@@ -264,7 +264,7 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
 ###################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v3.15.0"
+  version = "v3.17.0"
 
   name        = "${var.name}-alb-https"
   vpc_id      = local.vpc_id
@@ -277,7 +277,7 @@ module "alb_https_sg" {
 
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
-  version = "v3.15.0"
+  version = "v3.17.0"
 
   name        = "${var.name}-alb-http"
   vpc_id      = local.vpc_id
@@ -290,7 +290,7 @@ module "alb_http_sg" {
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v3.15.0"
+  version = "v3.17.0"
 
   name        = var.name
   vpc_id      = local.vpc_id
@@ -316,7 +316,7 @@ module "atlantis_sg" {
 ###################
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v2.10.0"
+  version = "v2.12.0"
 
   create_certificate = var.certificate_arn == ""
 
@@ -448,7 +448,7 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 
 module "container_definition_github_gitlab" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.40.0"
+  version = "v0.45.2"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -505,7 +505,7 @@ module "container_definition_github_gitlab" {
 
 module "container_definition_bitbucket" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.40.0"
+  version = "v0.45.2"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -588,6 +588,7 @@ resource "aws_ecs_service" "atlantis" {
   )}"
   desired_count                      = var.ecs_service_desired_count
   launch_type                        = var.ecs_fargate_spot ? null : "FARGATE"
+  platform_version                   = var.ecs_service_platform_version
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
   deployment_minimum_healthy_percent = var.ecs_service_deployment_minimum_healthy_percent
 
