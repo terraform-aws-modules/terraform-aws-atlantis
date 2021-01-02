@@ -182,6 +182,7 @@ allow_github_webhooks        = true
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | acm\_certificate\_domain\_name | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name` | `string` | `""` | no |
+| additional\_target\_group\_arns | List of additional target group arns to connect with the ecs_service | `list(string)` | `[]` | no |
 | alb\_authenticate\_cognito | Map of AWS Cognito authentication parameters to protect ALB (eg, using SAML). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-cognito-action | `any` | `{}` | no |
 | alb\_authenticate\_oidc | Map of Authenticate OIDC parameters to protect ALB (eg, using Auth0). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-oidc-action | `any` | `{}` | no |
 | alb\_http\_security\_group\_tags | Additional tags to put on the http security group | `map(string)` | `{}` | no |
