@@ -233,6 +233,12 @@ variable "ecs_service_assign_public_ip" {
   default     = false
 }
 
+variable "permissions_boundary" {
+  description = "If provided, all IAM roles will be created with this permissions boundary attached."
+  type        = string
+  default     = null
+}
+
 variable "policies_arn" {
   description = "A list of the ARN of the policies you want to apply"
   type        = list(string)
