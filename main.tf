@@ -252,9 +252,13 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
     target_group_arn = module.alb.target_group_arns[0]
   }
 
-  condition {
-    path_pattern {
-      values = [var.allow_unauthenticated_access_path_pattern]
+  dynamic "condition" {
+    for_each = var.allow_unauthenticated_access_path_pattern == "" ? [] : [var.allow_unauthenticated_access_path_pattern]
+
+    content {
+      path_pattern {
+        values = [condition.value]
+      }
     }
   }
 

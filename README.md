@@ -144,8 +144,8 @@ If you are using one of the authentication methods above along with managed GitH
 
 ```hcl
 allow_unauthenticated_access = true
-allow_unauthenticated_access_path_pattern = "/events" # optional, by default is wildcard "*"
-allow_github_webhooks        = true # or manually set Github CIDRs in whitelist_unauthenticated_cidr_blocks
+allow_unauthenticated_access_path_pattern = "/events"
+allow_github_webhooks        = true
 ```
 
 ## Notes

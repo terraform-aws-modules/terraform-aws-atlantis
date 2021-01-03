@@ -129,7 +129,7 @@ variable "allow_unauthenticated_access" {
 variable "allow_unauthenticated_access_path_pattern" {
   description = "The pattern to allow unauthenticated access (eg. allow GitHub webhooks for /events)"
   type        = string
-  default     = "*"
+  default     = ""
 }
 
 variable "allow_unauthenticated_access_priority" {
