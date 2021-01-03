@@ -195,7 +195,7 @@ allow_github_webhooks        = true
 | allow\_github\_webhooks | Whether to allow access for GitHub webhooks | `bool` | `false` | no |
 | allow\_repo\_config | When true allows the use of atlantis.yaml config files within the source repos. | `string` | `"false"` | no |
 | allow\_unauthenticated\_access | Whether to create ALB listener rule to allow unauthenticated access for certain CIDR blocks (eg. allow GitHub webhooks to bypass OIDC authentication) | `bool` | `false` | no |
-| allow\_unauthenticated\_access\_path\_pattern | The pattern to allow unauthenticated access (eg. allow GitHub webhooks for /events) | `string` | `"*"` | no |
+| allow\_unauthenticated\_access\_path\_pattern | The pattern to allow unauthenticated access (eg. allow GitHub webhooks for /events) | `string` | `""` | no |
 | allow\_unauthenticated\_access\_priority | ALB listener rule priority for allow unauthenticated access rule | `number` | `10` | no |
 | atlantis\_allowed\_repo\_names | Git repositories where webhook should be created | `list(string)` | `[]` | no |
 | atlantis\_bitbucket\_base\_url | Base URL of Bitbucket Server, use for Bitbucket on prem (Stash) | `string` | `""` | no |
