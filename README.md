@@ -247,6 +247,7 @@ allow_github_webhooks        = true
 | internal | Whether the load balancer is internal or external | `bool` | `false` | no |
 | mount\_points | Container mount points. This is a list of maps, where each map should contain a `containerPath` and `sourceVolume`. The `readOnly` key is optional. | `list` | `[]` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | `string` | `"atlantis"` | no |
+| permissions\_boundary | If provided, all IAM roles will be created with this permissions boundary attached. | `string` | `null` | no |
 | policies\_arn | A list of the ARN of the policies you want to apply | `list(string)` | <pre>[<br>  "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"<br>]</pre> | no |
 | private\_subnet\_ids | A list of IDs of existing private subnets inside the VPC | `list(string)` | `[]` | no |
 | private\_subnets | A list of private subnets inside the VPC | `list(string)` | `[]` | no |
