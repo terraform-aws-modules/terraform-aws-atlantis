@@ -233,10 +233,28 @@ variable "ecs_service_assign_public_ip" {
   default     = false
 }
 
+variable "permissions_boundary" {
+  description = "If provided, all IAM roles will be created with this permissions boundary attached."
+  type        = string
+  default     = null
+}
+
 variable "policies_arn" {
   description = "A list of the ARN of the policies you want to apply"
   type        = list(string)
   default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+}
+
+variable "trusted_principals" {
+  description = "A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role"
+  type        = list(string)
+  default     = []
+}
+
+variable "ecs_fargate_spot" {
+  description = "Whether to run ECS Fargate Spot or not"
+  type        = bool
+  default     = false
 }
 
 variable "ecs_container_insights" {
@@ -249,6 +267,12 @@ variable "ecs_service_desired_count" {
   description = "The number of instances of the task definition to place and keep running"
   type        = number
   default     = 1
+}
+
+variable "ecs_service_platform_version" {
+  description = "The platform version on which to run your service"
+  type        = string
+  default     = "LATEST"
 }
 
 variable "ecs_service_deployment_maximum_percent" {
@@ -285,6 +309,12 @@ variable "custom_container_definitions" {
   description = "A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used."
   type        = string
   default     = ""
+}
+
+variable "extra_container_definitions" {
+  description = "A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition"
+  type        = list(any)
+  default     = []
 }
 
 variable "entrypoint" {

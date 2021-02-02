@@ -28,7 +28,7 @@ locals {
   alb_authenication_method = length(keys(var.alb_authenticate_oidc)) > 0 ? "authenticate-oidc" : length(keys(var.alb_authenticate_cognito)) > 0 ? "authenticate-cognito" : "forward"
 
   # Container definitions
-  container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? module.container_definition_bitbucket.json_map_encoded_list : module.container_definition_github_gitlab.json_map_encoded_list : var.custom_container_definitions
+  container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? jsonencode(concat([module.container_definition_bitbucket.json_map_object], var.extra_container_definitions)) : jsonencode(concat([module.container_definition_github_gitlab.json_map_object], var.extra_container_definitions)) : var.custom_container_definitions
 
   container_definition_environment = [
     {
@@ -164,7 +164,7 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
 ###################
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v2.47.0"
+  version = "v2.64.0"
 
   create_vpc = var.vpc_id == ""
 
@@ -186,7 +186,7 @@ module "vpc" {
 ###################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v5.7.0"
+  version = "v5.10.0"
 
   name     = var.name
   internal = var.internal
@@ -264,7 +264,7 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
 ###################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v3.15.0"
+  version = "v3.17.0"
 
   name        = "${var.name}-alb-https"
   vpc_id      = local.vpc_id
@@ -277,7 +277,7 @@ module "alb_https_sg" {
 
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
-  version = "v3.15.0"
+  version = "v3.17.0"
 
   name        = "${var.name}-alb-http"
   vpc_id      = local.vpc_id
@@ -290,7 +290,7 @@ module "alb_http_sg" {
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v3.15.0"
+  version = "v3.17.0"
 
   name        = var.name
   vpc_id      = local.vpc_id
@@ -316,7 +316,7 @@ module "atlantis_sg" {
 ###################
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v2.10.0"
+  version = "v2.12.0"
 
   create_certificate = var.certificate_arn == ""
 
@@ -349,10 +349,16 @@ resource "aws_route53_record" "atlantis" {
 ###################
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "v2.3.0"
+  version = "v2.5.0"
 
   name               = var.name
   container_insights = var.ecs_container_insights
+
+  capacity_providers = ["FARGATE", "FARGATE_SPOT"]
+
+  default_capacity_provider_strategy = {
+    capacity_provider = var.ecs_fargate_spot ? "FARGATE_SPOT" : "FARGATE"
+  }
 
   tags = local.tags
 }
@@ -367,14 +373,15 @@ data "aws_iam_policy_document" "ecs_tasks" {
 
     principals {
       type        = "Service"
-      identifiers = ["ecs-tasks.amazonaws.com"]
+      identifiers = compact(distinct(concat(["ecs-tasks.amazonaws.com"], var.trusted_principals)))
     }
   }
 }
 
 resource "aws_iam_role" "ecs_task_execution" {
-  name               = "${var.name}-ecs_task_execution"
-  assume_role_policy = data.aws_iam_policy_document.ecs_tasks.json
+  name                 = "${var.name}-ecs_task_execution"
+  assume_role_policy   = data.aws_iam_policy_document.ecs_tasks.json
+  permissions_boundary = var.permissions_boundary
 
   tags = local.tags
 }
@@ -386,7 +393,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
   policy_arn = element(var.policies_arn, count.index)
 }
 
-// ref: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html
+# ref: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html
 data "aws_iam_policy_document" "ecs_task_access_secrets" {
   statement {
     effect = "Allow"
@@ -437,7 +444,7 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 
 module "container_definition_github_gitlab" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.40.0"
+  version = "v0.45.2"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -494,7 +501,7 @@ module "container_definition_github_gitlab" {
 
 module "container_definition_bitbucket" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.40.0"
+  version = "v0.45.2"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -576,7 +583,8 @@ resource "aws_ecs_service" "atlantis" {
     data.aws_ecs_task_definition.atlantis.revision,
   )}"
   desired_count                      = var.ecs_service_desired_count
-  launch_type                        = "FARGATE"
+  launch_type                        = var.ecs_fargate_spot ? null : "FARGATE"
+  platform_version                   = var.ecs_service_platform_version
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
   deployment_minimum_healthy_percent = var.ecs_service_deployment_minimum_healthy_percent
 
@@ -590,6 +598,14 @@ resource "aws_ecs_service" "atlantis" {
     container_name   = var.name
     container_port   = var.atlantis_port
     target_group_arn = element(module.alb.target_group_arns, 0)
+  }
+
+  dynamic "capacity_provider_strategy" {
+    for_each = var.ecs_fargate_spot ? [true] : []
+    content {
+      capacity_provider = "FARGATE_SPOT"
+      weight            = 100
+    }
   }
 
   tags = var.use_old_arn_format ? null : local.tags

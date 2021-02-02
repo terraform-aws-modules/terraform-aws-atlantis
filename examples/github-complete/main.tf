@@ -35,6 +35,7 @@ module "atlantis" {
   public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
 
   # ECS
+  ecs_service_platform_version = "LATEST"
   ecs_container_insights       = true
   ecs_task_cpu                 = 512
   ecs_task_memory              = 1024
@@ -58,6 +59,9 @@ module "atlantis" {
     softLimit = 4096
     hardLimit = 16384
   }]
+
+  # Security
+  trusted_principals = var.trusted_principals
 
   # DNS
   route53_zone_name = var.domain
@@ -97,13 +101,13 @@ module "github_repository_webhook" {
   webhook_url    = module.atlantis.atlantis_url_events
   webhook_secret = module.atlantis.webhook_secret
 }
+
 ################################################################################
 # ALB Access Log Bucket + Policy
 ################################################################################
-
 module "atlantis_access_log_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 1.9"
+  version = ">= 1.9"
 
   bucket = "${data.aws_caller_identity.current.account_id}-atlantis-access-logs-${data.aws_region.current.name}"
 
