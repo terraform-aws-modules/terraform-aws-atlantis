@@ -608,6 +608,9 @@ resource "aws_ecs_service" "atlantis" {
     }
   }
 
+  enable_ecs_managed_tags = var.enable_ecs_managed_tags
+  propagate_tags          = var.propagate_tags
+
   tags = local.tags
 }
 
