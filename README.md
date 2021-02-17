@@ -270,6 +270,7 @@ allow_github_webhooks        = true
 | ecs\_service\_platform\_version | The platform version on which to run your service | `string` | `"LATEST"` | no |
 | ecs\_task\_cpu | The number of cpu units used by the task | `number` | `256` | no |
 | ecs\_task\_memory | The amount (in MiB) of memory used by the task | `number` | `512` | no |
+| enable\_ecs\_managed\_tags | Specifies whether to enable Amazon ECS managed tags for the tasks within the service | `bool` | `false` | no |
 | entrypoint | The entry point that is passed to the container | `list(string)` | `null` | no |
 | essential | Determines whether all other containers in a task are stopped, if this container fails or stops for any reason. Due to how Terraform type casts booleans in json it is required to double quote this value | `bool` | `true` | no |
 | extra\_container\_definitions | A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition | `list(any)` | `[]` | no |
@@ -282,6 +283,7 @@ allow_github_webhooks        = true
 | policies\_arn | A list of the ARN of the policies you want to apply | `list(string)` | <pre>[<br>  "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"<br>]</pre> | no |
 | private\_subnet\_ids | A list of IDs of existing private subnets inside the VPC | `list(string)` | `[]` | no |
 | private\_subnets | A list of private subnets inside the VPC | `list(string)` | `[]` | no |
+| propagate\_tags | Specifies whether to propagate the tags from the task definition or the service to the tasks. The valid values are SERVICE and TASK\_DEFINITION | `string` | `null` | no |
 | public\_subnet\_ids | A list of IDs of existing public subnets inside the VPC | `list(string)` | `[]` | no |
 | public\_subnets | A list of public subnets inside the VPC | `list(string)` | `[]` | no |
 | readonly\_root\_filesystem | Determines whether a container is given read-only access to its root filesystem. Due to how Terraform type casts booleans in json it is required to double quote this value | `bool` | `false` | no |
