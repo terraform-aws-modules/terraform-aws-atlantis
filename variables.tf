@@ -382,7 +382,7 @@ variable "readonly_root_filesystem" {
 
 variable "mount_points" {
   description = "Container mount points. This is a list of maps, where each map should contain a `containerPath` and `sourceVolume`. The `readOnly` key is optional."
-  type        = list
+  type        = list(any)
   default     = []
 }
 
