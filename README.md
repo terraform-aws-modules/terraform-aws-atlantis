@@ -197,12 +197,12 @@ allow_github_webhooks        = true
 |------|
 | [aws_cloudwatch_log_group](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/cloudwatch_log_group) |
 | [aws_ecs_service](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/ecs_service) |
-| [aws_ecs_task_definition](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/ecs_task_definition) |
 | [aws_ecs_task_definition](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/ecs_task_definition) |
+| [aws_ecs_task_definition](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/ecs_task_definition) |
 | [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/iam_policy_document) |
-| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/iam_role) |
-| [aws_iam_role_policy](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/iam_role_policy) |
 | [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/iam_role_policy_attachment) |
+| [aws_iam_role_policy](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/iam_role_policy) |
+| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/iam_role) |
 | [aws_lb_listener_rule](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/lb_listener_rule) |
 | [aws_region](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/region) |
 | [aws_route53_record](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/route53_record) |
