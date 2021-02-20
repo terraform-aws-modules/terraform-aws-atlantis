@@ -28,6 +28,18 @@ Note that this example may create resources which cost money. Run `terraform des
 |------|---------|
 | terraform | n/a |
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| gitlab_repository_webhook | ../../modules/gitlab-repository-webhook |  |
+
+## Resources
+
+| Name |
+|------|
+| [terraform_remote_state](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -41,5 +53,4 @@ Note that this example may create resources which cost money. Run `terraform des
 |------|-------------|
 | gitlab\_webhook\_secret | Gitlab webhook secret |
 | gitlab\_webhook\_urls | Gitlab webhook URL |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

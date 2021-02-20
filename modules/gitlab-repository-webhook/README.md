@@ -13,6 +13,16 @@
 |------|---------|
 | gitlab | n/a |
 
+## Modules
+
+No Modules.
+
+## Resources
+
+| Name |
+|------|
+| [gitlab_project_hook](https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/project_hook) |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -30,5 +40,4 @@
 |------|-------------|
 | this\_repository\_webhook\_secret | Webhook secret |
 | this\_repository\_webhook\_urls | Webhook URL |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

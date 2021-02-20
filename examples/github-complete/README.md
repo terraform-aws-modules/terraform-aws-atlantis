@@ -38,6 +38,23 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 |------|---------|
 | aws | >= 2.68 |
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| atlantis | ../../ |  |
+| atlantis_access_log_bucket | terraform-aws-modules/s3-bucket/aws | >= 1.9 |
+| github_repository_webhook | ../../modules/github-repository-webhook |  |
+
+## Resources
+
+| Name |
+|------|
+| [aws_caller_identity](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/caller_identity) |
+| [aws_elb_service_account](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/elb_service_account) |
+| [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/iam_policy_document) |
+| [aws_region](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/region) |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -61,5 +78,4 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 | github\_webhook\_secret | Github webhook secret |
 | github\_webhook\_urls | Github webhook URL |
 | task\_role\_arn | The Atlantis ECS task role arn |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -14,6 +14,16 @@
 |------|---------|
 | github | >= 2.4.1 |
 
+## Modules
+
+No Modules.
+
+## Resources
+
+| Name |
+|------|
+| [github_repository_webhook](https://registry.terraform.io/providers/hashicorp/github/2.4.1/docs/resources/repository_webhook) |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -31,5 +41,4 @@
 |------|-------------|
 | this\_repository\_webhook\_secret | Webhook secret |
 | this\_repository\_webhook\_urls | Webhook URL |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
