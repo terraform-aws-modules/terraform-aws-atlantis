@@ -1,8 +1,15 @@
 terraform {
-  required_version = ">= 0.12.26"
+  required_version = ">= 0.13"
 
   required_providers {
-    aws    = ">= 2.68"
-    gitlab = ">= 2.0"
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 2.68"
+    }
+
+    gitlab = {
+      source  = "gitlabhq/gitlab"
+      version = ">= 2.0"
+    }
   }
 }
