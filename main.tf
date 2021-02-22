@@ -442,6 +442,38 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
   )
 }
 
+data "aws_iam_policy_document" "s3_state_bucket_access" {
+  statement {
+    effect = "Allow"
+
+    resources = concat(
+      formatlist("arn:aws:s3:::%s", var.s3_state_buckets),
+      formatlist("arn:aws:s3:::%s/*", var.s3_state_buckets),
+    )
+
+    actions = [
+      "s3:*",
+    ]
+  }
+}
+
+resource "aws_iam_role_policy" "s3_state_bucket_access" {
+  count = length(var.s3_state_buckets)
+
+  name = "ECSTaskAccessStateBuckets"
+
+  role = aws_iam_role.ecs_task_execution.id
+
+  policy = element(
+    compact(
+      concat(
+        data.aws_iam_policy_document.s3_state_bucket_access.*.json,
+      ),
+    ),
+    0,
+  )
+}
+
 module "container_definition_github_gitlab" {
   source  = "cloudposse/ecs-container-definition/aws"
   version = "v0.45.2"

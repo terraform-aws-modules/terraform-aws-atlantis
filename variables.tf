@@ -565,3 +565,9 @@ variable "enable_ecs_managed_tags" {
   type        = bool
   default     = false
 }
+
+variable "s3_state_buckets" {
+  description = "List of S3 buckets where Terraform state is stored (can be in any account)."
+  type        = list(string)
+  default     = []
+}
