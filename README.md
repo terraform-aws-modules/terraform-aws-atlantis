@@ -177,6 +177,39 @@ allow_github_webhooks        = true
 | aws | >= 2.68 |
 | random | >= 2.0 |
 
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| acm | terraform-aws-modules/acm/aws | v2.12.0 |
+| alb | terraform-aws-modules/alb/aws | v5.10.0 |
+| alb_http_sg | terraform-aws-modules/security-group/aws//modules/http-80 | v3.17.0 |
+| alb_https_sg | terraform-aws-modules/security-group/aws//modules/https-443 | v3.17.0 |
+| atlantis_sg | terraform-aws-modules/security-group/aws | v3.17.0 |
+| container_definition_bitbucket | cloudposse/ecs-container-definition/aws | v0.45.2 |
+| container_definition_github_gitlab | cloudposse/ecs-container-definition/aws | v0.45.2 |
+| ecs | terraform-aws-modules/ecs/aws | v2.5.0 |
+| vpc | terraform-aws-modules/vpc/aws | v2.64.0 |
+
+## Resources
+
+| Name |
+|------|
+| [aws_cloudwatch_log_group](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/cloudwatch_log_group) |
+| [aws_ecs_service](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/ecs_service) |
+| [aws_ecs_task_definition](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/ecs_task_definition) |
+| [aws_ecs_task_definition](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/ecs_task_definition) |
+| [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/iam_policy_document) |
+| [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/iam_role_policy_attachment) |
+| [aws_iam_role_policy](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/iam_role_policy) |
+| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/iam_role) |
+| [aws_lb_listener_rule](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/lb_listener_rule) |
+| [aws_region](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/region) |
+| [aws_route53_record](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/route53_record) |
+| [aws_route53_zone](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/route53_zone) |
+| [aws_ssm_parameter](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/resources/ssm_parameter) |
+| [random_id](https://registry.terraform.io/providers/hashicorp/random/2.0/docs/resources/id) |
+
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -237,18 +270,20 @@ allow_github_webhooks        = true
 | ecs\_service\_platform\_version | The platform version on which to run your service | `string` | `"LATEST"` | no |
 | ecs\_task\_cpu | The number of cpu units used by the task | `number` | `256` | no |
 | ecs\_task\_memory | The amount (in MiB) of memory used by the task | `number` | `512` | no |
+| enable\_ecs\_managed\_tags | Specifies whether to enable Amazon ECS managed tags for the tasks within the service | `bool` | `false` | no |
 | entrypoint | The entry point that is passed to the container | `list(string)` | `null` | no |
 | essential | Determines whether all other containers in a task are stopped, if this container fails or stops for any reason. Due to how Terraform type casts booleans in json it is required to double quote this value | `bool` | `true` | no |
 | extra\_container\_definitions | A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition | `list(any)` | `[]` | no |
 | firelens\_configuration | The FireLens configuration for the container. This is used to specify and configure a log router for container logs. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html | <pre>object({<br>    type    = string<br>    options = map(string)<br>  })</pre> | `null` | no |
 | github\_webhooks\_cidr\_blocks | List of CIDR blocks used by GitHub webhooks | `list(string)` | <pre>[<br>  "140.82.112.0/20",<br>  "185.199.108.0/22",<br>  "192.30.252.0/22"<br>]</pre> | no |
 | internal | Whether the load balancer is internal or external | `bool` | `false` | no |
-| mount\_points | Container mount points. This is a list of maps, where each map should contain a `containerPath` and `sourceVolume`. The `readOnly` key is optional. | `list` | `[]` | no |
+| mount\_points | Container mount points. This is a list of maps, where each map should contain a `containerPath` and `sourceVolume`. The `readOnly` key is optional. | `list(any)` | `[]` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | `string` | `"atlantis"` | no |
 | permissions\_boundary | If provided, all IAM roles will be created with this permissions boundary attached. | `string` | `null` | no |
 | policies\_arn | A list of the ARN of the policies you want to apply | `list(string)` | <pre>[<br>  "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"<br>]</pre> | no |
 | private\_subnet\_ids | A list of IDs of existing private subnets inside the VPC | `list(string)` | `[]` | no |
 | private\_subnets | A list of private subnets inside the VPC | `list(string)` | `[]` | no |
+| propagate\_tags | Specifies whether to propagate the tags from the task definition or the service to the tasks. The valid values are SERVICE and TASK\_DEFINITION | `string` | `null` | no |
 | public\_subnet\_ids | A list of IDs of existing public subnets inside the VPC | `list(string)` | `[]` | no |
 | public\_subnets | A list of public subnets inside the VPC | `list(string)` | `[]` | no |
 | readonly\_root\_filesystem | Determines whether a container is given read-only access to its root filesystem. Due to how Terraform type casts booleans in json it is required to double quote this value | `bool` | `false` | no |
@@ -288,7 +323,6 @@ allow_github_webhooks        = true
 | task\_role\_unique\_id | The stable and unique string identifying the Atlantis ECS task role. |
 | vpc\_id | ID of the VPC that was created or passed in |
 | webhook\_secret | Webhook secret |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Authors
