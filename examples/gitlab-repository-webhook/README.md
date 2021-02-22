@@ -21,7 +21,7 @@ Note that this example may create resources which cost money. Run `terraform des
 |------|---------|
 | terraform | >= 0.13 |
 | aws | >= 2.68 |
-| gitlab | >= 2.0 |
+| gitlab | >= 3.0 |
 
 ## Providers
 
