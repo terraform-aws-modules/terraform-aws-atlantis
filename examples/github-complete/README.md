@@ -29,8 +29,9 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.7 |
+| terraform | >= 0.12.26 |
 | aws | >= 2.68 |
+| github | >= 2.4.1 |
 
 ## Providers
 

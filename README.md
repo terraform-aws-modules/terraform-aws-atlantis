@@ -166,7 +166,7 @@ allow_github_webhooks        = true
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.7 |
+| terraform | >= 0.12.26 |
 | aws | >= 2.68 |
 | random | >= 2.0 |
 

@@ -5,13 +5,14 @@
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.13 |
+| terraform | >= 0.12.26 |
+| gitlab | >= 2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| gitlab | n/a |
+| gitlab | >= 2.0 |
 
 ## Modules
 
@@ -21,7 +22,7 @@ No Modules.
 
 | Name |
 |------|
-| [gitlab_project_hook](https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/project_hook) |
+| [gitlab_project_hook](https://registry.terraform.io/providers/hashicorp/gitlab/2.0/docs/resources/project_hook) |
 
 ## Inputs
 

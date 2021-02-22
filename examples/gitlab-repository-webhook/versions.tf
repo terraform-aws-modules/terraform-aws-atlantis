@@ -1,7 +1,8 @@
 terraform {
-  required_version = ">= 0.12.7"
+  required_version = ">= 0.12.26"
 
   required_providers {
-    aws = ">= 2.68"
+    aws    = ">= 2.68"
+    gitlab = ">= 2.0"
   }
 }

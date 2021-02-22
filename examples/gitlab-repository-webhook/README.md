@@ -19,8 +19,9 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.7 |
+| terraform | >= 0.12.26 |
 | aws | >= 2.68 |
+| gitlab | >= 2.0 |
 
 ## Providers
 
