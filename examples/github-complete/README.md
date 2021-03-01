@@ -51,10 +51,10 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 
 | Name |
 |------|
-| [aws_caller_identity](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/caller_identity) |
-| [aws_elb_service_account](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/elb_service_account) |
-| [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/iam_policy_document) |
-| [aws_region](https://registry.terraform.io/providers/hashicorp/aws/2.68/docs/data-sources/region) |
+| [aws_caller_identity](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) |
+| [aws_elb_service_account](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/elb_service_account) |
+| [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) |
+| [aws_region](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) |
 
 ## Inputs
 

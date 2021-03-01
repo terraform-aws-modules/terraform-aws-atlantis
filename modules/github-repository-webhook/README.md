@@ -22,7 +22,7 @@ No Modules.
 
 | Name |
 |------|
-| [github_repository_webhook](https://registry.terraform.io/providers/integrations/github/2.4.1/docs/resources/repository_webhook) |
+| [github_repository_webhook](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_webhook) |
 
 ## Inputs
 

@@ -299,6 +299,18 @@ variable "ecs_task_memory" {
   default     = 512
 }
 
+variable "container_cpu" {
+  description = "The number of cpu units used by the atlantis container. If not specified ecs_task_cpu will be used"
+  type        = number
+  default     = null
+}
+
+variable "container_memory" {
+  description = "The amount (in MiB) of memory used by the atlantis container. If not specified ecs_task_memory will be used"
+  type        = number
+  default     = null
+}
+
 variable "container_memory_reservation" {
   description = "The amount of memory (in MiB) to reserve for the container"
   type        = number
