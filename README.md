@@ -17,12 +17,6 @@ Depending on which SCM system you use, Github repositories or Gitlab projects ha
 
 See `README.md` in `examples` for Github or Gitlab for complete details.
 
-## Terraform versions
-
-Terraform 0.12 or newer. Pin module version to `~> v2.0`. Submit pull-requests to `master` branch.
-
-Terraform 0.11. Pin module version to `~> v1.0`.
-
 ### Before using Atlantis and the code in this repository please make sure that you have read and understood the security implications described in [the official Atlantis documentation](https://www.runatlantis.io/docs/security.html).
 
 ## How to use this?
@@ -166,7 +160,7 @@ allow_github_webhooks        = true
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.13 |
+| terraform | >= 0.12.26 |
 | aws | >= 2.68 |
 | random | >= 2.0 |
 
