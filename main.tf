@@ -452,7 +452,9 @@ data "aws_iam_policy_document" "s3_state_bucket_access" {
     )
 
     actions = [
-      "s3:*",
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:ListBucket"
     ]
   }
 }
