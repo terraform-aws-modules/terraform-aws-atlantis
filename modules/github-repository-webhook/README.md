@@ -5,7 +5,7 @@
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.7 |
+| terraform | >= 0.12.26 |
 | github | >= 2.4.1 |
 
 ## Providers
@@ -13,6 +13,16 @@
 | Name | Version |
 |------|---------|
 | github | >= 2.4.1 |
+
+## Modules
+
+No Modules.
+
+## Resources
+
+| Name |
+|------|
+| [github_repository_webhook](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_webhook) |
 
 ## Inputs
 
@@ -31,5 +41,4 @@
 |------|-------------|
 | this\_repository\_webhook\_secret | Webhook secret |
 | this\_repository\_webhook\_urls | Webhook URL |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

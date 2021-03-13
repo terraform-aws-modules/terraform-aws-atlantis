@@ -305,6 +305,18 @@ variable "ecs_task_memory" {
   default     = 512
 }
 
+variable "container_cpu" {
+  description = "The number of cpu units used by the atlantis container. If not specified ecs_task_cpu will be used"
+  type        = number
+  default     = null
+}
+
+variable "container_memory" {
+  description = "The amount (in MiB) of memory used by the atlantis container. If not specified ecs_task_memory will be used"
+  type        = number
+  default     = null
+}
+
 variable "container_memory_reservation" {
   description = "The amount of memory (in MiB) to reserve for the container"
   type        = number
@@ -388,7 +400,7 @@ variable "readonly_root_filesystem" {
 
 variable "mount_points" {
   description = "Container mount points. This is a list of maps, where each map should contain a `containerPath` and `sourceVolume`. The `readOnly` key is optional."
-  type        = list
+  type        = list(any)
   default     = []
 }
 
@@ -558,4 +570,16 @@ variable "security_group_ids" {
   description = "List of one or more security groups to be added to the load balancer"
   type        = list(string)
   default     = []
+}
+
+variable "propagate_tags" {
+  description = "Specifies whether to propagate the tags from the task definition or the service to the tasks. The valid values are SERVICE and TASK_DEFINITION"
+  type        = string
+  default     = null
+}
+
+variable "enable_ecs_managed_tags" {
+  description = "Specifies whether to enable Amazon ECS managed tags for the tasks within the service"
+  type        = bool
+  default     = false
 }

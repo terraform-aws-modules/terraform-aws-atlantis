@@ -40,6 +40,8 @@ module "atlantis" {
   ecs_task_cpu                 = 512
   ecs_task_memory              = 1024
   container_memory_reservation = 256
+  container_cpu                = 512
+  container_memory             = 1024
 
   entrypoint        = ["docker-entrypoint.sh"]
   command           = ["server"]

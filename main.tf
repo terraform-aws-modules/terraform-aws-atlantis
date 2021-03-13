@@ -408,11 +408,12 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
   statement {
     effect = "Allow"
 
-    resources = flatten(list(
+    resources = flatten([
       aws_ssm_parameter.webhook.*.arn,
       aws_ssm_parameter.atlantis_github_user_token.*.arn,
       aws_ssm_parameter.atlantis_gitlab_user_token.*.arn,
-    aws_ssm_parameter.atlantis_bitbucket_user_token.*.arn))
+      aws_ssm_parameter.atlantis_bitbucket_user_token.*.arn
+    ])
 
     actions = [
       "ssm:GetParameters",
@@ -459,8 +460,8 @@ module "container_definition_github_gitlab" {
   container_name  = var.name
   container_image = local.atlantis_image
 
-  container_cpu                = var.ecs_task_cpu
-  container_memory             = var.ecs_task_memory
+  container_cpu                = var.container_cpu != null ? var.container_cpu : var.ecs_task_cpu
+  container_memory             = var.container_memory != null ? var.container_memory : var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
 
   user                     = var.user
@@ -516,8 +517,8 @@ module "container_definition_bitbucket" {
   container_name  = var.name
   container_image = local.atlantis_image
 
-  container_cpu                = var.ecs_task_cpu
-  container_memory             = var.ecs_task_memory
+  container_cpu                = var.container_cpu != null ? var.container_cpu : var.ecs_task_cpu
+  container_memory             = var.container_memory != null ? var.container_memory : var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
 
   user                     = var.user
@@ -617,6 +618,9 @@ resource "aws_ecs_service" "atlantis" {
       weight            = 100
     }
   }
+
+  enable_ecs_managed_tags = var.enable_ecs_managed_tags
+  propagate_tags          = var.propagate_tags
 
   tags = local.tags
 }
