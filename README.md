@@ -101,20 +101,37 @@ If all provided subnets are public (no NAT gateway) then `ecs_service_assign_pub
 
 You can use service like [Auth0](https://www.auth0.com) to secure access to Atlantis and require authentication on ALB. To enable this, you need to create Auth0 application and provide correct arguments to Atlantis module. Make sure to update application hostname, client id and client secret:
 
+Read more in [this post](https://medium.com/@sandrinodm/securing-your-applications-with-aws-alb-built-in-authentication-and-auth0-310ad84c8595).
+
+##### Auth0
+
 ```hcl
 alb_authenticate_oidc = {
-  issuer = "https://youruser.eu.auth0.com/"
-  token_endpoint = "https://youruser.eu.auth0.com/oauth/token"
-  user_info_endpoint = "https://youruser.eu.auth0.com/userinfo"
-  authorization_endpoint = "https://youruser.eu.auth0.com/authorize"
+  issuer                              = "https://youruser.eu.auth0.com/"
+  token_endpoint                      = "https://youruser.eu.auth0.com/oauth/token"
+  user_info_endpoint                  = "https://youruser.eu.auth0.com/userinfo"
+  authorization_endpoint              = "https://youruser.eu.auth0.com/authorize"
   authentication_request_extra_params = {}
-  client_id = "clientid"
-  client_secret = "secret123"
+  client_id                           = "clientid"
+  client_secret                       = "secret123" # a data source would be good here
 }
 ```
 
-Read more in [this post](https://medium.com/@sandrinodm/securing-your-applications-with-aws-alb-built-in-authentication-and-auth0-310ad84c8595).
+##### Okta
 
+```hcl
+alb_authenticate_oidc = {
+  issuer                              = "https://dev-42069.okta.com/"
+  token_endpoint                      = "https://dev-42069.okta.com/oauth2/v1/token"
+  user_info_endpoint                  = "https://dev-42069.okta.com/oauth2/v1/userinfo"
+  authorization_endpoint              = "https://dev-42069.okta.com/oauth2/v1/authorize"
+  authentication_request_extra_params = {}
+  client_id                           = "clientid"
+  client_secret                       = "secret123" # a data source would be good here
+}
+```
+
+Read more in [this post](https://medium.com/swlh/aws-alb-authentication-with-okta-oidc-using-terraform-902cd8289db4)
 
 #### AWS Cognito with SAML
 
