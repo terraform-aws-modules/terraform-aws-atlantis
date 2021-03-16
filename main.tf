@@ -77,6 +77,9 @@ locals {
     },
   ]
 
+  # ECS task definition
+  latest_task_definition_rev = var.external_task_definition_updates ? max(aws_ecs_task_definition.atlantis.revision, data.aws_ecs_task_definition.atlantis[0].revision) : aws_ecs_task_definition.atlantis.revision
+
   # Secret access tokens
   container_definition_secrets_1 = local.secret_name_key != "" && local.secret_name_value_from != "" ? [
     {
@@ -571,6 +574,8 @@ resource "aws_ecs_task_definition" "atlantis" {
 }
 
 data "aws_ecs_task_definition" "atlantis" {
+  count = var.external_task_definition_updates ? 1 : 0
+
   task_definition = var.name
 
   depends_on = [aws_ecs_task_definition.atlantis]
@@ -579,10 +584,8 @@ data "aws_ecs_task_definition" "atlantis" {
 resource "aws_ecs_service" "atlantis" {
   name    = var.name
   cluster = module.ecs.this_ecs_cluster_id
-  task_definition = "${data.aws_ecs_task_definition.atlantis.family}:${max(
-    aws_ecs_task_definition.atlantis.revision,
-    data.aws_ecs_task_definition.atlantis.revision,
-  )}"
+
+  task_definition                    = "${var.name}:${local.latest_task_definition_rev}"
   desired_count                      = var.ecs_service_desired_count
   launch_type                        = var.ecs_fargate_spot ? null : "FARGATE"
   platform_version                   = var.ecs_service_platform_version
