@@ -7,6 +7,74 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.35.0"></a>
+## [v2.35.0] - 2021-03-02
+
+- fix: revert module Terraform 0.13.x version upgrade ([#186](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/186))
+
+
+<a name="v2.34.0"></a>
+## [v2.34.0] - 2021-03-01
+
+- fix: Update syntax for Terraform 0.15 ([#184](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/184))
+
+
+<a name="v2.33.0"></a>
+## [v2.33.0] - 2021-03-01
+
+- feat: allow setting container memory & cpu from task memory & cpu ([#169](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/169))
+- chore: correct versions used and required versions ([#183](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/183))
+- chore: add ci-cd workflow for pre-commit checks ([#182](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/182))
+
+
+<a name="v2.32.0"></a>
+## [v2.32.0] - 2021-02-20
+
+- chore: update documentation based on latest `terraform-docs` which includes module and resource sections ([#180](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/180))
+
+
+<a name="v2.31.0"></a>
+## [v2.31.0] - 2021-02-08
+
+- feat: Add enable_ecs_managed_tags and propagate_tags arguments to ecs_service ([#177](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/177))
+
+
+<a name="v2.30.0"></a>
+## [v2.30.0] - 2020-12-29
+
+- feat: Add permissions boundary to ecs task iam role ([#176](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/176))
+
+
+<a name="v2.29.0"></a>
+## [v2.29.0] - 2020-12-24
+
+- feat: support custom platform version ([#170](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/170))
+
+
+<a name="v2.28.0"></a>
+## [v2.28.0] - 2020-12-20
+
+- fix: Update module dependencies for TF 0.14 support ([#172](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/172))
+
+
+<a name="v2.27.0"></a>
+## [v2.27.0] - 2020-12-10
+
+- feat: allow adding more trusted principals to task role ([#155](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/155))
+
+
+<a name="v2.26.0"></a>
+## [v2.26.0] - 2020-11-13
+
+- feat: allow for extra_container_definitions ([#162](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/162))
+
+
+<a name="v2.25.0"></a>
+## [v2.25.0] - 2020-11-10
+
+- feat: Added support for Fargate Spot ([#164](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/164))
+
+
 <a name="v2.24.0"></a>
 ## [v2.24.0] - 2020-09-01
 
@@ -340,7 +408,18 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.24.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.35.0...HEAD
+[v2.35.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.34.0...v2.35.0
+[v2.34.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.33.0...v2.34.0
+[v2.33.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.32.0...v2.33.0
+[v2.32.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.31.0...v2.32.0
+[v2.31.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.30.0...v2.31.0
+[v2.30.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.29.0...v2.30.0
+[v2.29.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.28.0...v2.29.0
+[v2.28.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.27.0...v2.28.0
+[v2.27.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.26.0...v2.27.0
+[v2.26.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.25.0...v2.26.0
+[v2.25.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.24.0...v2.25.0
 [v2.24.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.23.0...v2.24.0
 [v2.23.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.22.0...v2.23.0
 [v2.22.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.21.0...v2.22.0

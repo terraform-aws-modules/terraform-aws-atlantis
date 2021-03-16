@@ -11,17 +11,11 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 - [AWS Elastic Cloud Service (ECS)](https://aws.amazon.com/ecs/) and [AWS Fargate](https://aws.amazon.com/fargate/) running Atlantis Docker image
 - AWS Parameter Store to keep secrets and access them in ECS task natively
 
-[AWS Fargate](https://aws.amazon.com/fargate/) is used instead of AWS ECS/EC2 to reduce the bill, and it is also a cool AWS service.
+[AWS Fargate](https://aws.amazon.com/fargate/) with optional support for [Fargate Spot](https://aws.amazon.com/blogs/aws/aws-fargate-spot-now-generally-available/) is used to reduce the bill, and it is also a cool AWS service.
 
 Depending on which SCM system you use, Github repositories or Gitlab projects has to be configured to post events to Atlantis webhook URL.
 
 See `README.md` in `examples` for Github or Gitlab for complete details.
-
-## Terraform versions
-
-Terraform 0.12 or newer. Pin module version to `~> v2.0`. Submit pull-requests to `master` branch.
-
-Terraform 0.11. Pin module version to `~> v1.0`.
 
 ### Before using Atlantis and the code in this repository please make sure that you have read and understood the security implications described in [the official Atlantis documentation](https://www.runatlantis.io/docs/security.html).
 
@@ -166,15 +160,49 @@ allow_github_webhooks        = true
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.7, < 0.14 |
-| aws | >= 2.68, < 4.0 |
+| terraform | >= 0.12.26 |
+| aws | >= 2.68 |
+| random | >= 2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 2.68, < 4.0 |
-| random | n/a |
+| aws | >= 2.68 |
+| random | >= 2.0 |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| acm | terraform-aws-modules/acm/aws | v2.12.0 |
+| alb | terraform-aws-modules/alb/aws | v5.10.0 |
+| alb_http_sg | terraform-aws-modules/security-group/aws//modules/http-80 | v3.17.0 |
+| alb_https_sg | terraform-aws-modules/security-group/aws//modules/https-443 | v3.17.0 |
+| atlantis_sg | terraform-aws-modules/security-group/aws | v3.17.0 |
+| container_definition_bitbucket | cloudposse/ecs-container-definition/aws | v0.45.2 |
+| container_definition_github_gitlab | cloudposse/ecs-container-definition/aws | v0.45.2 |
+| ecs | terraform-aws-modules/ecs/aws | v2.5.0 |
+| vpc | terraform-aws-modules/vpc/aws | v2.64.0 |
+
+## Resources
+
+| Name |
+|------|
+| [aws_cloudwatch_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) |
+| [aws_ecs_service](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_service) |
+| [aws_ecs_task_definition](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ecs_task_definition) |
+| [aws_ecs_task_definition](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ecs_task_definition) |
+| [aws_iam_policy_document](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) |
+| [aws_iam_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) |
+| [aws_iam_role_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy) |
+| [aws_iam_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) |
+| [aws_lb_listener_rule](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener_rule) |
+| [aws_region](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) |
+| [aws_route53_record](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) |
+| [aws_route53_zone](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) |
+| [aws_ssm_parameter](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) |
+| [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
 
 ## Inputs
 
@@ -220,7 +248,9 @@ allow_github_webhooks        = true
 | cidr | The CIDR block for the VPC which will be created if `vpc_id` is not specified | `string` | `""` | no |
 | cloudwatch\_log\_retention\_in\_days | Retention period of Atlantis CloudWatch logs | `number` | `7` | no |
 | command | The command that is passed to the container | `list(string)` | `null` | no |
+| container\_cpu | The number of cpu units used by the atlantis container. If not specified ecs\_task\_cpu will be used | `number` | `null` | no |
 | container\_depends\_on | The dependencies defined for container startup and shutdown. A container can contain multiple dependencies. When a dependency is defined for container startup, for container shutdown it is reversed. The condition can be one of START, COMPLETE, SUCCESS or HEALTHY | <pre>list(object({<br>    containerName = string<br>    condition     = string<br>  }))</pre> | `null` | no |
+| container\_memory | The amount (in MiB) of memory used by the atlantis container. If not specified ecs\_task\_memory will be used | `number` | `null` | no |
 | container\_memory\_reservation | The amount of memory (in MiB) to reserve for the container | `number` | `128` | no |
 | create\_route53\_record | Whether to create Route53 record for Atlantis | `bool` | `true` | no |
 | custom\_container\_definitions | A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used. | `string` | `""` | no |
@@ -228,23 +258,29 @@ allow_github_webhooks        = true
 | custom\_environment\_variables | List of additional environment variables the container will use (list should contain maps with `name` and `value`) | <pre>list(object(<br>    {<br>      name  = string<br>      value = string<br>    }<br>  ))</pre> | `[]` | no |
 | docker\_labels | The configuration options to send to the `docker_labels` | `map(string)` | `null` | no |
 | ecs\_container\_insights | Controls if ECS Cluster has container insights enabled | `bool` | `false` | no |
+| ecs\_fargate\_spot | Whether to run ECS Fargate Spot or not | `bool` | `false` | no |
 | ecs\_service\_assign\_public\_ip | Should be true, if ECS service is using public subnets (more info: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_cannot_pull_image.html) | `bool` | `false` | no |
 | ecs\_service\_deployment\_maximum\_percent | The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment | `number` | `200` | no |
 | ecs\_service\_deployment\_minimum\_healthy\_percent | The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment | `number` | `50` | no |
 | ecs\_service\_desired\_count | The number of instances of the task definition to place and keep running | `number` | `1` | no |
+| ecs\_service\_platform\_version | The platform version on which to run your service | `string` | `"LATEST"` | no |
 | ecs\_task\_cpu | The number of cpu units used by the task | `number` | `256` | no |
 | ecs\_task\_memory | The amount (in MiB) of memory used by the task | `number` | `512` | no |
+| enable\_ecs\_managed\_tags | Specifies whether to enable Amazon ECS managed tags for the tasks within the service | `bool` | `false` | no |
 | entrypoint | The entry point that is passed to the container | `list(string)` | `null` | no |
 | essential | Determines whether all other containers in a task are stopped, if this container fails or stops for any reason. Due to how Terraform type casts booleans in json it is required to double quote this value | `bool` | `true` | no |
-| external\_task\_definition\_updates | Enable to allow the task definition to be updated outside of this Terraform module | `bool` | `false` | no |
+| external\_task\_definition\_updates | Enable to allow the task definition to be updated outside of this Terraform module. This should be enabled when using a deployment tool such as ecs-deploy which updates the task definition and will then keep the ECS service using the latest version of the task definition. | `bool` | `false` | no |
+| extra\_container\_definitions | A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition | `list(any)` | `[]` | no |
 | firelens\_configuration | The FireLens configuration for the container. This is used to specify and configure a log router for container logs. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html | <pre>object({<br>    type    = string<br>    options = map(string)<br>  })</pre> | `null` | no |
 | github\_webhooks\_cidr\_blocks | List of CIDR blocks used by GitHub webhooks | `list(string)` | <pre>[<br>  "140.82.112.0/20",<br>  "185.199.108.0/22",<br>  "192.30.252.0/22"<br>]</pre> | no |
 | internal | Whether the load balancer is internal or external | `bool` | `false` | no |
-| mount\_points | Container mount points. This is a list of maps, where each map should contain a `containerPath` and `sourceVolume`. The `readOnly` key is optional. | `list` | `[]` | no |
+| mount\_points | Container mount points. This is a list of maps, where each map should contain a `containerPath` and `sourceVolume`. The `readOnly` key is optional. | `list(any)` | `[]` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | `string` | `"atlantis"` | no |
+| permissions\_boundary | If provided, all IAM roles will be created with this permissions boundary attached. | `string` | `null` | no |
 | policies\_arn | A list of the ARN of the policies you want to apply | `list(string)` | <pre>[<br>  "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"<br>]</pre> | no |
 | private\_subnet\_ids | A list of IDs of existing private subnets inside the VPC | `list(string)` | `[]` | no |
 | private\_subnets | A list of private subnets inside the VPC | `list(string)` | `[]` | no |
+| propagate\_tags | Specifies whether to propagate the tags from the task definition or the service to the tasks. The valid values are SERVICE and TASK\_DEFINITION | `string` | `null` | no |
 | public\_subnet\_ids | A list of IDs of existing public subnets inside the VPC | `list(string)` | `[]` | no |
 | public\_subnets | A list of public subnets inside the VPC | `list(string)` | `[]` | no |
 | readonly\_root\_filesystem | Determines whether a container is given read-only access to its root filesystem. Due to how Terraform type casts booleans in json it is required to double quote this value | `bool` | `false` | no |
@@ -256,6 +292,7 @@ allow_github_webhooks        = true
 | start\_timeout | Time duration (in seconds) to wait before giving up on resolving dependencies for a container | `number` | `30` | no |
 | stop\_timeout | Time duration (in seconds) to wait before the container is forcefully killed if it doesn't exit normally on its own | `number` | `30` | no |
 | tags | A map of tags to use on all resources | `map(string)` | `{}` | no |
+| trusted\_principals | A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role | `list(string)` | `[]` | no |
 | ulimits | Container ulimit settings. This is a list of maps, where each map should contain "name", "hardLimit" and "softLimit" | <pre>list(object({<br>    name      = string<br>    hardLimit = number<br>    softLimit = number<br>  }))</pre> | `null` | no |
 | user | The user to run as inside the container. Can be any of these formats: user, user:group, uid, uid:gid, user:gid, uid:group. The default (null) will use the container's configured `USER` directive or root if not set. | `string` | `null` | no |
 | volumes\_from | A list of VolumesFrom maps which contain "sourceContainer" (name of the container that has the volumes to mount) and "readOnly" (whether the container can write to the volume) | <pre>list(object({<br>    sourceContainer = string<br>    readOnly        = bool<br>  }))</pre> | `[]` | no |
@@ -283,7 +320,6 @@ allow_github_webhooks        = true
 | task\_role\_unique\_id | The stable and unique string identifying the Atlantis ECS task role. |
 | vpc\_id | ID of the VPC that was created or passed in |
 | webhook\_secret | Webhook secret |
-
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Authors

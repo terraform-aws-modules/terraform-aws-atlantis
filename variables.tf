@@ -233,10 +233,28 @@ variable "ecs_service_assign_public_ip" {
   default     = false
 }
 
+variable "permissions_boundary" {
+  description = "If provided, all IAM roles will be created with this permissions boundary attached."
+  type        = string
+  default     = null
+}
+
 variable "policies_arn" {
   description = "A list of the ARN of the policies you want to apply"
   type        = list(string)
   default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+}
+
+variable "trusted_principals" {
+  description = "A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role"
+  type        = list(string)
+  default     = []
+}
+
+variable "ecs_fargate_spot" {
+  description = "Whether to run ECS Fargate Spot or not"
+  type        = bool
+  default     = false
 }
 
 variable "ecs_container_insights" {
@@ -249,6 +267,12 @@ variable "ecs_service_desired_count" {
   description = "The number of instances of the task definition to place and keep running"
   type        = number
   default     = 1
+}
+
+variable "ecs_service_platform_version" {
+  description = "The platform version on which to run your service"
+  type        = string
+  default     = "LATEST"
 }
 
 variable "ecs_service_deployment_maximum_percent" {
@@ -275,6 +299,18 @@ variable "ecs_task_memory" {
   default     = 512
 }
 
+variable "container_cpu" {
+  description = "The number of cpu units used by the atlantis container. If not specified ecs_task_cpu will be used"
+  type        = number
+  default     = null
+}
+
+variable "container_memory" {
+  description = "The amount (in MiB) of memory used by the atlantis container. If not specified ecs_task_memory will be used"
+  type        = number
+  default     = null
+}
+
 variable "container_memory_reservation" {
   description = "The amount of memory (in MiB) to reserve for the container"
   type        = number
@@ -285,6 +321,12 @@ variable "custom_container_definitions" {
   description = "A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used."
   type        = string
   default     = ""
+}
+
+variable "extra_container_definitions" {
+  description = "A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition"
+  type        = list(any)
+  default     = []
 }
 
 variable "entrypoint" {
@@ -352,7 +394,7 @@ variable "readonly_root_filesystem" {
 
 variable "mount_points" {
   description = "Container mount points. This is a list of maps, where each map should contain a `containerPath` and `sourceVolume`. The `readOnly` key is optional."
-  type        = list
+  type        = list(any)
   default     = []
 }
 
@@ -528,4 +570,16 @@ variable "security_group_ids" {
   description = "List of one or more security groups to be added to the load balancer"
   type        = list(string)
   default     = []
+}
+
+variable "propagate_tags" {
+  description = "Specifies whether to propagate the tags from the task definition or the service to the tasks. The valid values are SERVICE and TASK_DEFINITION"
+  type        = string
+  default     = null
+}
+
+variable "enable_ecs_managed_tags" {
+  description = "Specifies whether to enable Amazon ECS managed tags for the tasks within the service"
+  type        = bool
+  default     = false
 }
