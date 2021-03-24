@@ -181,6 +181,8 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = true
 
+  enable_dns_hostnames = var.enable_dns_hostnames
+
   tags = local.tags
 }
 

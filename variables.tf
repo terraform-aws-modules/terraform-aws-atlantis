@@ -65,6 +65,12 @@ variable "cidr" {
   default     = ""
 }
 
+variable "enable_dns_hostnames" {
+  description = "Whether to enable DNS hostname support in the VPC"
+  type        = bool
+  default     = false
+}
+
 variable "azs" {
   description = "A list of availability zones in the region"
   type        = list(string)
