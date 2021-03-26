@@ -242,7 +242,7 @@ variable "permissions_boundary" {
 variable "policies_arn" {
   description = "A list of the ARN of the policies you want to apply"
   type        = list(string)
-  default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+  default     = ["arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
 
 variable "trusted_principals" {

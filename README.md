@@ -69,7 +69,7 @@ module "atlantis" {
   route53_zone_name = "example.com"
 
   # ACM (SSL certificate) - Specify ARN of an existing certificate or new one will be created and validated using Route53 DNS
-  certificate_arn = "arn:aws:acm:eu-west-1:135367859851:certificate/70e008e1-c0e1-4c7e-9670-7bb5bd4f5a84"
+  certificate_arn = "arn:${data.aws_partition.current.partition}:acm:eu-west-1:135367859851:certificate/70e008e1-c0e1-4c7e-9670-7bb5bd4f5a84"
 
   # Atlantis
   atlantis_github_user       = "atlantis-bot"
@@ -143,7 +143,7 @@ To enable Cognito authentication on the Atlantis ALB, specify the following argu
 
 ```hcl
 alb_authenticate_cognito = {
-  user_pool_arn       = "arn:aws:cognito-idp:us-west-2:1234567890:userpool/us-west-2_aBcDeFG"
+  user_pool_arn       = "arn:${data.aws_partition.current.partition}:cognito-idp:us-west-2:1234567890:userpool/us-west-2_aBcDeFG"
   user_pool_client_id = "clientid123"
   user_pool_domain    = "sso.your-corp.com"
 }
@@ -294,7 +294,7 @@ allow_github_webhooks        = true
 | mount\_points | Container mount points. This is a list of maps, where each map should contain a `containerPath` and `sourceVolume`. The `readOnly` key is optional. | `list(any)` | `[]` | no |
 | name | Name to use on all resources created (VPC, ALB, etc) | `string` | `"atlantis"` | no |
 | permissions\_boundary | If provided, all IAM roles will be created with this permissions boundary attached. | `string` | `null` | no |
-| policies\_arn | A list of the ARN of the policies you want to apply | `list(string)` | <pre>[<br>  "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"<br>]</pre> | no |
+| policies\_arn | A list of the ARN of the policies you want to apply | `list(string)` | <pre>[<br>  "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"<br>]</pre> | no |
 | private\_subnet\_ids | A list of IDs of existing private subnets inside the VPC | `list(string)` | `[]` | no |
 | private\_subnets | A list of private subnets inside the VPC | `list(string)` | `[]` | no |
 | propagate\_tags | Specifies whether to propagate the tags from the task definition or the service to the tasks. The valid values are SERVICE and TASK\_DEFINITION | `string` | `null` | no |
