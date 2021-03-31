@@ -583,3 +583,9 @@ variable "enable_ecs_managed_tags" {
   type        = bool
   default     = false
 }
+
+variable "ecs_efs_volume" {
+  description = "Map of EFS Volume Configuration Arguments.  See https://www.terraform.io/docs/providers/aws/r/ecs_task_definition#efs-volume-configuration-arguments"
+  type        = any
+  default     = {}
+}

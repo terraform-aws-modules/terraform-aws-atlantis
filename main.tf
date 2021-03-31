@@ -570,6 +570,20 @@ resource "aws_ecs_task_definition" "atlantis" {
 
   container_definitions = local.container_definitions
 
+  dynamic "volume" {
+    for_each = var.ecs_efs_volume != {} ? [var.ecs_efs_volume] : []
+
+    content {
+      name = "${var.name}-storage"
+      efs_volume_configuration {
+        file_system_id          = volume.value["file_system_id"]
+        root_directory          = can(volume.value["root_directory"]) ? volume.value["root_directory"] : null
+        transit_encryption      = can(volume.value["transit_encryption"]) ? volume.value["transit_encryption"] : null
+        transit_encryption_port = can(volume.value["transit_encryption_port"]) ? volume.value["transit_encryption_port"] : null
+      }
+    }
+  }
+
   tags = local.tags
 }
 
