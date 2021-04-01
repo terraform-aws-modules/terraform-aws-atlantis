@@ -574,7 +574,7 @@ resource "aws_ecs_task_definition" "atlantis" {
     for_each = var.ecs_efs_volume != {} ? [var.ecs_efs_volume] : []
 
     content {
-      name = "${var.name}-storage"
+      name = "${var.name}-data"
       efs_volume_configuration {
         file_system_id          = volume.value["file_system_id"]
         root_directory          = can(volume.value["root_directory"]) ? volume.value["root_directory"] : null
