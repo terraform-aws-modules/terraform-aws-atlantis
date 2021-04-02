@@ -580,6 +580,10 @@ resource "aws_ecs_task_definition" "atlantis" {
         root_directory          = can(volume.value["root_directory"]) ? volume.value["root_directory"] : null
         transit_encryption      = can(volume.value["transit_encryption"]) ? volume.value["transit_encryption"] : null
         transit_encryption_port = can(volume.value["transit_encryption_port"]) ? volume.value["transit_encryption_port"] : null
+        authorization_config {
+          access_point_id = can(volume.value["access_point_id"]) ? volume.value["access_point_id"] : null
+          iam             = can(volume.value["iam"]) ? volume.value["iam"] : "DISABLED"
+        }
       }
     }
   }
