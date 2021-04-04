@@ -105,6 +105,7 @@ locals {
 }
 
 data "aws_region" "current" {}
+data "aws_partition" current {}
 
 data "aws_route53_zone" "this" {
   count = var.create_route53_record ? 1 : 0
@@ -390,11 +391,21 @@ resource "aws_iam_role" "ecs_task_execution" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
-  count = length(var.policies_arn)
+  // if the partition is aws, keep on keeping on. if not, quit the game 
+  count = data.aws_partition.current.partition == "aws" ? length(var.policies_arn) : 0
 
   role       = aws_iam_role.ecs_task_execution.id
   policy_arn = element(var.policies_arn, count.index)
 }
+
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_govcloud" {
+  // if the partition is aws-us-gov, keep on keeping on. if not, quit the game
+  count = data.aws_partition.current.partition == "aws-us-gov" ? length(var.gov_policies_arn) : 0
+
+  role       = aws_iam_role.ecs_task_execution.id
+  policy_arn = element(var.gov_policies_arn, count.index)
+}
+
 
 # ref: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html
 data "aws_iam_policy_document" "ecs_task_access_secrets" {

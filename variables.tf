@@ -242,8 +242,15 @@ variable "permissions_boundary" {
 variable "policies_arn" {
   description = "A list of the ARN of the policies you want to apply"
   type        = list(string)
-  default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+  default     = ["arn:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
+
+variable "gov_policies_arn" {
+  description = "A list of the ARN of the policies you want to apply"
+  type        = list(string)
+  default     = ["arn:aws-us-gov:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+}
+
 
 variable "trusted_principals" {
   description = "A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role"
