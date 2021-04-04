@@ -3,4 +3,5 @@ FROM runatlantis/atlantis:${CODE_VERSION}
 ARG SECRET_KEY_FILE
 COPY --chown=root:atlantis ${SECRET_KEY_FILE} /home/atlantis/atlantis-app-key.pem
 RUN chmod 644 /home/atlantis/atlantis-app-key.pem
-FROM python:3.6-slim
+RUN sudo apt-get update -y
+RUN sudo apt-get install -y python3
