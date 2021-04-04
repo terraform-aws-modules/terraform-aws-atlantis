@@ -105,7 +105,7 @@ locals {
 }
 
 data "aws_region" "current" {}
-data "aws_partition" current {}
+data "aws_partition" "current" {}
 
 data "aws_route53_zone" "this" {
   count = var.create_route53_record ? 1 : 0
