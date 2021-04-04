@@ -3,7 +3,9 @@
         [
             {
                 "id": "github.com/tophatmonocle/terraform-service",
-                "apply_requirements": ["mergeable"]
+                "apply_requirements": ["mergeable"],
+                "allowed_overrides": ["workflow"],
+                "allow_custom_workflows": true
             }
         ]
 }
