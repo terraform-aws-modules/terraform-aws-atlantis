@@ -2,7 +2,7 @@
     "repos":
         [
             {
-                "id": "github.com/tophatmonocle/terraform-service",
+                "id": "github.com/tophatmonocle/boilerplate-service",
                 "apply_requirements": ["mergeable"],
                 "allowed_overrides": ["workflow"],
                 "allow_custom_workflows": true
