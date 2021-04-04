@@ -391,7 +391,6 @@ resource "aws_iam_role" "ecs_task_execution" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
-  // if the partition is aws, keep on keeping on. if not, quit the game 
   count = data.aws_partition.current.partition == "aws" ? length(var.policies_arn) : 0
 
   role       = aws_iam_role.ecs_task_execution.id
@@ -399,7 +398,6 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution_govcloud" {
-  // if the partition is aws-us-gov, keep on keeping on. if not, quit the game
   count = data.aws_partition.current.partition == "aws-us-gov" ? length(var.gov_policies_arn) : 0
 
   role       = aws_iam_role.ecs_task_execution.id
