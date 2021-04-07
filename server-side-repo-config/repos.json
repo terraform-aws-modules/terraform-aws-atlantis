@@ -6,6 +6,12 @@
                 "apply_requirements": ["mergeable"],
                 "allowed_overrides": ["workflow"],
                 "allow_custom_workflows": true
+            },
+            {
+                "id": "github.com/tophatmonocle/student-item-policy-service",
+                "apply_requirements": ["mergeable"],
+                "allowed_overrides": ["workflow"],
+                "allow_custom_workflows": true
             }
         ]
 }
