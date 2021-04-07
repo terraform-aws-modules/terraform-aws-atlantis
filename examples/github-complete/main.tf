@@ -64,6 +64,7 @@ module "atlantis" {
 
   # Security
   trusted_principals = var.trusted_principals
+  trusted_entities   = var.trusted_entities
 
   # DNS
   route53_zone_name = var.domain

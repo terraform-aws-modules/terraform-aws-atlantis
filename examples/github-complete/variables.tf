@@ -38,3 +38,9 @@ variable "trusted_principals" {
   description = "A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role"
   type        = list(string)
 }
+
+variable "trusted_entities" {
+  description = "A list of  users or roles, that can assume the task role"
+  type        = list(string)
+  default     = []
+}

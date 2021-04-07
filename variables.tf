@@ -251,6 +251,12 @@ variable "trusted_principals" {
   default     = []
 }
 
+variable "trusted_entities" {
+  description = "A list of  users or roles, that can assume the task role"
+  type        = list(string)
+  default     = []
+}
+
 variable "ecs_fargate_spot" {
   description = "Whether to run ECS Fargate Spot or not"
   type        = bool
