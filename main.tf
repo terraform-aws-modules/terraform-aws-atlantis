@@ -12,7 +12,7 @@ module "atlantis" {
   atlantis_github_webhook_secret_ssm_parameter_name = "/atlantis/webhook/secret"
   atlantis_github_organization                      = "tophatmonocle"
   atlantis_github_app_id                            = "85044"
-  atlantis_repo_whitelist                           = ["github.com/tophatmonocle/boilerplate-service"]
+  atlantis_repo_whitelist                           = ["github.com/tophatmonocle/boilerplate-service", "github.com/tophatmonocle/student-item-policy-service"]
   atlantis_repo_config_json                         = "server-side-repo-config/repos.json"
   atlantis_github_app_key_file                      = "/home/atlantis/atlantis-app-key.pem"
 
