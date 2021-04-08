@@ -14,6 +14,18 @@ variable "alb_ingress_cidr_blocks" {
   type        = list(string)
 }
 
+variable "alb_enable_deletion_protection" {
+  description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
+  type        = bool
+  default     = false
+}
+
+variable "alb_drop_invalid_header_fields" {
+  description = "Indicates whether invalid header fields are dropped in application load balancers. Defaults to false."
+  type        = bool
+  default     = false
+}
+
 variable "github_token" {
   description = "Github token"
   type        = string

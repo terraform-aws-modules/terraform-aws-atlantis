@@ -204,6 +204,10 @@ module "alb" {
     prefix  = var.alb_log_location_prefix
   }
 
+  enable_deletion_protection = var.alb_enable_deletion_protection
+
+  drop_invalid_header_fields = var.alb_drop_invalid_header_fields
+
   listener_ssl_policy_default = var.alb_listener_ssl_policy_default
   https_listeners = [
     {
