@@ -600,6 +600,7 @@ resource "aws_ecs_service" "atlantis" {
   platform_version                   = var.ecs_service_platform_version
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
   deployment_minimum_healthy_percent = var.ecs_service_deployment_minimum_healthy_percent
+  force_new_deployment               = var.ecs_service_force_new_deployment
 
   network_configuration {
     subnets          = local.private_subnet_ids
