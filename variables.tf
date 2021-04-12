@@ -123,13 +123,13 @@ variable "alb_authenticate_cognito" {
 variable "alb_enable_deletion_protection" {
   description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
   type        = bool
-  default     = false
+  default     = null
 }
 
 variable "alb_drop_invalid_header_fields" {
   description = "Indicates whether invalid header fields are dropped in application load balancers. Defaults to false."
   type        = bool
-  default     = false
+  default     = null
 }
 
 variable "allow_unauthenticated_access" {
