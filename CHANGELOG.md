@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.39.0"></a>
+## [v2.39.0] - 2021-04-13
+
+- feat: Add `force_new_deployment` switch ([#196](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/196))
+
+
 <a name="v2.38.0"></a>
 ## [v2.38.0] - 2021-04-13
 
@@ -455,7 +461,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.38.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.39.0...HEAD
+[v2.39.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.38.0...v2.39.0
 [v2.38.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.37.0...v2.38.0
 [v2.37.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.36.0...v2.37.0
 [v2.36.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.35.0...v2.36.0
