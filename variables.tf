@@ -120,6 +120,18 @@ variable "alb_authenticate_cognito" {
   default     = {}
 }
 
+variable "alb_enable_deletion_protection" {
+  description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
+  type        = bool
+  default     = null
+}
+
+variable "alb_drop_invalid_header_fields" {
+  description = "Indicates whether invalid header fields are dropped in application load balancers. Defaults to false."
+  type        = bool
+  default     = null
+}
+
 variable "allow_unauthenticated_access" {
   description = "Whether to create ALB listener rule to allow unauthenticated access for certain CIDR blocks (eg. allow GitHub webhooks to bypass OIDC authentication)"
   type        = bool
