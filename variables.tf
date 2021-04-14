@@ -120,6 +120,18 @@ variable "alb_authenticate_cognito" {
   default     = {}
 }
 
+variable "alb_enable_deletion_protection" {
+  description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
+  type        = bool
+  default     = null
+}
+
+variable "alb_drop_invalid_header_fields" {
+  description = "Indicates whether invalid header fields are dropped in application load balancers. Defaults to false."
+  type        = bool
+  default     = null
+}
+
 variable "allow_unauthenticated_access" {
   description = "Whether to create ALB listener rule to allow unauthenticated access for certain CIDR blocks (eg. allow GitHub webhooks to bypass OIDC authentication)"
   type        = bool
@@ -254,6 +266,12 @@ variable "gov_policies_arn" {
 
 variable "trusted_principals" {
   description = "A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role"
+  type        = list(string)
+  default     = []
+}
+
+variable "trusted_entities" {
+  description = "A list of  users or roles, that can assume the task role"
   type        = list(string)
   default     = []
 }
@@ -587,6 +605,12 @@ variable "propagate_tags" {
 
 variable "enable_ecs_managed_tags" {
   description = "Specifies whether to enable Amazon ECS managed tags for the tasks within the service"
+  type        = bool
+  default     = false
+}
+
+variable "ecs_service_force_new_deployment" {
+  description = "Enable to force a new task deployment of the service. This can be used to update tasks to use a newer Docker image with same image/tag combination (e.g. myimage:latest)"
   type        = bool
   default     = false
 }

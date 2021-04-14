@@ -205,6 +205,10 @@ module "alb" {
     prefix  = var.alb_log_location_prefix
   }
 
+  enable_deletion_protection = var.alb_enable_deletion_protection
+
+  drop_invalid_header_fields = var.alb_drop_invalid_header_fields
+
   listener_ssl_policy_default = var.alb_listener_ssl_policy_default
   https_listeners = [
     {
@@ -378,6 +382,15 @@ data "aws_iam_policy_document" "ecs_tasks" {
     principals {
       type        = "Service"
       identifiers = compact(distinct(concat(["ecs-tasks.amazonaws.com"], var.trusted_principals)))
+    }
+
+    dynamic "principals" {
+      for_each = length(var.trusted_entities) > 0 ? [true] : []
+
+      content {
+        type        = "AWS"
+        identifiers = var.trusted_entities
+      }
     }
   }
 }
@@ -600,6 +613,7 @@ resource "aws_ecs_service" "atlantis" {
   platform_version                   = var.ecs_service_platform_version
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
   deployment_minimum_healthy_percent = var.ecs_service_deployment_minimum_healthy_percent
+  force_new_deployment               = var.ecs_service_force_new_deployment
 
   network_configuration {
     subnets          = local.private_subnet_ids

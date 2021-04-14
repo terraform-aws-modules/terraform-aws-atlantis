@@ -64,6 +64,7 @@ module "atlantis" {
 
   # Security
   trusted_principals = var.trusted_principals
+  trusted_entities   = var.trusted_entities
 
   # DNS
   route53_zone_name = var.domain
@@ -80,6 +81,7 @@ module "atlantis" {
   alb_log_bucket_name             = module.atlantis_access_log_bucket.this_s3_bucket_id
   alb_log_location_prefix         = "atlantis-alb"
   alb_listener_ssl_policy_default = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  alb_drop_invalid_header_fields  = true
 
   allow_unauthenticated_access = true
   allow_github_webhooks        = true
