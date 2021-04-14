@@ -476,7 +476,7 @@ variable "atlantis_port" {
   default     = 4141
 }
 
-variable "atlantis_repo_whitelist" {
+variable "atlantis_repo_allowlist" {
   description = "List of allowed repositories Atlantis can be used with"
   type        = list(string)
 }

@@ -68,8 +68,8 @@ locals {
       value = var.atlantis_bitbucket_base_url
     },
     {
-      name  = "ATLANTIS_REPO_WHITELIST"
-      value = join(",", var.atlantis_repo_whitelist)
+      name  = "ATLANTIS_REPO_ALLOWLIST"
+      value = join(",", var.atlantis_repo_allowlist)
     },
     {
       name  = "ATLANTIS_HIDE_PREV_PLAN_COMMENTS"

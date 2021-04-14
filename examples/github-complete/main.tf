@@ -72,7 +72,7 @@ module "atlantis" {
   # Atlantis
   atlantis_github_user        = var.github_user
   atlantis_github_user_token  = var.github_token
-  atlantis_repo_whitelist     = ["github.com/${var.github_organization}/*"]
+  atlantis_repo_allowlist     = ["github.com/${var.github_organization}/*"]
   atlantis_allowed_repo_names = var.allowed_repo_names
 
   # ALB access
