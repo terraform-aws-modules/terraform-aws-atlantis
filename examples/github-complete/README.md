@@ -31,7 +31,7 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.26 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.68 |
-| <a name="requirement_github"></a> [github](#requirement\_github) | >= 2.4.1 |
+| <a name="requirement_github"></a> [github](#requirement\_github) | >= 4.8 |
 
 ## Providers
 
@@ -44,8 +44,9 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_atlantis"></a> [atlantis](#module\_atlantis) | ../../ |  |
-| <a name="module_atlantis_access_log_bucket"></a> [atlantis\_access\_log\_bucket](#module\_atlantis\_access\_log\_bucket) | terraform-aws-modules/s3-bucket/aws | >= 1.9 |
+| <a name="module_atlantis_access_log_bucket"></a> [atlantis\_access\_log\_bucket](#module\_atlantis\_access\_log\_bucket) | terraform-aws-modules/s3-bucket/aws | ~> 1 |
 | <a name="module_github_repository_webhook"></a> [github\_repository\_webhook](#module\_github\_repository\_webhook) | ../../modules/github-repository-webhook |  |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 2 |
 
 ## Resources
 
@@ -67,8 +68,6 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token | `string` | n/a | yes |
 | <a name="input_github_user"></a> [github\_user](#input\_github\_user) | Github user for Atlantis to utilize when performing Github activities | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | AWS region where resources will be created | `string` | `"us-east-1"` | no |
-| <a name="input_trusted_entities"></a> [trusted\_entities](#input\_trusted\_entities) | A list of  users or roles, that can assume the task role | `list(string)` | `[]` | no |
-| <a name="input_trusted_principals"></a> [trusted\_principals](#input\_trusted\_principals) | A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role | `list(string)` | n/a | yes |
 
 ## Outputs
 

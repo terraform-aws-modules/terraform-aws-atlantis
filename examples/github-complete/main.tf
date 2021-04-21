@@ -3,21 +3,39 @@ provider "aws" {
 }
 
 locals {
+  name = "atlantiscomplete"
   tags = {
     Owner       = "user"
     Environment = "dev"
   }
 }
 
-##############################################################
-# Data sources for existing resources
-##############################################################
+################################################################################
+# Supporting Resources
+################################################################################
 
 data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
 
 data "aws_elb_service_account" "current" {}
+
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 2"
+
+  name = local.name
+  cidr = "10.99.0.0/18"
+
+  azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
+  public_subnets  = ["10.99.0.0/24", "10.99.1.0/24", "10.99.2.0/24"]
+  private_subnets = ["10.99.3.0/24", "10.99.4.0/24", "10.99.5.0/24"]
+
+  enable_nat_gateway = true
+  single_nat_gateway = true
+
+  tags = local.tags
+}
 
 ##############################################################
 # Atlantis Service
@@ -26,13 +44,12 @@ data "aws_elb_service_account" "current" {}
 module "atlantis" {
   source = "../../"
 
-  name = "atlantiscomplete"
+  name = local.name
 
-  # VPC
-  cidr            = "10.20.0.0/16"
-  azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
-  private_subnets = ["10.20.1.0/24", "10.20.2.0/24", "10.20.3.0/24"]
-  public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
+  # Network
+  vpc_id         = module.vpc.vpc_id
+  alb_subnet_ids = module.vpc.public_subnets
+  ecs_subnet_ids = module.vpc.private_subnets
 
   # ECS
   ecs_service_platform_version = "LATEST"
@@ -61,10 +78,6 @@ module "atlantis" {
     softLimit = 4096
     hardLimit = 16384
   }]
-
-  # Security
-  trusted_principals = var.trusted_principals
-  trusted_entities   = var.trusted_entities
 
   # DNS
   route53_zone_name = var.domain
@@ -109,9 +122,10 @@ module "github_repository_webhook" {
 ################################################################################
 # ALB Access Log Bucket + Policy
 ################################################################################
+
 module "atlantis_access_log_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = ">= 1.9"
+  version = "~> 1"
 
   bucket = "${data.aws_caller_identity.current.account_id}-atlantis-access-logs-${data.aws_region.current.name}"
 

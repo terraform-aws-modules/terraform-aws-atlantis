@@ -50,22 +50,6 @@ output "ecs_security_group" {
   value       = module.atlantis_sg.this_security_group_id
 }
 
-# VPC
-output "vpc_id" {
-  description = "ID of the VPC that was created or passed in"
-  value       = local.vpc_id
-}
-
-output "private_subnet_ids" {
-  description = "IDs of the VPC private subnets that were created or passed in"
-  value       = local.private_subnet_ids
-}
-
-output "public_subnet_ids" {
-  description = "IDs of the VPC public subnets that were created or passed in"
-  value       = local.public_subnet_ids
-}
-
 # ALB
 output "alb_dns_name" {
   description = "Dns name of alb"
