@@ -1,56 +1,24 @@
-# AWS Terraform module which runs Atlantis on AWS Fargate
+# AWS Terraform module to run Atlantis on AWS Fargate
 
 [Atlantis](https://www.runatlantis.io/) is tool which provides unified workflow for collaborating on Terraform through GitHub, GitLab and Bitbucket Cloud.
 
 This repository contains Terraform infrastructure code which creates AWS resources required to run [Atlantis](https://www.runatlantis.io/) on AWS, including:
 
-- Virtual Private Cloud (VPC)
 - SSL certificate using Amazon Certificate Manager (ACM)
 - Application Load Balancer (ALB)
 - Domain name using AWS Route53 which points to ALB
 - [AWS Elastic Cloud Service (ECS)](https://aws.amazon.com/ecs/) and [AWS Fargate](https://aws.amazon.com/fargate/) running Atlantis Docker image
 - AWS Parameter Store to keep secrets and access them in ECS task natively
 
-[AWS Fargate](https://aws.amazon.com/fargate/) with optional support for [Fargate Spot](https://aws.amazon.com/blogs/aws/aws-fargate-spot-now-generally-available/) is used to reduce the bill, and it is also a cool AWS service.
+[AWS Fargate](https://aws.amazon.com/fargate/) with optional support for [Fargate Spot](https://aws.amazon.com/blogs/aws/aws-fargate-spot-now-generally-available/).
 
-Depending on which SCM system you use, Github repositories or Gitlab projects has to be configured to post events to Atlantis webhook URL.
+Depending on which SCM system you use, Github repositories or GitLab projects has to be configured to post events to Atlantis webhook URL.
 
-See `README.md` in `examples` for Github or Gitlab for complete details.
+See `README.md` in `examples` for Github or GitLab for complete details.
 
-### Before using Atlantis and the code in this repository please make sure that you have read and understood the security implications described in [the official Atlantis documentation](https://www.runatlantis.io/docs/security.html).
+:warning: Before using Atlantis and the code in this repository please make sure that you have read and understood the security implications described in [the official Atlantis documentation](https://www.runatlantis.io/docs/security.html).
 
-## How to use this?
-
-As often with the code published in [terraform-aws-modules GitHub organization](https://github.com/terraform-aws-modules) you should have everything to run this code and get Atlantis up and running.
-
-There are three ways to do this:
-
-1. [As a standalone project](https://github.com/terraform-aws-modules/terraform-aws-atlantis#run-atlantis-as-a-standalone-project)
-1. [As a Terraform module](https://github.com/terraform-aws-modules/terraform-aws-atlantis#run-atlantis-as-a-terraform-module)
-1. [As a part of an existing AWS infrastructure](https://github.com/terraform-aws-modules/terraform-aws-atlantis#run-atlantis-as-a-part-of-an-existing-aws-infrastructure-use-existing-vpc)
-
-### Run Atlantis as a standalone project
-
-1. Clone this github repository:
-
-```
-$ git clone git@github.com:terraform-aws-modules/terraform-aws-atlantis.git
-$ cd terraform-aws-atlantis
-```
-
-2. Copy sample `terraform.tfvars.sample` into `terraform.tfvars` and specify required variables there.
-
-3. Run `terraform init` to download required providers and modules.
-
-4. Run `terraform apply` to apply the Terraform configuration and create required infrastructure.
-
-5. Run `terraform output atlantis_url` to get URL where Atlantis is publicly reachable. (Note: It may take a minute or two to get it reachable for the first time)
-
-6. Github webhook is automatically created if `github_token`, `github_organization` and `github_repo_names` were specified. Read [Add GitHub Webhook](https://github.com/runatlantis/atlantis#add-github-webhook) in the official Atlantis documentation or check [example "GitHub repository webhook for Atlantis"](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook) to add more webhooks.
-
-### Run Atlantis as a Terraform module
-
-This way allows integration with your existing Terraform configurations.
+## Usage
 
 ```hcl
 module "atlantis" {
@@ -59,8 +27,7 @@ module "atlantis" {
 
   name = "atlantis"
 
-  # VPC
-  cidr            = "10.20.0.0/16"
+  # Network
   azs             = ["eu-west-1a", "eu-west-1b", "eu-west-1c"]
   private_subnets = ["10.20.1.0/24", "10.20.2.0/24", "10.20.3.0/24"]
   public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
@@ -78,32 +45,15 @@ module "atlantis" {
 }
 ```
 
-### Run Atlantis as a part of an existing AWS infrastructure (use existing VPC)
+## Secure Atlantis with ALB Built-in Authentication
 
-This way allows integration with your existing AWS resources - VPC, public and private subnets. Specify the following arguments (see methods described above):
-
-```
-vpc_id             = "vpc-1651acf1"
-private_subnet_ids = ["subnet-1fe3d837", "subnet-129d66ab"]
-public_subnet_ids  = ["subnet-1211eef5", "subnet-163466ab"]
-```
-
-If `vpc_id` is specified it will take precedence over `cidr` and existing VPC will be used. `private_subnet_ids` and `public_subnet_ids` must be specified also.
-
-Make sure that both private and public subnets were created in the same set of availability zones (ALB will be created in public subnets, ECS Fargate service in private subnets).
-
-If all provided subnets are public (no NAT gateway) then `ecs_service_assign_public_ip` should be set to `true`.
-
-
-### Secure Atlantis with ALB Built-in Authentication
-
-#### OpenID Connect (OIDC)
+### OpenID Connect (OIDC)
 
 You can use service like [Auth0](https://www.auth0.com) to secure access to Atlantis and require authentication on ALB. To enable this, you need to create Auth0 application and provide correct arguments to Atlantis module. Make sure to update application hostname, client id and client secret:
 
 Read more in [this post](https://medium.com/@sandrinodm/securing-your-applications-with-aws-alb-built-in-authentication-and-auth0-310ad84c8595).
 
-##### Auth0
+### Auth0
 
 ```hcl
 alb_authenticate_oidc = {
@@ -117,7 +67,7 @@ alb_authenticate_oidc = {
 }
 ```
 
-##### Okta
+### Okta
 
 ```hcl
 alb_authenticate_oidc = {
@@ -133,7 +83,7 @@ alb_authenticate_oidc = {
 
 Read more in [this post](https://medium.com/swlh/aws-alb-authentication-with-okta-oidc-using-terraform-902cd8289db4)
 
-#### AWS Cognito with SAML
+### AWS Cognito with SAML
 
 The AWS Cognito service allows you to define SAML applications tied to an identity provider (e.g., GSuite). The Atlantis ALB can then be configured to require an authenticated user managed by your identity provider.
 
@@ -149,7 +99,7 @@ alb_authenticate_cognito = {
 }
 ```
 
-#### Allow GitHub Webhooks Unauthenticated Access
+### Allow GitHub Webhooks Unauthenticated Access
 
 If you are using one of the authentication methods above along with managed GitHub (not self-hosted enterprise version), you'll need to allow unauthenticated access to GitHub's Webhook static IPs:
 
@@ -161,23 +111,23 @@ allow_github_webhooks        = true
 ## Notes
 
 1. AWS Route53 zone is not created by this module, so zone specified as a value in `route53_zone_name` should be created before using this module. Check documentation for [aws_route53_zone](https://www.terraform.io/docs/providers/aws/r/route53_zone.html).
-1. Currently this module configures Atlantis in a way that it can not be used to work with GitHub and Gitlab simultaneously (can't make list of ECS secrets conditionally).
+1. Currently this module configures Atlantis in a way that it can not be used to work with GitHub and GitLab simultaneously (can't make list of ECS secrets conditionally).
 1. For Bitbucket Cloud webhook configuration follow instructions in [the official Atlantis documentation](https://www.runatlantis.io/docs/configuring-webhooks.html#bitbucket-cloud-bitbucket-org-webhook).
 
 <!-- TODO: For Bitbucket Cloud an IP whitelist should be implemented for the webhook url as stated in [the official Atlantis documentation](https://www.runatlantis.io/docs/security.html#bitbucket-cloud-bitbucket-org) due to lack of support for webhook secrets. -->
 
 ## Examples
 
-* [Complete Atlantis with GitHub webhook](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-complete)
-* [GitHub repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook)
-* [GitLab repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/gitlab-repository-webhook)
+- [Complete Atlantis with GitHub webhook](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-complete)
+- [GitHub repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook)
+- [GitLab repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/GitLab-repository-webhook)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.26 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.68 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 2.0 |
 
@@ -343,11 +293,8 @@ allow_github_webhooks        = true
 
 ## Authors
 
-Module is created and maintained by [Anton Babenko](https://github.com/antonbabenko).
-
-[Seth Vargo](https://github.com/sethvargo) has created [atlantis-on-gke](https://github.com/sethvargo/atlantis-on-gke)(Terraform configurations for running Atlantis on [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine)). This inspired me to do similar stuff for AWS Fargate.
+Currently maintained by [Anton Babenko](https://github.com/antonbabenko) and [these awesome contributors](https://github.com/terraform-aws-modules/terraform-aws-atlantis/graphs/contributors).
 
 ## License
 
-Apache 2 Licensed. See LICENSE for full details.
-
+Apache 2 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/LICENSE) for full details.
