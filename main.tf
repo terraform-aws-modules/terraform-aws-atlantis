@@ -97,9 +97,12 @@ locals {
     },
     var.tags,
   )
+
+  policies_arn = var.policies_arn == null ? ["arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"] : var.policies_arn
 }
 
 data "aws_region" "current" {}
+data "aws_partition" "current" {}
 
 data "aws_route53_zone" "this" {
   count = var.create_route53_record ? 1 : 0
@@ -384,10 +387,10 @@ resource "aws_iam_role" "ecs_task_execution" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
-  count = length(var.policies_arn)
+  count = length(local.policies_arn)
 
   role       = aws_iam_role.ecs_task_execution.id
-  policy_arn = element(var.policies_arn, count.index)
+  policy_arn = element(local.policies_arn, count.index)
 }
 
 # ref: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html

@@ -228,9 +228,9 @@ variable "permissions_boundary" {
 }
 
 variable "policies_arn" {
-  description = "A list of the ARN of the policies you want to apply"
+  description = "A list of the ARN of the policies you want to apply. If not specified, the `AmazonECSTaskExecutionRolePolicy` policy is used."
   type        = list(string)
-  default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+  default     = null
 }
 
 variable "trusted_principals" {

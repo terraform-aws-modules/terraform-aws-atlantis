@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  name = "atlantiscomplete"
+  name = "github-complete"
   tags = {
     Owner       = "user"
     Environment = "dev"
