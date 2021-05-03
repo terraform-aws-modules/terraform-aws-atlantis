@@ -4,7 +4,7 @@ locals {
   atlantis_url = "https://${coalesce(
     var.atlantis_fqdn,
     element(concat(aws_route53_record.atlantis.*.fqdn, [""]), 0),
-    module.alb.this_lb_dns_name,
+    module.alb.lb_dns_name,
     "_"
   )}"
   atlantis_url_events = "${local.atlantis_url}/events"
@@ -167,14 +167,14 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
 
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v5.16.0"
+  version = "v6.0.0"
 
   name     = var.name
   internal = var.internal
 
   vpc_id          = var.vpc_id
   subnets         = var.alb_subnet_ids
-  security_groups = flatten([module.alb_https_sg.this_security_group_id, module.alb_http_sg.this_security_group_id, var.security_group_ids])
+  security_groups = flatten([module.alb_https_sg.security_group_id, module.alb_http_sg.security_group_id, var.security_group_ids])
 
   access_logs = {
     enabled = var.alb_logging_enabled
@@ -192,7 +192,7 @@ module "alb" {
       target_group_index   = 0
       port                 = 443
       protocol             = "HTTPS"
-      certificate_arn      = var.certificate_arn == "" ? module.acm.this_acm_certificate_arn : var.certificate_arn
+      certificate_arn      = var.certificate_arn == "" ? module.acm.acm_certificate_arn : var.certificate_arn
       action_type          = local.alb_authenication_method
       authenticate_oidc    = var.alb_authenticate_oidc
       authenticate_cognito = var.alb_authenticate_cognito
@@ -250,7 +250,7 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
 
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v3.18.0"
+  version = "v4.0.0"
 
   name        = "${var.name}-alb-https"
   vpc_id      = var.vpc_id
@@ -263,7 +263,7 @@ module "alb_https_sg" {
 
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
-  version = "v3.18.0"
+  version = "v4.0.0"
 
   name        = "${var.name}-alb-http"
   vpc_id      = var.vpc_id
@@ -276,7 +276,7 @@ module "alb_http_sg" {
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v3.18.0"
+  version = "v4.0.0"
 
   name        = var.name
   vpc_id      = var.vpc_id
@@ -288,7 +288,7 @@ module "atlantis_sg" {
       to_port                  = var.atlantis_port
       protocol                 = "tcp"
       description              = "Atlantis"
-      source_security_group_id = module.alb_https_sg.this_security_group_id
+      source_security_group_id = module.alb_https_sg.security_group_id
     },
   ]
 
@@ -303,7 +303,7 @@ module "atlantis_sg" {
 
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v2.14.0"
+  version = "v3.0.0"
 
   create_certificate = var.certificate_arn == ""
 
@@ -326,8 +326,8 @@ resource "aws_route53_record" "atlantis" {
   type    = "A"
 
   alias {
-    name                   = module.alb.this_lb_dns_name
-    zone_id                = module.alb.this_lb_zone_id
+    name                   = module.alb.lb_dns_name
+    zone_id                = module.alb.lb_zone_id
     evaluate_target_health = true
   }
 }
@@ -338,7 +338,7 @@ resource "aws_route53_record" "atlantis" {
 
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "v2.9.0"
+  version = "v3.0.0"
 
   name               = var.name
   container_insights = var.ecs_container_insights
@@ -580,7 +580,7 @@ data "aws_ecs_task_definition" "atlantis" {
 
 resource "aws_ecs_service" "atlantis" {
   name    = var.name
-  cluster = module.ecs.this_ecs_cluster_id
+  cluster = module.ecs.ecs_cluster_id
 
   task_definition                    = "${var.name}:${local.latest_task_definition_rev}"
   desired_count                      = var.ecs_service_desired_count
@@ -592,7 +592,7 @@ resource "aws_ecs_service" "atlantis" {
 
   network_configuration {
     subnets          = var.ecs_subnet_ids
-    security_groups  = [module.atlantis_sg.this_security_group_id]
+    security_groups  = [module.atlantis_sg.security_group_id]
     assign_public_ip = var.ecs_service_assign_public_ip
   }
 

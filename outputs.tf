@@ -47,16 +47,16 @@ output "ecs_task_definition" {
 
 output "ecs_security_group" {
   description = "Security group assigned to ECS Service in network configuration"
-  value       = module.atlantis_sg.this_security_group_id
+  value       = module.atlantis_sg.security_group_id
 }
 
 # ALB
 output "alb_dns_name" {
   description = "Dns name of alb"
-  value       = module.alb.this_lb_dns_name
+  value       = module.alb.lb_dns_name
 }
 
 output "alb_zone_id" {
   description = "Zone ID of alb"
-  value       = module.alb.this_lb_zone_id
+  value       = module.alb.lb_zone_id
 }

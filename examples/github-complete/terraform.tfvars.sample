@@ -5,4 +5,3 @@ github_organization = "myorg"
 github_user = "atlantis"
 github_token = "mygithubpersonalaccesstokenforatlantis"
 allowed_repo_names = ["repo1", "repo2"]
-trusted_principals = ["ssm.amazonaws.com"] # Convenient if you want to enable SSM access into Atlantis for troubleshooting etc

@@ -39,6 +39,6 @@ No modules.
 
 | Name | Description |
 |------|-------------|
-| <a name="output_this_repository_webhook_secret"></a> [this\_repository\_webhook\_secret](#output\_this\_repository\_webhook\_secret) | Webhook secret |
-| <a name="output_this_repository_webhook_urls"></a> [this\_repository\_webhook\_urls](#output\_this\_repository\_webhook\_urls) | Webhook URL |
+| <a name="output_repository_webhook_secret"></a> [repository\_webhook\_secret](#output\_repository\_webhook\_secret) | Webhook secret |
+| <a name="output_repository_webhook_urls"></a> [repository\_webhook\_urls](#output\_repository\_webhook\_urls) | Webhook URL |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -125,7 +125,7 @@ module "github_repository_webhook" {
 
 module "atlantis_access_log_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 1"
+  version = "~> 2"
 
   bucket = "${data.aws_caller_identity.current.account_id}-atlantis-access-logs-${data.aws_region.current.name}"
 
