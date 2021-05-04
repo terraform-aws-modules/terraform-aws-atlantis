@@ -78,6 +78,39 @@ module "atlantis" {
 }
 ```
 
+### Provide Atlantis with server yaml configuration
+
+`server-atlantis.yaml`
+```yaml
+repos:
+  - id: /.*/
+    allow_custom_workflows: true
+    allowed_overrides:
+      - apply_requirements
+      - workflow
+    apply_requirements:
+      - approved
+    workflow: default
+```
+
+`main.tf`
+```hcl
+module "atlantis" {
+  source  = "terraform-aws-modules/atlantis/aws"
+
+  # ...
+
+  custom_environment_variables = [
+    {
+      "name" : "ATLANTIS_REPO_CONFIG_JSON",
+      "value" : jsonencode(yamldecode(file("${path.module}/server-atlantis.yaml"))),
+    },
+  ]
+
+  # ...
+}
+```
+
 ### Run Atlantis as a part of an existing AWS infrastructure (use existing VPC)
 
 This way allows integration with your existing AWS resources - VPC, public and private subnets. Specify the following arguments (see methods described above):
