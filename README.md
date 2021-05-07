@@ -45,6 +45,39 @@ module "atlantis" {
 }
 ```
 
+### Provide Atlantis with server yaml configuration
+
+`server-atlantis.yaml`
+```yaml
+repos:
+  - id: /.*/
+    allow_custom_workflows: true
+    allowed_overrides:
+      - apply_requirements
+      - workflow
+    apply_requirements:
+      - approved
+    workflow: default
+```
+
+`main.tf`
+```hcl
+module "atlantis" {
+  source  = "terraform-aws-modules/atlantis/aws"
+
+  # ...
+
+  custom_environment_variables = [
+    {
+      "name" : "ATLANTIS_REPO_CONFIG_JSON",
+      "value" : jsonencode(yamldecode(file("${path.module}/server-atlantis.yaml"))),
+    },
+  ]
+
+  # ...
+}
+```
+
 ## Secure Atlantis with ALB Built-in Authentication
 
 ### OpenID Connect (OIDC)
