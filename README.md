@@ -78,6 +78,39 @@ module "atlantis" {
 }
 ```
 
+### Provide Atlantis with server yaml configuration
+
+`server-atlantis.yaml`
+```yaml
+repos:
+  - id: /.*/
+    allow_custom_workflows: true
+    allowed_overrides:
+      - apply_requirements
+      - workflow
+    apply_requirements:
+      - approved
+    workflow: default
+```
+
+`main.tf`
+```hcl
+module "atlantis" {
+  source  = "terraform-aws-modules/atlantis/aws"
+
+  # ...
+
+  custom_environment_variables = [
+    {
+      "name" : "ATLANTIS_REPO_CONFIG_JSON",
+      "value" : jsonencode(yamldecode(file("${path.module}/server-atlantis.yaml"))),
+    },
+  ]
+
+  # ...
+}
+```
+
 ### Run Atlantis as a part of an existing AWS infrastructure (use existing VPC)
 
 This way allows integration with your existing AWS resources - VPC, public and private subnets. Specify the following arguments (see methods described above):
@@ -93,7 +126,6 @@ If `vpc_id` is specified it will take precedence over `cidr` and existing VPC wi
 Make sure that both private and public subnets were created in the same set of availability zones (ALB will be created in public subnets, ECS Fargate service in private subnets).
 
 If all provided subnets are public (no NAT gateway) then `ecs_service_assign_public_ip` should be set to `true`.
-
 
 ### Secure Atlantis with ALB Built-in Authentication
 
@@ -168,9 +200,9 @@ allow_github_webhooks        = true
 
 ## Examples
 
-* [Complete Atlantis with GitHub webhook](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-complete)
-* [GitHub repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook)
-* [GitLab repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/gitlab-repository-webhook)
+- [Complete Atlantis with GitHub webhook](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-complete)
+- [GitHub repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook)
+- [GitLab repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/gitlab-repository-webhook)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -353,11 +385,8 @@ allow_github_webhooks        = true
 
 ## Authors
 
-Module is created and maintained by [Anton Babenko](https://github.com/antonbabenko).
-
-[Seth Vargo](https://github.com/sethvargo) has created [atlantis-on-gke](https://github.com/sethvargo/atlantis-on-gke)(Terraform configurations for running Atlantis on [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine)). This inspired me to do similar stuff for AWS Fargate.
+Module is maintained by [Anton Babenko](https://github.com/antonbabenko) with help from [these awesome contributors](https://github.com/terraform-aws-modules/terraform-aws-atlantis/graphs/contributors).
 
 ## License
 
-Apache 2 Licensed. See LICENSE for full details.
-
+Apache 2 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/LICENSE) for full details.
