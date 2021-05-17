@@ -68,14 +68,17 @@ locals {
       value = var.atlantis_bitbucket_base_url
     },
     {
-      name  = "ATLANTIS_REPO_WHITELIST"
-      value = join(",", var.atlantis_repo_whitelist)
+      name  = "ATLANTIS_REPO_ALLOWLIST"
+      value = join(",", var.atlantis_repo_allowlist)
     },
     {
       name  = "ATLANTIS_HIDE_PREV_PLAN_COMMENTS"
       value = var.atlantis_hide_prev_plan_comments
     },
   ]
+
+  # ECS task definition
+  latest_task_definition_rev = var.external_task_definition_updates ? max(aws_ecs_task_definition.atlantis.revision, data.aws_ecs_task_definition.atlantis[0].revision) : aws_ecs_task_definition.atlantis.revision
 
   # Secret access tokens
   container_definition_secrets_1 = local.secret_name_key != "" && local.secret_name_value_from != "" ? [
@@ -200,6 +203,10 @@ module "alb" {
     bucket  = var.alb_log_bucket_name
     prefix  = var.alb_log_location_prefix
   }
+
+  enable_deletion_protection = var.alb_enable_deletion_protection
+
+  drop_invalid_header_fields = var.alb_drop_invalid_header_fields
 
   listener_ssl_policy_default = var.alb_listener_ssl_policy_default
   https_listeners = [
@@ -375,6 +382,15 @@ data "aws_iam_policy_document" "ecs_tasks" {
       type        = "Service"
       identifiers = compact(distinct(concat(["ecs-tasks.amazonaws.com"], var.trusted_principals)))
     }
+
+    dynamic "principals" {
+      for_each = length(var.trusted_entities) > 0 ? [true] : []
+
+      content {
+        type        = "AWS"
+        identifiers = var.trusted_entities
+      }
+    }
   }
 }
 
@@ -398,11 +414,12 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
   statement {
     effect = "Allow"
 
-    resources = flatten(list(
+    resources = flatten([
       aws_ssm_parameter.webhook.*.arn,
       aws_ssm_parameter.atlantis_github_user_token.*.arn,
       aws_ssm_parameter.atlantis_gitlab_user_token.*.arn,
-    aws_ssm_parameter.atlantis_bitbucket_user_token.*.arn))
+      aws_ssm_parameter.atlantis_bitbucket_user_token.*.arn
+    ])
 
     actions = [
       "ssm:GetParameters",
@@ -449,8 +466,8 @@ module "container_definition_github_gitlab" {
   container_name  = var.name
   container_image = local.atlantis_image
 
-  container_cpu                = var.ecs_task_cpu
-  container_memory             = var.ecs_task_memory
+  container_cpu                = var.container_cpu != null ? var.container_cpu : var.ecs_task_cpu
+  container_memory             = var.container_memory != null ? var.container_memory : var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
 
   user                     = var.user
@@ -506,8 +523,8 @@ module "container_definition_bitbucket" {
   container_name  = var.name
   container_image = local.atlantis_image
 
-  container_cpu                = var.ecs_task_cpu
-  container_memory             = var.ecs_task_memory
+  container_cpu                = var.container_cpu != null ? var.container_cpu : var.ecs_task_cpu
+  container_memory             = var.container_memory != null ? var.container_memory : var.ecs_task_memory
   container_memory_reservation = var.container_memory_reservation
 
   user                     = var.user
@@ -570,6 +587,8 @@ resource "aws_ecs_task_definition" "atlantis" {
 }
 
 data "aws_ecs_task_definition" "atlantis" {
+  count = var.external_task_definition_updates ? 1 : 0
+
   task_definition = var.name
 
   depends_on = [aws_ecs_task_definition.atlantis]
@@ -578,15 +597,14 @@ data "aws_ecs_task_definition" "atlantis" {
 resource "aws_ecs_service" "atlantis" {
   name    = var.name
   cluster = module.ecs.this_ecs_cluster_id
-  task_definition = "${data.aws_ecs_task_definition.atlantis.family}:${max(
-    aws_ecs_task_definition.atlantis.revision,
-    data.aws_ecs_task_definition.atlantis.revision,
-  )}"
+
+  task_definition                    = "${var.name}:${local.latest_task_definition_rev}"
   desired_count                      = var.ecs_service_desired_count
   launch_type                        = var.ecs_fargate_spot ? null : "FARGATE"
   platform_version                   = var.ecs_service_platform_version
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
   deployment_minimum_healthy_percent = var.ecs_service_deployment_minimum_healthy_percent
+  force_new_deployment               = var.ecs_service_force_new_deployment
 
   network_configuration {
     subnets          = local.private_subnet_ids
