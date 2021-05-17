@@ -602,6 +602,12 @@ variable "enable_ecs_managed_tags" {
   default     = false
 }
 
+variable "use_ecs_old_arn_format" {
+  description = "A flag to enable/disable tagging the ecs resources that require the new longer arn format"
+  type        = bool
+  default     = false
+}
+
 variable "ecs_service_force_new_deployment" {
   description = "Enable to force a new task deployment of the service. This can be used to update tasks to use a newer Docker image with same image/tag combination (e.g. myimage:latest)"
   type        = bool
