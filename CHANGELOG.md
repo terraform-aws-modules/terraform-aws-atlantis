@@ -7,6 +7,14 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.41.0"></a>
+## [v2.41.0] - 2021-05-17
+
+- feat: Only tag ecs service if longer arns are enabled in the aws account ([#153](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/153))
+- docs: Example of providing server yaml configuration ([#205](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/205))
+- chore: update CI/CD to use stable `terraform-docs` release artifact and discoverable Apache2.0 license ([#203](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/203))
+
+
 <a name="v2.40.0"></a>
 ## [v2.40.0] - 2021-04-15
 
@@ -223,18 +231,6 @@ All notable changes to this project will be documented in this file.
 
 - docs: Fixed README after terraform-docs was updated
 - feat: Added tags to cluster, task, ssm, role, and fmt ([#115](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/115))
-- Merge pull request [#113](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/113) from terraform-aws-modules/terraform-provider-githubfile-1584635479759647000
-- [ci skip] Create ".chglog/CHANGELOG.tpl.md".
-- Merge pull request [#112](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/112) from terraform-aws-modules/terraform-provider-githubfile-1584535132232631000
-- [ci skip] Create "Makefile".
-- Merge pull request [#110](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/110) from terraform-aws-modules/terraform-provider-githubfile-1584535083937153000
-- Merge pull request [#111](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/111) from terraform-aws-modules/terraform-provider-githubfile-1584535083937136000
-- Merge pull request [#109](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/109) from terraform-aws-modules/terraform-provider-githubfile-1584535083937167000
-- Merge pull request [#108](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/108) from terraform-aws-modules/terraform-provider-githubfile-1584535083936519000
-- [ci skip] Create ".pre-commit-config.yaml".
-- [ci skip] Create ".editorconfig".
-- [ci skip] Create "LICENSE".
-- [ci skip] Create ".gitignore".
 
 
 <a name="v2.5.0"></a>
@@ -316,14 +312,12 @@ All notable changes to this project will be documented in this file.
 ## [v1.12.0] - 2019-02-14
 
 - Fixed documentation after [#38](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/38)
-- Merge pull request [#38](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/38) from kilbergr/kilbergr_add-vpc-to-outputs
 - add vpc_id to outputs
 
 
 <a name="v1.11.0"></a>
 ## [v1.11.0] - 2019-02-07
 
-- Merge pull request [#37](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/37) from terraform-aws-modules/pr/35
 - Follow up for [#35](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/35) and [#36](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/36)
 - adding custom secrets and environment variables
 
@@ -331,7 +325,6 @@ All notable changes to this project will be documented in this file.
 <a name="v1.10.0"></a>
 ## [v1.10.0] - 2019-02-01
 
-- Merge pull request [#32](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/32) from chenrui333/refresh-module-versions
 - Update acm module version for DNS validation issue
 - Update `cloudposse/ecs-container-definition/aws` to `v0.7.0`
 - Merge branch 'master' into refresh-module-versions
@@ -342,7 +335,6 @@ All notable changes to this project will be documented in this file.
 ## [v1.9.0] - 2019-01-18
 
 - Updated pre-commit
-- Merge pull request [#30](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/30) from waeltken/http-to-https-redirect
 - Adjust comments on ALB security groups
 - Add http -> https redirect on the ALB
 
@@ -350,7 +342,6 @@ All notable changes to this project will be documented in this file.
 <a name="v1.8.0"></a>
 ## [v1.8.0] - 2019-01-07
 
-- Merge pull request [#29](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/29) from waeltken/add-gitlab-hostname
 - Add variable to configure gitlab hostname
 
 
@@ -363,7 +354,6 @@ All notable changes to this project will be documented in this file.
 <a name="v1.7.0"></a>
 ## [v1.7.0] - 2018-12-31
 
-- Merge pull request [#28](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/28) from terraform-aws-modules/refactor_container_definition
 - Added secrets and refactored container definition section
 
 
@@ -376,10 +366,8 @@ All notable changes to this project will be documented in this file.
 <a name="v1.6.0"></a>
 ## [v1.6.0] - 2018-12-14
 
-- Merge pull request [#27](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/27) from terraform-aws-modules/gitlab-and-ssm
 - Cleanup before merge
 - Added support for gitlab and SSM parameter store
-- Merge pull request [#26](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/26) from chenrui333/fix-readme
 - Fix README
 
 
@@ -392,8 +380,6 @@ All notable changes to this project will be documented in this file.
 <a name="v1.5.0"></a>
 ## [v1.5.0] - 2018-09-28
 
-- Merge pull request [#20](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/20) from exosite/master
-- Merge pull request [#21](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/21) from ldormoy/master
 - updates README
 - fixes typo variable name
 - allows custom value for alb ingress_cidr_blocks
@@ -411,8 +397,6 @@ All notable changes to this project will be documented in this file.
 ## [v1.4.0] - 2018-09-07
 
 - Fixes after [#18](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/18)
-- Merge pull request [#18](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/18) from ldormoy/master
-- Merge pull request [#1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/1) from ldormoy/support-multiple-policies
 - allow ECS task role to get multiple policiy attachments
 - [#7](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/7) updates README with policy_arn input
 - [#7](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/7) pass ECs task exec. policy as input variable
@@ -421,7 +405,6 @@ All notable changes to this project will be documented in this file.
 <a name="v1.3.0"></a>
 ## [v1.3.0] - 2018-08-19
 
-- Merge pull request [#17](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/17) from bitflight-public/master
 - Added a task role to the container
 - setthe maximum count to 200, and the minimum to 50%, so that there is no atlantis outage when deploying
 - added Task role output. Added the atlantis config in repo support
@@ -447,11 +430,9 @@ All notable changes to this project will be documented in this file.
 <a name="v1.1.0"></a>
 ## [v1.1.0] - 2018-05-26
 
-- Merge pull request [#12](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/12) from terraform-aws-modules/reuse_vps
 - README fixes
 - README fixes
 - Allow reuse existing VPC and subnets
-- Merge pull request [#11](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/11) from terraform-aws-modules/github_webhook
 - Format tfvars
 - Added github-repository-webhook
 
@@ -467,7 +448,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.40.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.41.0...HEAD
+[v2.41.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.40.0...v2.41.0
 [v2.40.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.39.0...v2.40.0
 [v2.39.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.38.0...v2.39.0
 [v2.38.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.37.0...v2.38.0
