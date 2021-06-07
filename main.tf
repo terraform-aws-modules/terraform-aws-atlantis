@@ -102,6 +102,26 @@ locals {
     },
     var.tags,
   )
+
+  log_configuration_secret_options = var.log_configuration != null ? lookup(var.log_configuration, "secretOptions", null) : null
+  log_configuration = var.log_configuration == null ? {
+    logDriver = "awslogs"
+    options = {
+      awslogs-region        = data.aws_region.current.name
+      awslogs-group         = aws_cloudwatch_log_group.atlantis.name
+      awslogs-stream-prefix = "ecs"
+    }
+    secretOptions = []
+  } : {
+    logDriver = tostring(lookup(var.log_configuration, "logDriver"))
+    options   = tomap(lookup(var.log_configuration, "options"))
+    secretOptions = local.log_configuration_secret_options == null ? null : [
+      for secret_option in tolist(local.log_configuration_secret_options) : {
+        name      = tostring(lookup(secret_option, "name"))
+        valueFrom = tostring(lookup(secret_option, "valueFrom"))
+      }
+    ]
+  }
 }
 
 data "aws_region" "current" {}
@@ -418,7 +438,8 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
       aws_ssm_parameter.webhook.*.arn,
       aws_ssm_parameter.atlantis_github_user_token.*.arn,
       aws_ssm_parameter.atlantis_gitlab_user_token.*.arn,
-      aws_ssm_parameter.atlantis_bitbucket_user_token.*.arn
+      aws_ssm_parameter.atlantis_bitbucket_user_token.*.arn,
+      var.additional_ssm_parameter_arns
     ])
 
     actions = [
@@ -493,15 +514,7 @@ module "container_definition_github_gitlab" {
     },
   ]
 
-  log_configuration = {
-    logDriver = "awslogs"
-    options = {
-      awslogs-region        = data.aws_region.current.name
-      awslogs-group         = aws_cloudwatch_log_group.atlantis.name
-      awslogs-stream-prefix = "ecs"
-    }
-    secretOptions = []
-  }
+  log_configuration = local.log_configuration
   firelens_configuration = var.firelens_configuration
 
   environment = concat(
@@ -550,15 +563,7 @@ module "container_definition_bitbucket" {
     },
   ]
 
-  log_configuration = {
-    logDriver = "awslogs"
-    options = {
-      awslogs-region        = data.aws_region.current.name
-      awslogs-group         = aws_cloudwatch_log_group.atlantis.name
-      awslogs-stream-prefix = "ecs"
-    }
-    secretOptions = []
-  }
+  log_configuration = local.log_configuration
   firelens_configuration = var.firelens_configuration
 
   environment = concat(
