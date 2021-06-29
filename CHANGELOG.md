@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.42.0"></a>
+## [v2.42.0] - 2021-06-29
+
+- feat: Add support for AWS ECS Exec ([#209](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/209))
+
+
 <a name="v2.41.0"></a>
 ## [v2.41.0] - 2021-05-17
 
@@ -448,7 +454,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.41.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.42.0...HEAD
+[v2.42.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.41.0...v2.42.0
 [v2.41.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.40.0...v2.41.0
 [v2.40.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.39.0...v2.40.0
 [v2.39.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.38.0...v2.39.0
