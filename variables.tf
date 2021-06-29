@@ -613,3 +613,9 @@ variable "ecs_service_force_new_deployment" {
   type        = bool
   default     = false
 }
+
+variable "ecs_service_enable_execute_command" {
+  description = "Enable ECS exec for the service. This can be used to allow interactive sessions and commands to be executed in the container"
+  type        = bool
+  default     = true
+}
