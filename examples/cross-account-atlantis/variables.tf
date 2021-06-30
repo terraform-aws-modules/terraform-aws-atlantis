@@ -22,7 +22,7 @@ variable "s3_state_buckets" {
   default     = ["secndwatch-remote-state-development", "laiello-terraform-tfstate"]
 }
 
-variable "atlantis_repo_whitelist" {
+variable "atlantis_repo_allowlist" {
   description = "List of allowed repositories Atlantis can be used with"
   type        = list(string)
   default     = ["github.com/2ndWatch/*", "github.com/aiell0/*"]

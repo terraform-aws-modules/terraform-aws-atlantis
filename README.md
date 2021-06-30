@@ -2,12 +2,6 @@
 
 The documentation for the original repository is located in the README of their official Github, which is located [here](https://github.com/terraform-aws-modules/terraform-aws-atlantis). This has been modified to include Terraform state management across AWS accounts specifically for 2W users.
 
-## Terraform versions
-
-Terraform 0.12 or newer. Pin module version to `~> v2.0`. Submit pull-requests to `master` branch.
-
-Terraform 0.11. Pin module version to `~> v1.0`.
-
 ### Before using Atlantis and the code in this repository please make sure that you have read and understood the security implications described in [the official Atlantis documentation](https://www.runatlantis.io/docs/security.html).
 
 ## Usage

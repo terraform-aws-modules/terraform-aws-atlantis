@@ -19,27 +19,39 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.7 |
-| aws | >= 2.68 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.68 |
+| <a name="requirement_gitlab"></a> [gitlab](#requirement\_gitlab) | >= 3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| terraform | n/a |
+| <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
+
+## Modules
+
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_gitlab_repository_webhook"></a> [gitlab\_repository\_webhook](#module\_gitlab\_repository\_webhook) | ../../modules/gitlab-repository-webhook |  |
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [terraform_remote_state.atlantis](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| gitlab\_base\_url | Gitlab base\_url | `string` | `""` | no |
-| gitlab\_token | Gitlab token | `string` | n/a | yes |
+| <a name="input_gitlab_base_url"></a> [gitlab\_base\_url](#input\_gitlab\_base\_url) | Gitlab base\_url | `string` | `""` | no |
+| <a name="input_gitlab_token"></a> [gitlab\_token](#input\_gitlab\_token) | Gitlab token | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| gitlab\_webhook\_secret | Gitlab webhook secret |
-| gitlab\_webhook\_urls | Gitlab webhook URL |
-
+| <a name="output_gitlab_webhook_secret"></a> [gitlab\_webhook\_secret](#output\_gitlab\_webhook\_secret) | Gitlab webhook secret |
+| <a name="output_gitlab_webhook_urls"></a> [gitlab\_webhook\_urls](#output\_gitlab\_webhook\_urls) | Gitlab webhook URL |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

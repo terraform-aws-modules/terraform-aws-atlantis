@@ -79,7 +79,7 @@ module "atlantis" {
   atlantis_github_user           = "aiell0"
   atlantis_github_user_token     = var.github_user_token
   atlantis_github_webhook_secret = var.github_webhook_secret
-  atlantis_repo_whitelist        = var.atlantis_repo_whitelist
+  atlantis_repo_allowlist        = var.atlantis_repo_allowlist
 
   # ALB access
   alb_ingress_cidr_blocks         = ["0.0.0.0/0"]

@@ -120,6 +120,18 @@ variable "alb_authenticate_cognito" {
   default     = {}
 }
 
+variable "alb_enable_deletion_protection" {
+  description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
+  type        = bool
+  default     = null
+}
+
+variable "alb_drop_invalid_header_fields" {
+  description = "Indicates whether invalid header fields are dropped in application load balancers. Defaults to false."
+  type        = bool
+  default     = null
+}
+
 variable "allow_unauthenticated_access" {
   description = "Whether to create ALB listener rule to allow unauthenticated access for certain CIDR blocks (eg. allow GitHub webhooks to bypass OIDC authentication)"
   type        = bool
@@ -251,6 +263,12 @@ variable "trusted_principals" {
   default     = []
 }
 
+variable "trusted_entities" {
+  description = "A list of  users or roles, that can assume the task role"
+  type        = list(string)
+  default     = []
+}
+
 variable "ecs_fargate_spot" {
   description = "Whether to run ECS Fargate Spot or not"
   type        = bool
@@ -297,6 +315,18 @@ variable "ecs_task_memory" {
   description = "The amount (in MiB) of memory used by the task"
   type        = number
   default     = 512
+}
+
+variable "container_cpu" {
+  description = "The number of cpu units used by the atlantis container. If not specified ecs_task_cpu will be used"
+  type        = number
+  default     = null
+}
+
+variable "container_memory" {
+  description = "The amount (in MiB) of memory used by the atlantis container. If not specified ecs_task_memory will be used"
+  type        = number
+  default     = null
 }
 
 variable "container_memory_reservation" {
@@ -411,6 +441,12 @@ variable "ulimits" {
   default = null
 }
 
+variable "external_task_definition_updates" {
+  description = "Enable to allow the task definition to be updated outside of this Terraform module. This should be enabled when using a deployment tool such as ecs-deploy which updates the task definition and will then keep the ECS service using the latest version of the task definition."
+  type        = bool
+  default     = false
+}
+
 # https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html
 variable "firelens_configuration" {
   description = "The FireLens configuration for the container. This is used to specify and configure a log router for container logs. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html"
@@ -440,7 +476,7 @@ variable "atlantis_port" {
   default     = 4141
 }
 
-variable "atlantis_repo_whitelist" {
+variable "atlantis_repo_allowlist" {
   description = "List of allowed repositories Atlantis can be used with"
   type        = list(string)
 }
@@ -570,4 +606,22 @@ variable "s3_state_buckets" {
   description = "List of S3 buckets where Terraform state is stored (can be in any account)."
   type        = list(string)
   default     = []
+}
+
+variable "use_ecs_old_arn_format" {
+  description = "A flag to enable/disable tagging the ecs resources that require the new longer arn format"
+  type        = bool
+  default     = false
+}
+
+variable "ecs_service_force_new_deployment" {
+  description = "Enable to force a new task deployment of the service. This can be used to update tasks to use a newer Docker image with same image/tag combination (e.g. myimage:latest)"
+  type        = bool
+  default     = false
+}
+
+variable "ecs_service_enable_execute_command" {
+  description = "Enable ECS exec for the service. This can be used to allow interactive sessions and commands to be executed in the container"
+  type        = bool
+  default     = true
 }
