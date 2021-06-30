@@ -1,8 +1,8 @@
 terraform {
-  required_version = "~>0.14"
+  required_version = "~>0.15"
 
   backend "s3" {
-    bucket = "2w-atlantis"
+    bucket = "secndwatch-remote-state-development"
     region = "us-east-1"
     key    = "terraform-aws-atlantis"
   }
@@ -43,7 +43,6 @@ module "atlantis" {
   private_subnets = ["10.2.50.16/28", "10.2.50.48/28", "10.2.50.80/28", "10.2.50.112/28", "10.2.50.144/28", "10.2.50.176/28"]
 
   route53_zone_name = var.domain_name
-  certificate_arn   = "arn:aws:acm:us-east-1:486567699039:certificate/85fb6838-5808-4b81-bdaa-87470a4d591e"
 
   # ECS
   ecs_service_platform_version = "LATEST"
@@ -85,7 +84,7 @@ module "atlantis" {
   # ALB access
   alb_ingress_cidr_blocks         = ["0.0.0.0/0"]
   alb_logging_enabled             = true
-  alb_log_bucket_name             = module.atlantis_access_log_bucket.this_s3_bucket_id
+  alb_log_bucket_name             = module.atlantis_access_log_bucket.s3_bucket_id
   alb_log_location_prefix         = "atlantis-alb"
   alb_listener_ssl_policy_default = "ELBSecurityPolicy-TLS-1-2-2017-01"
 
@@ -155,7 +154,7 @@ data "aws_iam_policy_document" "atlantis_access_log_bucket_policy" {
     effect  = "Allow"
     actions = ["s3:PutObject"]
     resources = [
-      "${module.atlantis_access_log_bucket.this_s3_bucket_arn}/*/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+      "${module.atlantis_access_log_bucket.s3_bucket_arn}/*/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
     ]
 
     principals {
@@ -172,7 +171,7 @@ data "aws_iam_policy_document" "atlantis_access_log_bucket_policy" {
     effect  = "Allow"
     actions = ["s3:PutObject"]
     resources = [
-      "${module.atlantis_access_log_bucket.this_s3_bucket_arn}/*/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+      "${module.atlantis_access_log_bucket.s3_bucket_arn}/*/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
     ]
 
     principals {
@@ -197,7 +196,7 @@ data "aws_iam_policy_document" "atlantis_access_log_bucket_policy" {
     effect  = "Allow"
     actions = ["s3:GetBucketAcl"]
     resources = [
-      module.atlantis_access_log_bucket.this_s3_bucket_arn
+      module.atlantis_access_log_bucket.s3_bucket_arn
     ]
 
     principals {
