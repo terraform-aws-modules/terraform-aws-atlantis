@@ -22,22 +22,22 @@ output "webhook_secret" {
 # ECS
 output "task_role_arn" {
   description = "The Atlantis ECS task role arn"
-  value       = aws_iam_role.ecs_task_execution.arn
+  value       = var.ecs_task_role_name == null ? aws_iam_role.ecs_task_execution[0].arn : data.aws_iam_role.custom_ecs_task_role[0].arn
 }
 
 output "task_role_id" {
   description = "The Atlantis ECS task role id"
-  value       = aws_iam_role.ecs_task_execution.id
+  value       = var.ecs_task_role_name == null ? aws_iam_role.ecs_task_execution[0].id : data.aws_iam_role.custom_ecs_task_role[0].id
 }
 
 output "task_role_name" {
   description = "The Atlantis ECS task role name"
-  value       = aws_iam_role.ecs_task_execution.name
+  value       = var.ecs_task_role_name == null ? aws_iam_role.ecs_task_execution[0].name : data.aws_iam_role.custom_ecs_task_role[0].name
 }
 
 output "task_role_unique_id" {
   description = "The stable and unique string identifying the Atlantis ECS task role."
-  value       = aws_iam_role.ecs_task_execution.unique_id
+  value       = var.ecs_task_role_name == null ? aws_iam_role.ecs_task_execution[0].unique_id : data.aws_iam_role.custom_ecs_task_role[0].unique_id
 }
 
 output "ecs_task_definition" {
