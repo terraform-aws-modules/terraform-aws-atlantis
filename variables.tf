@@ -447,6 +447,13 @@ variable "external_task_definition_updates" {
   default     = false
 }
 
+# https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_LogConfiguration.html
+variable "log_configuration" {
+  type        = any
+  description = "Log configuration options to send to a custom log driver for the container. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_LogConfiguration.html"
+  default     = null
+}
+
 # https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html
 variable "firelens_configuration" {
   description = "The FireLens configuration for the container. This is used to specify and configure a log router for container logs. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html"
@@ -455,6 +462,12 @@ variable "firelens_configuration" {
     options = map(string)
   })
   default = null
+}
+
+variable "additional_ssm_parameter_arns" {
+  description = "Additional arns of ssm or parameter store params to apply to the ECSTaskAccessSecretsPolicy"
+  type = list(string)
+  default = []
 }
 
 # Atlantis
