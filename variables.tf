@@ -317,6 +317,12 @@ variable "ecs_task_memory" {
   default     = 512
 }
 
+variable "ecs_task_role_name" {
+  description = "Use an existing task role"
+  type        = string
+  default     = null
+}
+
 variable "container_cpu" {
   description = "The number of cpu units used by the atlantis container. If not specified ecs_task_cpu will be used"
   type        = number
