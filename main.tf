@@ -395,6 +395,7 @@ data "aws_iam_policy_document" "ecs_tasks" {
 }
 
 resource "aws_iam_role" "ecs_task_execution" {
+  count                = var.ecs_task_role_name == null ? 1 : 0
   name                 = "${var.name}-ecs_task_execution"
   assume_role_policy   = data.aws_iam_policy_document.ecs_tasks.json
   permissions_boundary = var.permissions_boundary
@@ -402,8 +403,13 @@ resource "aws_iam_role" "ecs_task_execution" {
   tags = local.tags
 }
 
+data "aws_iam_role" "custom_ecs_task_role" {
+  count = var.ecs_task_role_name == null ? 0 : 1
+  name = var.ecs_task_role_name
+}
+
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
-  count = length(var.policies_arn)
+  count      = var.ecs_task_role_name == null ? length(var.policies_arn) : 0
 
   role       = aws_iam_role.ecs_task_execution.id
   policy_arn = element(var.policies_arn, count.index)
@@ -574,8 +580,8 @@ module "container_definition_bitbucket" {
 
 resource "aws_ecs_task_definition" "atlantis" {
   family                   = var.name
-  execution_role_arn       = aws_iam_role.ecs_task_execution.arn
-  task_role_arn            = aws_iam_role.ecs_task_execution.arn
+  execution_role_arn       = var.ecs_task_role_name == null ? aws_iam_role.ecs_task_execution.arn : data.aws_iam_role.custom_ecs_task_role.arn
+  task_role_arn            = var.ecs_task_role_name == null ? aws_iam_role.ecs_task_execution.arn : data.aws_iam_role.custom_ecs_task_role.arn
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.ecs_task_cpu
