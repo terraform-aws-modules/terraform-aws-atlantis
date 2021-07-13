@@ -6,7 +6,7 @@ GitHub's personal access token can be generated at https://github.com/settings/t
 
 ## Usage
 
-To run this code you need to copy `terraform.tfvars.sample` into `terraform.tfvars` and put your GitHub token and Github organization there or specify them using environment variables (`TF_VAR_github_token` and `TF_VAR_github_organization`). Once ready, execute:
+To run this code you need to copy `terraform.tfvars.sample` into `terraform.tfvars` and put your GitHub token and Github owner there or specify them using environment variables (`TF_VAR_github_token` and `TF_VAR_github_owner`). Once ready, execute:
 
 ```bash
 $ terraform init
@@ -47,7 +47,7 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_github_organization"></a> [github\_organization](#input\_github\_organization) | Github organization | `string` | n/a | yes |
+| <a name="input_github_owner"></a> [github\_owner](#input\_github\_owner) | Github owner | `string` | n/a | yes |
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token | `string` | n/a | yes |
 
 ## Outputs

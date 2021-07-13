@@ -28,9 +28,9 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_atlantis_allowed_repo_names"></a> [atlantis\_allowed\_repo\_names](#input\_atlantis\_allowed\_repo\_names) | List of names of repositories which belong to the organization specified in `github_organization` | `list(string)` | n/a | yes |
+| <a name="input_atlantis_allowed_repo_names"></a> [atlantis\_allowed\_repo\_names](#input\_atlantis\_allowed\_repo\_names) | List of names of repositories which belong to the owner specified in `github_owner` | `list(string)` | n/a | yes |
 | <a name="input_create_github_repository_webhook"></a> [create\_github\_repository\_webhook](#input\_create\_github\_repository\_webhook) | Whether to create Github repository webhook for Atlantis | `bool` | `true` | no |
-| <a name="input_github_organization"></a> [github\_organization](#input\_github\_organization) | Github organization to use when creating webhook | `string` | `""` | no |
+| <a name="input_github_owner"></a> [github\_owner](#input\_github\_owner) | Github owner to use when creating webhook | `string` | `""` | no |
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token to use when creating webhook | `string` | `""` | no |
 | <a name="input_webhook_secret"></a> [webhook\_secret](#input\_webhook\_secret) | Webhook secret | `string` | `""` | no |
 | <a name="input_webhook_url"></a> [webhook\_url](#input\_webhook\_url) | Webhook URL | `string` | `""` | no |
