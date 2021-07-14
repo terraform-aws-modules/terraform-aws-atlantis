@@ -67,6 +67,7 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token | `string` | n/a | yes |
 | <a name="input_github_user"></a> [github\_user](#input\_github\_user) | Github user for Atlantis to utilize when performing Github activities | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | AWS region where resources will be created | `string` | `"us-east-1"` | no |
+| <a name="input_trusted_entities"></a> [trusted\_entities](#input\_trusted\_entities) | A list of  users or roles, that can assume the task role | `list(string)` | `[]` | no |
 | <a name="input_trusted_principals"></a> [trusted\_principals](#input\_trusted\_principals) | A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role | `list(string)` | n/a | yes |
 
 ## Outputs

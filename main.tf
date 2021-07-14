@@ -68,8 +68,8 @@ locals {
       value = var.atlantis_bitbucket_base_url
     },
     {
-      name  = "ATLANTIS_REPO_WHITELIST"
-      value = join(",", var.atlantis_repo_whitelist)
+      name  = "ATLANTIS_REPO_ALLOWLIST"
+      value = join(",", var.atlantis_repo_allowlist)
     },
     {
       name  = "ATLANTIS_HIDE_PREV_PLAN_COMMENTS"
@@ -203,6 +203,10 @@ module "alb" {
     bucket  = var.alb_log_bucket_name
     prefix  = var.alb_log_location_prefix
   }
+
+  enable_deletion_protection = var.alb_enable_deletion_protection
+
+  drop_invalid_header_fields = var.alb_drop_invalid_header_fields
 
   listener_ssl_policy_default = var.alb_listener_ssl_policy_default
   https_listeners = [
@@ -377,6 +381,15 @@ data "aws_iam_policy_document" "ecs_tasks" {
     principals {
       type        = "Service"
       identifiers = compact(distinct(concat(["ecs-tasks.amazonaws.com"], var.trusted_principals)))
+    }
+
+    dynamic "principals" {
+      for_each = length(var.trusted_entities) > 0 ? [true] : []
+
+      content {
+        type        = "AWS"
+        identifiers = var.trusted_entities
+      }
     }
   }
 }
@@ -609,6 +622,8 @@ resource "aws_ecs_service" "atlantis" {
   platform_version                   = var.ecs_service_platform_version
   deployment_maximum_percent         = var.ecs_service_deployment_maximum_percent
   deployment_minimum_healthy_percent = var.ecs_service_deployment_minimum_healthy_percent
+  force_new_deployment               = var.ecs_service_force_new_deployment
+  enable_execute_command             = var.ecs_service_enable_execute_command
 
   network_configuration {
     subnets          = local.private_subnet_ids
@@ -633,7 +648,7 @@ resource "aws_ecs_service" "atlantis" {
   enable_ecs_managed_tags = var.enable_ecs_managed_tags
   propagate_tags          = var.propagate_tags
 
-  tags = local.tags
+  tags = var.use_ecs_old_arn_format ? null : local.tags
 }
 
 ###################

@@ -120,6 +120,18 @@ variable "alb_authenticate_cognito" {
   default     = {}
 }
 
+variable "alb_enable_deletion_protection" {
+  description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
+  type        = bool
+  default     = null
+}
+
+variable "alb_drop_invalid_header_fields" {
+  description = "Indicates whether invalid header fields are dropped in application load balancers. Defaults to false."
+  type        = bool
+  default     = null
+}
+
 variable "allow_unauthenticated_access" {
   description = "Whether to create ALB listener rule to allow unauthenticated access for certain CIDR blocks (eg. allow GitHub webhooks to bypass OIDC authentication)"
   type        = bool
@@ -247,6 +259,12 @@ variable "policies_arn" {
 
 variable "trusted_principals" {
   description = "A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role"
+  type        = list(string)
+  default     = []
+}
+
+variable "trusted_entities" {
+  description = "A list of  users or roles, that can assume the task role"
   type        = list(string)
   default     = []
 }
@@ -458,7 +476,7 @@ variable "atlantis_port" {
   default     = 4141
 }
 
-variable "atlantis_repo_whitelist" {
+variable "atlantis_repo_allowlist" {
   description = "List of allowed repositories Atlantis can be used with"
   type        = list(string)
 }
@@ -588,4 +606,21 @@ variable "ecs_efs_volume" {
   description = "Map of EFS Volume Configuration Arguments.  See https://www.terraform.io/docs/providers/aws/r/ecs_task_definition#efs-volume-configuration-arguments"
   type        = any
   default     = {}
+}
+variable "use_ecs_old_arn_format" {
+  description = "A flag to enable/disable tagging the ecs resources that require the new longer arn format"
+  type        = bool
+  default     = false
+}
+
+variable "ecs_service_force_new_deployment" {
+  description = "Enable to force a new task deployment of the service. This can be used to update tasks to use a newer Docker image with same image/tag combination (e.g. myimage:latest)"
+  type        = bool
+  default     = false
+}
+
+variable "ecs_service_enable_execute_command" {
+  description = "Enable ECS exec for the service. This can be used to allow interactive sessions and commands to be executed in the container"
+  type        = bool
+  default     = true
 }

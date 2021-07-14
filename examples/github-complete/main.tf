@@ -64,6 +64,7 @@ module "atlantis" {
 
   # Security
   trusted_principals = var.trusted_principals
+  trusted_entities   = var.trusted_entities
 
   # DNS
   route53_zone_name = var.domain
@@ -71,15 +72,16 @@ module "atlantis" {
   # Atlantis
   atlantis_github_user        = var.github_user
   atlantis_github_user_token  = var.github_token
-  atlantis_repo_whitelist     = ["github.com/${var.github_organization}/*"]
+  atlantis_repo_allowlist     = ["github.com/${var.github_organization}/*"]
   atlantis_allowed_repo_names = var.allowed_repo_names
 
   # ALB access
   alb_ingress_cidr_blocks         = var.alb_ingress_cidr_blocks
   alb_logging_enabled             = true
-  alb_log_bucket_name             = module.atlantis_access_log_bucket.this_s3_bucket_id
+  alb_log_bucket_name             = module.atlantis_access_log_bucket.s3_bucket_id
   alb_log_location_prefix         = "atlantis-alb"
   alb_listener_ssl_policy_default = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  alb_drop_invalid_header_fields  = true
 
   allow_unauthenticated_access = true
   allow_github_webhooks        = true
@@ -165,7 +167,7 @@ data "aws_iam_policy_document" "atlantis_access_log_bucket_policy" {
     effect  = "Allow"
     actions = ["s3:PutObject"]
     resources = [
-      "${module.atlantis_access_log_bucket.this_s3_bucket_arn}/*/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+      "${module.atlantis_access_log_bucket.s3_bucket_arn}/*/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
     ]
 
     principals {
@@ -182,7 +184,7 @@ data "aws_iam_policy_document" "atlantis_access_log_bucket_policy" {
     effect  = "Allow"
     actions = ["s3:PutObject"]
     resources = [
-      "${module.atlantis_access_log_bucket.this_s3_bucket_arn}/*/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+      "${module.atlantis_access_log_bucket.s3_bucket_arn}/*/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
     ]
 
     principals {
@@ -207,7 +209,7 @@ data "aws_iam_policy_document" "atlantis_access_log_bucket_policy" {
     effect  = "Allow"
     actions = ["s3:GetBucketAcl"]
     resources = [
-      module.atlantis_access_log_bucket.this_s3_bucket_arn
+      module.atlantis_access_log_bucket.s3_bucket_arn
     ]
 
     principals {

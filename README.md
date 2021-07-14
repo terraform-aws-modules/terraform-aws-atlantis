@@ -74,7 +74,40 @@ module "atlantis" {
   # Atlantis
   atlantis_github_user       = "atlantis-bot"
   atlantis_github_user_token = "examplegithubtoken"
-  atlantis_repo_whitelist    = ["github.com/terraform-aws-modules/*"]
+  atlantis_repo_allowlist    = ["github.com/terraform-aws-modules/*"]
+}
+```
+
+### Provide Atlantis with server yaml configuration
+
+`server-atlantis.yaml`
+```yaml
+repos:
+  - id: /.*/
+    allow_custom_workflows: true
+    allowed_overrides:
+      - apply_requirements
+      - workflow
+    apply_requirements:
+      - approved
+    workflow: default
+```
+
+`main.tf`
+```hcl
+module "atlantis" {
+  source  = "terraform-aws-modules/atlantis/aws"
+
+  # ...
+
+  custom_environment_variables = [
+    {
+      "name" : "ATLANTIS_REPO_CONFIG_JSON",
+      "value" : jsonencode(yamldecode(file("${path.module}/server-atlantis.yaml"))),
+    },
+  ]
+
+  # ...
 }
 ```
 
@@ -93,7 +126,6 @@ If `vpc_id` is specified it will take precedence over `cidr` and existing VPC wi
 Make sure that both private and public subnets were created in the same set of availability zones (ALB will be created in public subnets, ECS Fargate service in private subnets).
 
 If all provided subnets are public (no NAT gateway) then `ecs_service_assign_public_ip` should be set to `true`.
-
 
 ### Secure Atlantis with ALB Built-in Authentication
 
@@ -168,9 +200,9 @@ allow_github_webhooks        = true
 
 ## Examples
 
-* [Complete Atlantis with GitHub webhook](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-complete)
-* [GitHub repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook)
-* [GitLab repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/gitlab-repository-webhook)
+- [Complete Atlantis with GitHub webhook](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-complete)
+- [GitHub repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-repository-webhook)
+- [GitLab repository webhook for Atlantis](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/gitlab-repository-webhook)
 
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
@@ -233,6 +265,8 @@ allow_github_webhooks        = true
 | <a name="input_acm_certificate_domain_name"></a> [acm\_certificate\_domain\_name](#input\_acm\_certificate\_domain\_name) | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name` | `string` | `""` | no |
 | <a name="input_alb_authenticate_cognito"></a> [alb\_authenticate\_cognito](#input\_alb\_authenticate\_cognito) | Map of AWS Cognito authentication parameters to protect ALB (eg, using SAML). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-cognito-action | `any` | `{}` | no |
 | <a name="input_alb_authenticate_oidc"></a> [alb\_authenticate\_oidc](#input\_alb\_authenticate\_oidc) | Map of Authenticate OIDC parameters to protect ALB (eg, using Auth0). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-oidc-action | `any` | `{}` | no |
+| <a name="input_alb_drop_invalid_header_fields"></a> [alb\_drop\_invalid\_header\_fields](#input\_alb\_drop\_invalid\_header\_fields) | Indicates whether invalid header fields are dropped in application load balancers. Defaults to false. | `bool` | `null` | no |
+| <a name="input_alb_enable_deletion_protection"></a> [alb\_enable\_deletion\_protection](#input\_alb\_enable\_deletion\_protection) | If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false. | `bool` | `null` | no |
 | <a name="input_alb_http_security_group_tags"></a> [alb\_http\_security\_group\_tags](#input\_alb\_http\_security\_group\_tags) | Additional tags to put on the http security group | `map(string)` | `{}` | no |
 | <a name="input_alb_https_security_group_tags"></a> [alb\_https\_security\_group\_tags](#input\_alb\_https\_security\_group\_tags) | Additional tags to put on the https security group | `map(string)` | `{}` | no |
 | <a name="input_alb_ingress_cidr_blocks"></a> [alb\_ingress\_cidr\_blocks](#input\_alb\_ingress\_cidr\_blocks) | List of IPv4 CIDR ranges to use on all ingress rules of the ALB. | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
@@ -262,7 +296,7 @@ allow_github_webhooks        = true
 | <a name="input_atlantis_image"></a> [atlantis\_image](#input\_atlantis\_image) | Docker image to run Atlantis with. If not specified, official Atlantis image will be used | `string` | `""` | no |
 | <a name="input_atlantis_log_level"></a> [atlantis\_log\_level](#input\_atlantis\_log\_level) | Log level that Atlantis will run with. Accepted values are: <debug\|info\|warn\|error> | `string` | `"debug"` | no |
 | <a name="input_atlantis_port"></a> [atlantis\_port](#input\_atlantis\_port) | Local port Atlantis should be running on. Default value is most likely fine. | `number` | `4141` | no |
-| <a name="input_atlantis_repo_whitelist"></a> [atlantis\_repo\_whitelist](#input\_atlantis\_repo\_whitelist) | List of allowed repositories Atlantis can be used with | `list(string)` | n/a | yes |
+| <a name="input_atlantis_repo_allowlist"></a> [atlantis\_repo\_allowlist](#input\_atlantis\_repo\_allowlist) | List of allowed repositories Atlantis can be used with | `list(string)` | n/a | yes |
 | <a name="input_atlantis_security_group_tags"></a> [atlantis\_security\_group\_tags](#input\_atlantis\_security\_group\_tags) | Additional tags to put on the atlantis security group | `map(string)` | `{}` | no |
 | <a name="input_atlantis_version"></a> [atlantis\_version](#input\_atlantis\_version) | Verion of Atlantis to run. If not specified latest will be used | `string` | `"latest"` | no |
 | <a name="input_azs"></a> [azs](#input\_azs) | A list of availability zones in the region | `list(string)` | `[]` | no |
@@ -285,6 +319,8 @@ allow_github_webhooks        = true
 | <a name="input_ecs_service_deployment_maximum_percent"></a> [ecs\_service\_deployment\_maximum\_percent](#input\_ecs\_service\_deployment\_maximum\_percent) | The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment | `number` | `200` | no |
 | <a name="input_ecs_service_deployment_minimum_healthy_percent"></a> [ecs\_service\_deployment\_minimum\_healthy\_percent](#input\_ecs\_service\_deployment\_minimum\_healthy\_percent) | The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment | `number` | `50` | no |
 | <a name="input_ecs_service_desired_count"></a> [ecs\_service\_desired\_count](#input\_ecs\_service\_desired\_count) | The number of instances of the task definition to place and keep running | `number` | `1` | no |
+| <a name="input_ecs_service_enable_execute_command"></a> [ecs\_service\_enable\_execute\_command](#input\_ecs\_service\_enable\_execute\_command) | Enable ECS exec for the service. This can be used to allow interactive sessions and commands to be executed in the container | `bool` | `true` | no |
+| <a name="input_ecs_service_force_new_deployment"></a> [ecs\_service\_force\_new\_deployment](#input\_ecs\_service\_force\_new\_deployment) | Enable to force a new task deployment of the service. This can be used to update tasks to use a newer Docker image with same image/tag combination (e.g. myimage:latest) | `bool` | `false` | no |
 | <a name="input_ecs_service_platform_version"></a> [ecs\_service\_platform\_version](#input\_ecs\_service\_platform\_version) | The platform version on which to run your service | `string` | `"LATEST"` | no |
 | <a name="input_ecs_task_cpu"></a> [ecs\_task\_cpu](#input\_ecs\_task\_cpu) | The number of cpu units used by the task | `number` | `256` | no |
 | <a name="input_ecs_task_memory"></a> [ecs\_task\_memory](#input\_ecs\_task\_memory) | The amount (in MiB) of memory used by the task | `number` | `512` | no |
@@ -314,8 +350,10 @@ allow_github_webhooks        = true
 | <a name="input_start_timeout"></a> [start\_timeout](#input\_start\_timeout) | Time duration (in seconds) to wait before giving up on resolving dependencies for a container | `number` | `30` | no |
 | <a name="input_stop_timeout"></a> [stop\_timeout](#input\_stop\_timeout) | Time duration (in seconds) to wait before the container is forcefully killed if it doesn't exit normally on its own | `number` | `30` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to use on all resources | `map(string)` | `{}` | no |
+| <a name="input_trusted_entities"></a> [trusted\_entities](#input\_trusted\_entities) | A list of  users or roles, that can assume the task role | `list(string)` | `[]` | no |
 | <a name="input_trusted_principals"></a> [trusted\_principals](#input\_trusted\_principals) | A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role | `list(string)` | `[]` | no |
 | <a name="input_ulimits"></a> [ulimits](#input\_ulimits) | Container ulimit settings. This is a list of maps, where each map should contain "name", "hardLimit" and "softLimit" | <pre>list(object({<br>    name      = string<br>    hardLimit = number<br>    softLimit = number<br>  }))</pre> | `null` | no |
+| <a name="input_use_ecs_old_arn_format"></a> [use\_ecs\_old\_arn\_format](#input\_use\_ecs\_old\_arn\_format) | A flag to enable/disable tagging the ecs resources that require the new longer arn format | `bool` | `false` | no |
 | <a name="input_user"></a> [user](#input\_user) | The user to run as inside the container. Can be any of these formats: user, user:group, uid, uid:gid, user:gid, uid:group. The default (null) will use the container's configured `USER` directive or root if not set. | `string` | `null` | no |
 | <a name="input_volumes_from"></a> [volumes\_from](#input\_volumes\_from) | A list of VolumesFrom maps which contain "sourceContainer" (name of the container that has the volumes to mount) and "readOnly" (whether the container can write to the volume) | <pre>list(object({<br>    sourceContainer = string<br>    readOnly        = bool<br>  }))</pre> | `[]` | no |
 | <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | ID of an existing VPC where resources will be created | `string` | `""` | no |
@@ -346,11 +384,8 @@ allow_github_webhooks        = true
 
 ## Authors
 
-Module is created and maintained by [Anton Babenko](https://github.com/antonbabenko).
-
-[Seth Vargo](https://github.com/sethvargo) has created [atlantis-on-gke](https://github.com/sethvargo/atlantis-on-gke)(Terraform configurations for running Atlantis on [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine)). This inspired me to do similar stuff for AWS Fargate.
+Module is maintained by [Anton Babenko](https://github.com/antonbabenko) with help from [these awesome contributors](https://github.com/terraform-aws-modules/terraform-aws-atlantis/graphs/contributors).
 
 ## License
 
-Apache 2 Licensed. See LICENSE for full details.
-
+Apache 2 Licensed. See [LICENSE](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/LICENSE) for full details.
