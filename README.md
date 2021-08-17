@@ -365,11 +365,19 @@ allow_github_webhooks        = true
 
 | Name | Description |
 |------|-------------|
+| <a name="output_alb_arn"></a> [alb\_arn](#output\_alb\_arn) | ARN of alb |
 | <a name="output_alb_dns_name"></a> [alb\_dns\_name](#output\_alb\_dns\_name) | Dns name of alb |
+| <a name="output_alb_http_listeners_arn"></a> [alb\_http\_listeners\_arn](#output\_alb\_http\_listeners\_arn) | ARNs of alb http listeners |
+| <a name="output_alb_http_listeners_id"></a> [alb\_http\_listeners\_id](#output\_alb\_http\_listeners\_id) | Ids of alb http listeners |
+| <a name="output_alb_https_listeners_arn"></a> [alb\_https\_listeners\_arn](#output\_alb\_https\_listeners\_arn) | ARN of alb https listeners |
+| <a name="output_alb_https_listeners_id"></a> [alb\_https\_listeners\_id](#output\_alb\_https\_listeners\_id) | Ids of alb https listeners |
+| <a name="output_alb_security_group_id"></a> [alb\_security\_group\_id](#output\_alb\_security\_group\_id) | Security group of alb |
 | <a name="output_alb_zone_id"></a> [alb\_zone\_id](#output\_alb\_zone\_id) | Zone ID of alb |
 | <a name="output_atlantis_allowed_repo_names"></a> [atlantis\_allowed\_repo\_names](#output\_atlantis\_allowed\_repo\_names) | Git repositories where webhook should be created |
 | <a name="output_atlantis_url"></a> [atlantis\_url](#output\_atlantis\_url) | URL of Atlantis |
 | <a name="output_atlantis_url_events"></a> [atlantis\_url\_events](#output\_atlantis\_url\_events) | Webhook events URL of Atlantis |
+| <a name="output_ecs_cluster_arn"></a> [ecs\_cluster\_arn](#output\_ecs\_cluster\_arn) | ECS cluster ARN |
+| <a name="output_ecs_cluster_id"></a> [ecs\_cluster\_id](#output\_ecs\_cluster\_id) | ECS cluster id |
 | <a name="output_ecs_security_group"></a> [ecs\_security\_group](#output\_ecs\_security\_group) | Security group assigned to ECS Service in network configuration |
 | <a name="output_ecs_task_definition"></a> [ecs\_task\_definition](#output\_ecs\_task\_definition) | Task definition for ECS service (used for external triggers) |
 | <a name="output_private_subnet_ids"></a> [private\_subnet\_ids](#output\_private\_subnet\_ids) | IDs of the VPC private subnets that were created or passed in |
