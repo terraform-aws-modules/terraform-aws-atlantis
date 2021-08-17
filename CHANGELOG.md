@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v2.43.0"></a>
+## [v2.43.0] - 2021-08-17
+
+- feat: Added outputs of ECS and ALB resources ([#216](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/216))
+
+
 <a name="v2.42.0"></a>
 ## [v2.42.0] - 2021-06-29
 
@@ -454,7 +460,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.42.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.43.0...HEAD
+[v2.43.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.42.0...v2.43.0
 [v2.42.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.41.0...v2.42.0
 [v2.41.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.40.0...v2.41.0
 [v2.40.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.39.0...v2.40.0
