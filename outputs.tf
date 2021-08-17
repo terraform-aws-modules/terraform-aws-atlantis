@@ -92,7 +92,7 @@ output "alb_arn" {
   value       = module.alb.this_lb_arn
 }
 
-output "alb_sg" {
+output "alb_security_group_id" {
   description = "Security group of alb"
   value       = module.alb_https_sg.this_security_group_id
 }
