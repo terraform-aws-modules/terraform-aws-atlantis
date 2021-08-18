@@ -298,7 +298,8 @@ module "alb_http_sg" {
   vpc_id      = local.vpc_id
   description = "Security group with HTTP ports open for specific IPv4 and IPv6CIDR block (or everybody), egress ports are all world open"
 
-  ingress_cidr_blocks = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.alb_ingress_cidr_blocks)))
+  ingress_cidr_blocks = local.alb_ingress_ipv4_cidr_blocks
+  ingress_ipv6_cidr_blocks = local.alb_ingress_ipv6_cidr_blocks
 
   tags = merge(local.tags, var.alb_http_security_group_tags)
 }
