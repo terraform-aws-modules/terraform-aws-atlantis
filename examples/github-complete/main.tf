@@ -68,6 +68,9 @@ module "atlantis" {
   # DNS
   route53_zone_name = var.domain
 
+  # Trusted roles
+  trusted_principals = ["ssm.amazonaws.com"]
+
   # Atlantis
   atlantis_github_user        = var.github_user
   atlantis_github_user_token  = var.github_token
