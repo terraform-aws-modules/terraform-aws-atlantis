@@ -1,17 +1,20 @@
 provider "aws" {
-  region = var.region
+  region = local.region
 }
 
 locals {
+  name   = "github-complete"
+  region = "eu-west-1"
+
   tags = {
     Owner       = "user"
     Environment = "dev"
   }
 }
 
-##############################################################
-# Data sources for existing resources
-##############################################################
+################################################################################
+# Supporting Resources
+################################################################################
 
 data "aws_caller_identity" "current" {}
 
@@ -26,11 +29,11 @@ data "aws_elb_service_account" "current" {}
 module "atlantis" {
   source = "../../"
 
-  name = "atlantiscomplete"
+  name = local.name
 
   # VPC
   cidr            = "10.20.0.0/16"
-  azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
+  azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
   private_subnets = ["10.20.1.0/24", "10.20.2.0/24", "10.20.3.0/24"]
   public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
 
@@ -62,17 +65,13 @@ module "atlantis" {
     hardLimit = 16384
   }]
 
-  # Security
-  trusted_principals = var.trusted_principals
-  trusted_entities   = var.trusted_entities
-
   # DNS
   route53_zone_name = var.domain
 
   # Atlantis
   atlantis_github_user        = var.github_user
   atlantis_github_user_token  = var.github_token
-  atlantis_repo_allowlist     = ["github.com/${var.github_organization}/*"]
+  atlantis_repo_allowlist     = ["github.com/${var.github_owner}/*"]
   atlantis_allowed_repo_names = var.allowed_repo_names
 
   # ALB access
@@ -97,8 +96,8 @@ module "atlantis" {
 module "github_repository_webhook" {
   source = "../../modules/github-repository-webhook"
 
-  github_organization = var.github_organization
-  github_token        = var.github_token
+  github_owner = var.github_owner
+  github_token = var.github_token
 
   atlantis_allowed_repo_names = module.atlantis.atlantis_allowed_repo_names
 
@@ -111,9 +110,9 @@ module "github_repository_webhook" {
 ################################################################################
 module "atlantis_access_log_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = ">= 1.9"
+  version = "~> 2"
 
-  bucket = "${data.aws_caller_identity.current.account_id}-atlantis-access-logs-${data.aws_region.current.name}"
+  bucket = "atlantis-access-logs-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}"
 
   attach_policy = true
   policy        = data.aws_iam_policy_document.atlantis_access_log_bucket_policy.json
