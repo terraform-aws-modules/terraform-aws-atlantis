@@ -1,9 +1,3 @@
-variable "region" {
-  description = "AWS region where resources will be created"
-  type        = string
-  default     = "us-east-1"
-}
-
 variable "domain" {
   description = "Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance"
   type        = string
@@ -19,8 +13,8 @@ variable "github_token" {
   type        = string
 }
 
-variable "github_organization" {
-  description = "Github organization"
+variable "github_owner" {
+  description = "Github owner"
   type        = string
 }
 
@@ -32,15 +26,4 @@ variable "github_user" {
 variable "allowed_repo_names" {
   description = "Repositories that Atlantis will listen for events from and a webhook will be installed"
   type        = list(string)
-}
-
-variable "trusted_principals" {
-  description = "A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role"
-  type        = list(string)
-}
-
-variable "trusted_entities" {
-  description = "A list of  users or roles, that can assume the task role"
-  type        = list(string)
-  default     = []
 }

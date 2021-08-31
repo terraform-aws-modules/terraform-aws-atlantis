@@ -2,7 +2,7 @@ data "terraform_remote_state" "atlantis" {
   backend = "local"
 
   config = {
-    path = "../../terraform.tfstate"
+    path = "../github-complete/terraform.tfstate"
   }
 }
 
@@ -11,8 +11,8 @@ module "github_repository_webhook" {
 
   create_github_repository_webhook = true
 
-  github_token        = var.github_token
-  github_organization = var.github_organization
+  github_token = var.github_token
+  github_owner = var.github_owner
 
   # Fetching these attributes from created already Atlantis Terraform state file
   #
@@ -20,6 +20,6 @@ module "github_repository_webhook" {
   # https://github.com/mygithubusername/awesome-repo and https://github.com/mygithubusername/another-awesome-repo
   atlantis_allowed_repo_names = data.terraform_remote_state.atlantis.outputs.atlantis_allowed_repo_names
 
-  webhook_url    = data.terraform_remote_state.atlantis.outputs.atlantis_url_events
-  webhook_secret = data.terraform_remote_state.atlantis.outputs.webhook_secret
+  webhook_url    = element(data.terraform_remote_state.atlantis.outputs.github_webhook_urls, 0)
+  webhook_secret = data.terraform_remote_state.atlantis.outputs.github_webhook_secret
 }

@@ -9,7 +9,7 @@ locals {
   atlantis_url = "https://${coalesce(
     var.atlantis_fqdn,
     element(concat(aws_route53_record.atlantis.*.fqdn, [""]), 0),
-    module.alb.this_lb_dns_name,
+    module.alb.lb_dns_name,
     "_"
   )}"
   atlantis_url_events = "${local.atlantis_url}/events"
@@ -102,7 +102,11 @@ locals {
     },
     var.tags,
   )
+
+  policies_arn = var.policies_arn != null ? var.policies_arn : ["arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
 }
+
+data "aws_partition" "current" {}
 
 data "aws_region" "current" {}
 
@@ -113,9 +117,9 @@ data "aws_route53_zone" "this" {
   private_zone = false
 }
 
-###################
+################################################################################
 # Secret for webhook
-###################
+################################################################################
 resource "random_id" "webhook" {
   count = var.atlantis_github_webhook_secret != "" ? 0 : 1
 
@@ -162,12 +166,13 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
   tags = local.tags
 }
 
-###################
+################################################################################
 # VPC
-###################
+################################################################################
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v2.64.0"
+  version = "v3.6.0"
 
   create_vpc = var.vpc_id == ""
 
@@ -184,19 +189,19 @@ module "vpc" {
   tags = local.tags
 }
 
-###################
+################################################################################
 # ALB
-###################
+################################################################################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v5.10.0"
+  version = "v6.5.0"
 
   name     = var.name
   internal = var.internal
 
   vpc_id          = local.vpc_id
   subnets         = local.public_subnet_ids
-  security_groups = flatten([module.alb_https_sg.this_security_group_id, module.alb_http_sg.this_security_group_id, var.security_group_ids])
+  security_groups = flatten([module.alb_https_sg.security_group_id, module.alb_http_sg.security_group_id, var.security_group_ids])
 
   access_logs = {
     enabled = var.alb_logging_enabled
@@ -214,7 +219,7 @@ module "alb" {
       target_group_index   = 0
       port                 = 443
       protocol             = "HTTPS"
-      certificate_arn      = var.certificate_arn == "" ? module.acm.this_acm_certificate_arn : var.certificate_arn
+      certificate_arn      = var.certificate_arn == "" ? module.acm.acm_certificate_arn : var.certificate_arn
       action_type          = local.alb_authenication_method
       authenticate_oidc    = var.alb_authenticate_oidc
       authenticate_cognito = var.alb_authenticate_cognito
@@ -266,12 +271,12 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
   }
 }
 
-###################
+################################################################################
 # Security groups
-###################
+################################################################################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v3.17.0"
+  version = "v4.3.0"
 
   name        = "${var.name}-alb-https"
   vpc_id      = local.vpc_id
@@ -284,7 +289,7 @@ module "alb_https_sg" {
 
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
-  version = "v3.17.0"
+  version = "v4.3.0"
 
   name        = "${var.name}-alb-http"
   vpc_id      = local.vpc_id
@@ -297,7 +302,7 @@ module "alb_http_sg" {
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v3.17.0"
+  version = "v4.3.0"
 
   name        = var.name
   vpc_id      = local.vpc_id
@@ -309,7 +314,7 @@ module "atlantis_sg" {
       to_port                  = var.atlantis_port
       protocol                 = "tcp"
       description              = "Atlantis"
-      source_security_group_id = module.alb_https_sg.this_security_group_id
+      source_security_group_id = module.alb_https_sg.security_group_id
     },
   ]
 
@@ -318,12 +323,12 @@ module "atlantis_sg" {
   tags = merge(local.tags, var.atlantis_security_group_tags)
 }
 
-###################
+################################################################################
 # ACM (SSL certificate)
-###################
+################################################################################
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v2.12.0"
+  version = "v3.2.0"
 
   create_certificate = var.certificate_arn == ""
 
@@ -334,9 +339,9 @@ module "acm" {
   tags = local.tags
 }
 
-###################
+################################################################################
 # Route53 record
-###################
+################################################################################
 resource "aws_route53_record" "atlantis" {
   count = var.create_route53_record ? 1 : 0
 
@@ -345,27 +350,29 @@ resource "aws_route53_record" "atlantis" {
   type    = "A"
 
   alias {
-    name                   = module.alb.this_lb_dns_name
-    zone_id                = module.alb.this_lb_zone_id
+    name                   = module.alb.lb_dns_name
+    zone_id                = module.alb.lb_zone_id
     evaluate_target_health = true
   }
 }
 
-###################
+################################################################################
 # ECS
-###################
+################################################################################
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "v2.5.0"
+  version = "v3.3.0"
 
   name               = var.name
   container_insights = var.ecs_container_insights
 
   capacity_providers = ["FARGATE", "FARGATE_SPOT"]
 
-  default_capacity_provider_strategy = {
-    capacity_provider = var.ecs_fargate_spot ? "FARGATE_SPOT" : "FARGATE"
-  }
+  default_capacity_provider_strategy = [
+    {
+      capacity_provider = var.ecs_fargate_spot ? "FARGATE_SPOT" : "FARGATE"
+    }
+  ]
 
   tags = local.tags
 }
@@ -403,10 +410,10 @@ resource "aws_iam_role" "ecs_task_execution" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
-  count = length(var.policies_arn)
+  for_each = toset(local.policies_arn)
 
   role       = aws_iam_role.ecs_task_execution.id
-  policy_arn = element(var.policies_arn, count.index)
+  policy_arn = each.value
 }
 
 # ref: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html
@@ -461,7 +468,7 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 
 module "container_definition_github_gitlab" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.45.2"
+  version = "v0.58.1"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -518,7 +525,7 @@ module "container_definition_github_gitlab" {
 
 module "container_definition_bitbucket" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.45.2"
+  version = "v0.58.1"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -596,7 +603,7 @@ data "aws_ecs_task_definition" "atlantis" {
 
 resource "aws_ecs_service" "atlantis" {
   name    = var.name
-  cluster = module.ecs.this_ecs_cluster_id
+  cluster = module.ecs.ecs_cluster_id
 
   task_definition                    = "${var.name}:${local.latest_task_definition_rev}"
   desired_count                      = var.ecs_service_desired_count
@@ -609,7 +616,7 @@ resource "aws_ecs_service" "atlantis" {
 
   network_configuration {
     subnets          = local.private_subnet_ids
-    security_groups  = [module.atlantis_sg.this_security_group_id]
+    security_groups  = [module.atlantis_sg.security_group_id]
     assign_public_ip = var.ecs_service_assign_public_ip
   }
 
@@ -633,9 +640,9 @@ resource "aws_ecs_service" "atlantis" {
   tags = var.use_ecs_old_arn_format ? null : local.tags
 }
 
-###################
+################################################################################
 # Cloudwatch logs
-###################
+################################################################################
 resource "aws_cloudwatch_log_group" "atlantis" {
   name              = var.name
   retention_in_days = var.cloudwatch_log_retention_in_days
