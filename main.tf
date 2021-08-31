@@ -5,7 +5,7 @@ locals {
   public_subnet_ids  = coalescelist(module.vpc.public_subnets, var.public_subnet_ids, [""])
 
   # Atlantis
-  atlantis_image = var.atlantis_image == "" ? "runatlantis/atlantis:${var.atlantis_version}" : var.atlantis_image
+  atlantis_image = var.atlantis_image == "" ? "ghcr.io/runatlantis/atlantis:${var.atlantis_version}" : var.atlantis_image
   atlantis_url = "https://${coalesce(
     var.atlantis_fqdn,
     element(concat(aws_route53_record.atlantis.*.fqdn, [""]), 0),
