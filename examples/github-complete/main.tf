@@ -52,7 +52,7 @@ module "atlantis" {
   docker_labels = {
     "org.opencontainers.image.title"       = "Atlantis"
     "org.opencontainers.image.description" = "A self-hosted golang application that listens for Terraform pull request events via webhooks."
-    "org.opencontainers.image.url"         = "https://github.com/runatlantis/atlantis/blob/master/Dockerfile"
+    "org.opencontainers.image.url"         = "https://github.com/runatlantis/atlantis/pkgs/container/atlantis"
   }
   start_timeout = 30
   stop_timeout  = 30
