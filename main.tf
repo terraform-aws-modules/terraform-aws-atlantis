@@ -104,6 +104,12 @@ locals {
   )
 
   policies_arn = var.policies_arn != null ? var.policies_arn : ["arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+
+  # Chunk these into groups of 5, the limit for IPs in an AWS lb listener
+  whitelist_unauthenticated_cidr_block_chunks = chunklist(
+    sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.whitelist_unauthenticated_cidr_blocks))),
+    5
+  )
 }
 
 data "aws_partition" "current" {}
@@ -254,10 +260,10 @@ module "alb" {
 
 # Forward action for certain CIDR blocks to bypass authentication (eg. GitHub webhooks)
 resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
-  count = var.allow_unauthenticated_access ? 1 : 0
+  count = var.allow_unauthenticated_access ? length(local.whitelist_unauthenticated_cidr_block_chunks) : 0
 
   listener_arn = module.alb.https_listener_arns[0]
-  priority     = var.allow_unauthenticated_access_priority
+  priority     = var.allow_unauthenticated_access_priority + count.index
 
   action {
     type             = "forward"
@@ -266,7 +272,7 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
 
   condition {
     source_ip {
-      values = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.whitelist_unauthenticated_cidr_blocks)))
+      values = local.whitelist_unauthenticated_cidr_block_chunks[count.index]
     }
   }
 }
