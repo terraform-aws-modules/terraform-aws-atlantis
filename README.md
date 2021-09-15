@@ -102,8 +102,8 @@ module "atlantis" {
 
   custom_environment_variables = [
     {
-      "name" : "ATLANTIS_REPO_CONFIG_JSON",
-      "value" : jsonencode(yamldecode(file("${path.module}/server-atlantis.yaml"))),
+      name : "ATLANTIS_REPO_CONFIG_JSON",
+      value : jsonencode(yamldecode(file("${path.module}/server-atlantis.yaml"))),
     },
   ]
 
