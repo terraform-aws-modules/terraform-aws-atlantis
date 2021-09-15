@@ -15,7 +15,7 @@ module "gitlab_repository_webhook" {
   gitlab_base_url = var.gitlab_base_url
 
   # Fetching these attributes from created already Atlantis Terraform state file
-  atlantis_allowed_repo_names = data.terraform_remote_state.atlantis.outputs.atlantis_allowed_repo_names
+  atlantis_repo_allowlist = data.terraform_remote_state.atlantis.outputs.atlantis_repo_allowlist
   webhook_url                 = data.terraform_remote_state.atlantis.outputs.atlantis_url_events
   webhook_secret              = data.terraform_remote_state.atlantis.outputs.webhook_secret
 }
