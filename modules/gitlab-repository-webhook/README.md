@@ -28,7 +28,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_atlantis_repo_allowlist"></a> [atlantis\_repo\_allowlist](#input\_atlantis\_repo\_allowlist) | List of names of repositories which belong to the owner specified in `github_owner` | `list(string)` | n/a | yes |
+| <a name="input_atlantis_repo_allowlist"></a> [atlantis\_repo\_allowlist](#input\_atlantis\_repo\_allowlist) | List of names of repositories which belong to the `gitlab_base_url` specified | `list(string)` | n/a | yes |
 | <a name="input_create_gitlab_repository_webhook"></a> [create\_gitlab\_repository\_webhook](#input\_create\_gitlab\_repository\_webhook) | Whether to create Gitlab repository webhook for Atlantis | `bool` | `true` | no |
 | <a name="input_gitlab_base_url"></a> [gitlab\_base\_url](#input\_gitlab\_base\_url) | Gitlab base\_url use | `string` | `""` | no |
 | <a name="input_gitlab_token"></a> [gitlab\_token](#input\_gitlab\_token) | Gitlab token to use when creating webhook | `string` | `""` | no |
