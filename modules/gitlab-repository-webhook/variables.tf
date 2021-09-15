@@ -16,7 +16,7 @@ variable "gitlab_token" {
   default     = ""
 }
 
-variable "atlantis_allowed_repo_names" {
+variable "atlantis_repo_allowlist" {
   description = "List of names of repositories which belong to the `gitlab_base_url` specified"
   type        = list(string)
 }
