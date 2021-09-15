@@ -517,12 +517,6 @@ variable "atlantis_repo_allowlist" {
   type        = list(string)
 }
 
-variable "atlantis_allowed_repo_names" {
-  description = "Git repositories where webhook should be created"
-  type        = list(string)
-  default     = []
-}
-
 variable "allow_repo_config" {
   description = "When true allows the use of atlantis.yaml config files within the source repos."
   type        = string
