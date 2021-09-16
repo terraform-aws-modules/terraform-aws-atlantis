@@ -6,4 +6,5 @@ output "gitlab_webhook_urls" {
 output "gitlab_webhook_secret" {
   description = "Gitlab webhook secret"
   value       = module.gitlab_repository_webhook.repository_webhook_secret
+  sensitive   = true
 }
