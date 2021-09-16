@@ -28,4 +28,5 @@ output "github_webhook_urls" {
 output "github_webhook_secret" {
   description = "Github webhook secret"
   value       = module.github_repository_webhook.repository_webhook_secret
+  sensitive   = true
 }

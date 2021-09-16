@@ -17,6 +17,7 @@ output "atlantis_allowed_repo_names" {
 output "webhook_secret" {
   description = "Webhook secret"
   value       = element(concat(random_id.webhook.*.hex, [""]), 0)
+  sensitive   = true
 }
 
 # ECS
