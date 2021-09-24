@@ -159,7 +159,7 @@ variable "allow_github_webhooks" {
 variable "github_webhooks_cidr_blocks" {
   description = "List of CIDR blocks used by GitHub webhooks" # This is hardcoded to avoid dependency on github provider. Source: https://api.github.com/meta
   type        = list(string)
-  default     = ["140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22"]
+  default     = ["140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22", "143.55.64.0/20"]
 }
 
 variable "whitelist_unauthenticated_cidr_blocks" {
