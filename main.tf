@@ -271,6 +271,25 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
   }
 }
 
+# Forward action for certain URL paths to bypass authentication (eg. GitHub webhooks)
+resource "aws_lb_listener_rule" "unauthenticated_access_for_webhook" {
+  count = var.allow_unauthenticated_access && var.allow_github_webhooks ? 1 : 0
+
+  listener_arn = module.alb.https_listener_arns[0]
+  priority     = var.allow_unauthenticated_webhook_access_priority
+
+  action {
+    type             = "forward"
+    target_group_arn = module.alb.target_group_arns[0]
+  }
+
+  condition {
+    path_pattern {
+      values = [ "/events" ]
+    }
+  }
+}
+
 ################################################################################
 # Security groups
 ################################################################################
