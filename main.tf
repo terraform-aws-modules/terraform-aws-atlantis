@@ -285,7 +285,7 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_webhook" {
 
   condition {
     path_pattern {
-      values = [ "/events" ]
+      values = ["/events"]
     }
   }
 }
