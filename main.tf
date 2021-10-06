@@ -27,6 +27,10 @@ locals {
   # determine if the alb has authentication enabled, otherwise forward the traffic unauthenticated
   alb_authenication_method = length(keys(var.alb_authenticate_oidc)) > 0 ? "authenticate-oidc" : length(keys(var.alb_authenticate_cognito)) > 0 ? "authenticate-cognito" : "forward"
 
+  # ECS - existing or new?
+  ecs_cluster_id  = var.ecs_cluster_id == "" ? module.ecs.ecs_cluster_id : var.ecs_cluster_id
+  ecs_cluster_arn = var.ecs_cluster_arn == "" ? module.ecs.ecs_cluster_arn : var.ecs_cluster_arn
+
   # Container definitions
   container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? jsonencode(concat([module.container_definition_bitbucket.json_map_object], var.extra_container_definitions)) : jsonencode(concat([module.container_definition_github_gitlab.json_map_object], var.extra_container_definitions)) : var.custom_container_definitions
 
@@ -379,6 +383,7 @@ resource "aws_route53_record" "atlantis" {
 # ECS
 ################################################################################
 module "ecs" {
+  count   = var.ecs_cluster_id == "" ? 1 : 0
   source  = "terraform-aws-modules/ecs/aws"
   version = "v3.3.0"
 
@@ -622,7 +627,7 @@ data "aws_ecs_task_definition" "atlantis" {
 
 resource "aws_ecs_service" "atlantis" {
   name    = var.name
-  cluster = module.ecs.ecs_cluster_id
+  cluster = local.ecs_cluster_id
 
   task_definition                    = "${var.name}:${local.latest_task_definition_rev}"
   desired_count                      = var.ecs_service_desired_count

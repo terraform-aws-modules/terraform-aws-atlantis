@@ -275,6 +275,18 @@ variable "trusted_entities" {
   default     = []
 }
 
+variable "ecs_cluster_id" {
+  description = "ID of an existing ECS cluster where resources will be created"
+  type        = string
+  default     = ""
+}
+
+variable "ecs_cluster_arn" {
+  description = "ARN of an existing ECS cluster where resources will be created"
+  type        = string
+  default     = ""
+}
+
 variable "ecs_fargate_spot" {
   description = "Whether to run ECS Fargate Spot or not"
   type        = bool
