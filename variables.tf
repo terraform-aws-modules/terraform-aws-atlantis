@@ -144,6 +144,12 @@ variable "allow_unauthenticated_access_priority" {
   default     = 10
 }
 
+variable "allow_unauthenticated_webhook_access_priority" {
+  description = "ALB listener rule priority for allow unauthenticated webhook access rule"
+  type        = number
+  default     = 15
+}
+
 variable "allow_github_webhooks" {
   description = "Whether to allow access for GitHub webhooks"
   type        = bool
@@ -153,7 +159,7 @@ variable "allow_github_webhooks" {
 variable "github_webhooks_cidr_blocks" {
   description = "List of CIDR blocks used by GitHub webhooks" # This is hardcoded to avoid dependency on github provider. Source: https://api.github.com/meta
   type        = list(string)
-  default     = ["140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22"]
+  default     = ["140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22", "143.55.64.0/20"]
 }
 
 variable "whitelist_unauthenticated_cidr_blocks" {
@@ -254,7 +260,7 @@ variable "permissions_boundary" {
 variable "policies_arn" {
   description = "A list of the ARN of the policies you want to apply"
   type        = list(string)
-  default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+  default     = null
 }
 
 variable "trusted_principals" {

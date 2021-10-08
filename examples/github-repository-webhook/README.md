@@ -1,12 +1,12 @@
 # GitHub repository webhook for Atlantis
 
-Configuration in this directory creates GitHub repository webhooks configured to Atlantis URL. This example uses value of webhook secret which got generated when Atlantis setup by referring to `terraform.tfstate`, so this example has to run after Atlantis. 
+Configuration in this directory creates GitHub repository webhooks configured to Atlantis URL. This example uses value of webhook secret which got generated when Atlantis setup by referring to `terraform.tfstate`, so this example has to run after Atlantis.
 
-GitHub's personal access token can be generated at https://github.com/settings/tokens 
+GitHub's personal access token can be generated at https://github.com/settings/tokens
 
 ## Usage
 
-To run this code you need to copy `terraform.tfvars.sample` into `terraform.tfvars` and put your GitHub token and Github organization there or specify them using environment variables (`TF_VAR_github_token` and `TF_VAR_github_organization`). Once ready, execute:
+To run this code you need to copy `terraform.tfvars.sample` into `terraform.tfvars` and put your GitHub token and Github owner there or specify them using environment variables (`TF_VAR_github_token` and `TF_VAR_github_owner`). Once ready, execute:
 
 ```bash
 $ terraform init
@@ -21,9 +21,9 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.12.26 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.68 |
-| <a name="requirement_github"></a> [github](#requirement\_github) | >= 2.4.1 |
+| <a name="requirement_github"></a> [github](#requirement\_github) | >= 4.8 |
 
 ## Providers
 
@@ -47,7 +47,7 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_github_organization"></a> [github\_organization](#input\_github\_organization) | Github organization | `string` | n/a | yes |
+| <a name="input_github_owner"></a> [github\_owner](#input\_github\_owner) | Github owner | `string` | n/a | yes |
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token | `string` | n/a | yes |
 
 ## Outputs

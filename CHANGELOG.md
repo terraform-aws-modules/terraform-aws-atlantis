@@ -7,6 +7,37 @@ All notable changes to this project will be documented in this file.
 
 
 
+<a name="v3.3.0"></a>
+## [v3.3.0] - 2021-09-24
+
+- feat: Allow unauthenticated access for webhooks to /events endpoint if needed ([#226](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/226))
+- fix: Add missing netblock (143.55.64.0/20) to GitHub webhook IP ranges ([#225](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/225))
+
+
+<a name="v3.2.0"></a>
+## [v3.2.0] - 2021-09-16
+
+- feat: Add sensitive flag for webhook secret outputs ([#222](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/222))
+
+
+<a name="v3.1.0"></a>
+## [v3.1.0] - 2021-09-01
+
+- feat: update default image to ghcr.io one ([#219](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/219))
+
+
+<a name="v3.0.0"></a>
+## [v3.0.0] - 2021-08-31
+
+- BREAKING CHANGE: update internal modules to latest, replace `github_organization` with `github_owner`, bump Terraform version to >=0.13.1 ([#218](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/218))
+
+
+<a name="v2.43.0"></a>
+## [v2.43.0] - 2021-08-17
+
+- feat: Added outputs of ECS and ALB resources ([#216](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/216))
+
+
 <a name="v2.42.0"></a>
 ## [v2.42.0] - 2021-06-29
 
@@ -454,7 +485,12 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.42.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.3.0...HEAD
+[v3.3.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.2.0...v3.3.0
+[v3.2.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.1.0...v3.2.0
+[v3.1.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.0.0...v3.1.0
+[v3.0.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.43.0...v3.0.0
+[v2.43.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.42.0...v2.43.0
 [v2.42.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.41.0...v2.42.0
 [v2.41.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.40.0...v2.41.0
 [v2.40.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.39.0...v2.40.0

@@ -17,7 +17,7 @@ variable "gitlab_token" {
 }
 
 variable "atlantis_allowed_repo_names" {
-  description = "List of names of repositories which belong to the organization specified in `gitlab_organization`"
+  description = "List of names of repositories which belong to the `gitlab_base_url` specified"
   type        = list(string)
 }
 
