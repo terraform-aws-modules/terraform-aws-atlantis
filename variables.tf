@@ -608,11 +608,6 @@ variable "enable_ecs_managed_tags" {
   default     = false
 }
 
-variable "ecs_efs_volume" {
-  description = "Map of EFS Volume Configuration Arguments.  See https://www.terraform.io/docs/providers/aws/r/ecs_task_definition#efs-volume-configuration-arguments"
-  type        = any
-  default     = {}
-}
 variable "use_ecs_old_arn_format" {
   description = "A flag to enable/disable tagging the ecs resources that require the new longer arn format"
   type        = bool
@@ -629,4 +624,20 @@ variable "ecs_service_enable_execute_command" {
   description = "Enable ECS exec for the service. This can be used to allow interactive sessions and commands to be executed in the container"
   type        = bool
   default     = true
+}
+
+variable "enable_ephemeral_storage" {
+  description = "Enable to use Fargate Ephermal Storage"
+  type        = bool
+  default     = false
+}
+variable "ephemeral_storage_size" {
+  description = "Size of Ephemeral Storage in GiB"
+  type        = number
+  default     = 21
+
+  validation {
+    condition     = var.ephemeral_storage_size >= 21 && var.ephemeral_storage_size <= 200
+    error_message = "The minimum supported value is 21 GiB and the maximum supported value is 200 GiB."
+  }
 }
