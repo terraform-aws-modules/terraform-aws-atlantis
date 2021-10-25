@@ -6,12 +6,7 @@ locals {
 
   # Atlantis
   atlantis_image = var.atlantis_image == "" ? "ghcr.io/runatlantis/atlantis:${var.atlantis_version}" : var.atlantis_image
-  atlantis_url = "https://${coalesce(
-    var.atlantis_fqdn,
-    element(concat(aws_route53_record.atlantis.*.fqdn, [""]), 0),
-    module.alb.lb_dns_name,
-    "_"
-  )}"
+  atlantis_url = "http://${module.alb.lb_dns_name}"
   atlantis_url_events = "${local.atlantis_url}/events"
 
   # Include only one group of secrets - for github, gitlab or bitbucket
@@ -111,7 +106,8 @@ data "aws_partition" "current" {}
 data "aws_region" "current" {}
 
 data "aws_route53_zone" "this" {
-  count = var.create_route53_record ? 1 : 0
+  #count = var.create_route53_record ? 1 : 0
+  count = 0
 
   name         = var.route53_zone_name
   private_zone = false
@@ -214,28 +210,12 @@ module "alb" {
   drop_invalid_header_fields = var.alb_drop_invalid_header_fields
 
   listener_ssl_policy_default = var.alb_listener_ssl_policy_default
-  https_listeners = [
-    {
-      target_group_index   = 0
-      port                 = 443
-      protocol             = "HTTPS"
-      certificate_arn      = var.certificate_arn == "" ? module.acm.acm_certificate_arn : var.certificate_arn
-      action_type          = local.alb_authenication_method
-      authenticate_oidc    = var.alb_authenticate_oidc
-      authenticate_cognito = var.alb_authenticate_cognito
-    },
-  ]
 
   http_tcp_listeners = [
     {
       port        = 80
       protocol    = "HTTP"
-      action_type = "redirect"
-      redirect = {
-        port        = 443
-        protocol    = "HTTPS"
-        status_code = "HTTP_301"
-      }
+      action_type = "forward"
     },
   ]
 
@@ -256,7 +236,7 @@ module "alb" {
 resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
   count = var.allow_unauthenticated_access ? 1 : 0
 
-  listener_arn = module.alb.https_listener_arns[0]
+  listener_arn = module.alb.http_tcp_listener_arns[0]
   priority     = var.allow_unauthenticated_access_priority
 
   action {
@@ -275,7 +255,7 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
 resource "aws_lb_listener_rule" "unauthenticated_access_for_webhook" {
   count = var.allow_unauthenticated_access && var.allow_github_webhooks ? 1 : 0
 
-  listener_arn = module.alb.https_listener_arns[0]
+  listener_arn = module.alb.http_tcp_listener_arns[0]
   priority     = var.allow_unauthenticated_webhook_access_priority
 
   action {
@@ -340,39 +320,6 @@ module "atlantis_sg" {
   egress_rules = ["all-all"]
 
   tags = merge(local.tags, var.atlantis_security_group_tags)
-}
-
-################################################################################
-# ACM (SSL certificate)
-################################################################################
-module "acm" {
-  source  = "terraform-aws-modules/acm/aws"
-  version = "v3.2.0"
-
-  create_certificate = var.certificate_arn == ""
-
-  domain_name = var.acm_certificate_domain_name == "" ? join(".", [var.name, var.route53_zone_name]) : var.acm_certificate_domain_name
-
-  zone_id = var.certificate_arn == "" ? element(concat(data.aws_route53_zone.this.*.id, [""]), 0) : ""
-
-  tags = local.tags
-}
-
-################################################################################
-# Route53 record
-################################################################################
-resource "aws_route53_record" "atlantis" {
-  count = var.create_route53_record ? 1 : 0
-
-  zone_id = data.aws_route53_zone.this[0].zone_id
-  name    = var.route53_record_name != null ? var.route53_record_name : var.name
-  type    = "A"
-
-  alias {
-    name                   = module.alb.lb_dns_name
-    zone_id                = module.alb.lb_zone_id
-    evaluate_target_health = true
-  }
 }
 
 ################################################################################
