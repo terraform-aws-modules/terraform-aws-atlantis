@@ -77,6 +77,9 @@ locals {
     },
   ]
 
+  # ECS BYOC
+  ecs_cluster_id = var.ecs_cluster_id == "" ? module.ecs.ecs_cluster_id : var.ecs_cluster_id
+
   # ECS task definition
   latest_task_definition_rev = var.external_task_definition_updates ? max(aws_ecs_task_definition.atlantis.revision, data.aws_ecs_task_definition.atlantis[0].revision) : aws_ecs_task_definition.atlantis.revision
 
@@ -379,8 +382,9 @@ resource "aws_route53_record" "atlantis" {
 # ECS
 ################################################################################
 module "ecs" {
-  source  = "terraform-aws-modules/ecs/aws"
-  version = "v3.3.0"
+  source     = "terraform-aws-modules/ecs/aws"
+  version    = "v3.3.0"
+  create_ecs = var.ecs_cluster_id == ""
 
   name               = var.name
   container_insights = var.ecs_container_insights
