@@ -275,7 +275,7 @@ variable "trusted_entities" {
   default     = []
 }
 
-variable "create_ecs_clsuter" {
+variable "create_ecs_cluster" {
   description = "Whether to create an ECS cluster or not"
   type        = bool
   default     = true
