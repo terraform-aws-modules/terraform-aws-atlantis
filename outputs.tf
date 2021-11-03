@@ -56,11 +56,6 @@ output "ecs_cluster_id" {
   value       = local.ecs_cluster_id
 }
 
-output "ecs_cluster_arn" {
-  description = "ECS cluster ARN"
-  value       = local.ecs_cluster_arn
-}
-
 # VPC
 output "vpc_id" {
   description = "ID of the VPC that was created or passed in"

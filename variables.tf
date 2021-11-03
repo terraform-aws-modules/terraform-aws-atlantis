@@ -287,12 +287,6 @@ variable "ecs_cluster_id" {
   default     = ""
 }
 
-variable "ecs_cluster_arn" {
-  description = "ARN of an existing ECS cluster where resources will be created"
-  type        = string
-  default     = ""
-}
-
 variable "ecs_fargate_spot" {
   description = "Whether to run ECS Fargate Spot or not"
   type        = bool
