@@ -650,6 +650,15 @@ resource "aws_ecs_service" "atlantis" {
     target_group_arn = element(module.alb.target_group_arns, 0)
   }
 
+  dynamic "load_balancer" {
+    for_each = var.extra_load_balancers
+    content {
+      container_name   = load_balancer.value["container_name"]
+      container_port   = load_balancer.value["container_port"]
+      target_group_arn = load_balancer.value["target_group_arn"]
+    }
+  }
+
   dynamic "capacity_provider_strategy" {
     for_each = var.ecs_fargate_spot ? [true] : []
     content {
