@@ -275,6 +275,12 @@ variable "trusted_entities" {
   default     = []
 }
 
+variable "create_ecs_clsuter" {
+  description = "Whether to create an ECS cluster or not"
+  type        = bool
+  default     = true
+}
+
 variable "ecs_cluster_id" {
   description = "ID of an existing ECS cluster where resources will be created"
   type        = string
