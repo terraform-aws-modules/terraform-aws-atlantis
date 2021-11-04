@@ -165,6 +165,22 @@ alb_authenticate_oidc = {
 
 Read more in [this post](https://medium.com/swlh/aws-alb-authentication-with-okta-oidc-using-terraform-902cd8289db4)
 
+##### Google
+
+```hcl
+  alb_authenticate_oidc = {
+    issuer                              = "https://accounts.google.com"
+    token_endpoint                      = "https://oauth2.googleapis.com/token"
+    user_info_endpoint                  = "https://openidconnect.googleapis.com/v1/userinfo"
+    authorization_endpoint              = "https://accounts.google.com/o/oauth2/v2/auth"
+    authentication_request_extra_params = {}
+    client_id                           = "google_client_id"
+    client_secret                       = "google_client_secret"
+  }
+```
+
+Note: remember to set your google consent screen to internal to only allow users from your own domain.
+
 #### AWS Cognito with SAML
 
 The AWS Cognito service allows you to define SAML applications tied to an identity provider (e.g., GSuite). The Atlantis ALB can then be configured to require an authenticated user managed by your identity provider.
