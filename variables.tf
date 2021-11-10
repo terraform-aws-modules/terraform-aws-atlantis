@@ -84,6 +84,18 @@ variable "private_subnets" {
 }
 
 # ALB
+variable "alb_arn" {
+  description = "ARN of an existing ALB where listener rules will be created"
+  type        = string
+  default     = ""
+}
+
+variable "alb_security_group" {
+  description = "Security group id of existing LB to allow ingress from for the ECS task"
+  type        = string
+  default     = ""
+}
+
 variable "alb_ingress_cidr_blocks" {
   description = "List of IPv4 CIDR ranges to use on all ingress rules of the ALB."
   type        = list(string)
@@ -148,6 +160,12 @@ variable "allow_unauthenticated_webhook_access_priority" {
   description = "ALB listener rule priority for allow unauthenticated webhook access rule"
   type        = number
   default     = 15
+}
+
+variable "default_access_priority" {
+  description = "ALB listener rule priority for default access rule"
+  type        = number
+  default     = 19
 }
 
 variable "allow_github_webhooks" {
@@ -497,12 +515,6 @@ variable "atlantis_allowed_repo_names" {
   description = "Git repositories where webhook should be created"
   type        = list(string)
   default     = []
-}
-
-variable "allow_repo_config" {
-  description = "When true allows the use of atlantis.yaml config files within the source repos."
-  type        = string
-  default     = "false"
 }
 
 variable "atlantis_log_level" {
