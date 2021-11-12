@@ -20,7 +20,7 @@ Note that this example may create resources which cost money. Run `terraform des
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 2.68 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.45 |
 | <a name="requirement_gitlab"></a> [gitlab](#requirement\_gitlab) | >= 3.0 |
 
 ## Providers
@@ -33,7 +33,7 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_gitlab_repository_webhook"></a> [gitlab\_repository\_webhook](#module\_gitlab\_repository\_webhook) | ../../modules/gitlab-repository-webhook |  |
+| <a name="module_gitlab_repository_webhook"></a> [gitlab\_repository\_webhook](#module\_gitlab\_repository\_webhook) | ../../modules/gitlab-repository-webhook | n/a |
 
 ## Resources
 

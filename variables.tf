@@ -637,6 +637,7 @@ variable "enable_ephemeral_storage" {
   type        = bool
   default     = false
 }
+
 variable "ephemeral_storage_size" {
   description = "Size of Ephemeral Storage in GiB"
   type        = number
