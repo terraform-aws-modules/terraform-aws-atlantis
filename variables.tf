@@ -174,6 +174,12 @@ variable "alb_listener_ssl_policy_default" {
   default     = "ELBSecurityPolicy-2016-08"
 }
 
+variable "extra_load_balancers" {
+  description = "A list of maps for additional ECS task load balancers"
+  type        = list(map(string))
+  default     = []
+}
+
 # ACM
 variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS"
