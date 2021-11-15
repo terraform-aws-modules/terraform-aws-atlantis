@@ -633,7 +633,7 @@ variable "ecs_service_enable_execute_command" {
 }
 
 variable "enable_ephemeral_storage" {
-  description = "Enable to use Fargate Ephermal Storage"
+  description = "Enable to use Fargate Ephemeral Storage"
   type        = bool
   default     = false
 }
