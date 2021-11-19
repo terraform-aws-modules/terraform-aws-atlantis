@@ -1,10 +1,12 @@
 repos:
   - repo: git://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.50.0
+    rev: v1.56.0
     hooks:
       - id: terraform_fmt
       - id: terraform_validate
       - id: terraform_docs
+        args:
+          - '--args=--lockfile=false'
       - id: terraform_tflint
         args:
           - '--args=--only=terraform_deprecated_interpolation'
@@ -24,3 +26,4 @@ repos:
     rev: v4.0.1
     hooks:
       - id: check-merge-conflict
+      - id: end-of-file-fixer

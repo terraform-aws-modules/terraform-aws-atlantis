@@ -33,7 +33,7 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_gitlab_repository_webhook"></a> [gitlab\_repository\_webhook](#module\_gitlab\_repository\_webhook) | ../../modules/gitlab-repository-webhook |  |
+| <a name="module_gitlab_repository_webhook"></a> [gitlab\_repository\_webhook](#module\_gitlab\_repository\_webhook) | ../../modules/gitlab-repository-webhook | n/a |
 
 ## Resources
 
