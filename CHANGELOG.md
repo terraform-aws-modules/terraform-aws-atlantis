@@ -1,3 +1,14 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [3.5.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.0...v3.5.1) (2021-11-19)
+
+
+### Bug Fixes
+
+* update CI/CD process to enable auto-release workflow ([#237](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/237)) ([75b3376](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/75b33768f7943474070feef5687aa3e147af9814))
+
 <a name="v3.5.0"></a>
 ## [v3.5.0] - 2021-11-14
 
