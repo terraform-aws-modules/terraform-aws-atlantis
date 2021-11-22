@@ -1,3 +1,12 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [3.5.2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.1...v3.5.2) (2021-11-19)
+
+
+### Bug Fixes
+
 * correct semantic-release message that is causing releases to fail ([#239](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/239)) ([ff0e47d](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/ff0e47d995e1f2b32b7dafeed78a8e706fc62857))
 
 ## [3.5.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.0...v3.5.1) (2021-11-19)
