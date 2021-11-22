@@ -192,6 +192,12 @@ variable "alb_listener_ssl_policy_default" {
   default     = "ELBSecurityPolicy-2016-08"
 }
 
+variable "extra_load_balancers" {
+  description = "A list of maps for additional ECS task load balancers"
+  type        = list(map(string))
+  default     = []
+}
+
 # ACM
 variable "certificate_arn" {
   description = "ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS"
@@ -642,4 +648,21 @@ variable "ecs_service_enable_execute_command" {
   description = "Enable ECS exec for the service. This can be used to allow interactive sessions and commands to be executed in the container"
   type        = bool
   default     = true
+}
+
+variable "enable_ephemeral_storage" {
+  description = "Enable to use Fargate Ephemeral Storage"
+  type        = bool
+  default     = false
+}
+
+variable "ephemeral_storage_size" {
+  description = "Size of Ephemeral Storage in GiB"
+  type        = number
+  default     = 21
+
+  validation {
+    condition     = var.ephemeral_storage_size >= 21 && var.ephemeral_storage_size <= 200
+    error_message = "The minimum supported value is 21 GiB and the maximum supported value is 200 GiB."
+  }
 }

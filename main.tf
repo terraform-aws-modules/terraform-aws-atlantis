@@ -710,6 +710,13 @@ resource "aws_ecs_task_definition" "atlantis" {
 
   container_definitions = local.container_definitions
 
+  dynamic "ephemeral_storage" {
+    for_each = var.enable_ephemeral_storage ? [1] : []
+    content {
+      size_in_gib = var.ephemeral_storage_size
+    }
+  }
+
   tags = local.tags
 }
 
@@ -744,6 +751,15 @@ resource "aws_ecs_service" "atlantis" {
     container_name   = var.name
     container_port   = var.atlantis_port
     target_group_arn = element(module.alb.target_group_arns, 0)
+  }
+
+  dynamic "load_balancer" {
+    for_each = var.extra_load_balancers
+    content {
+      container_name   = load_balancer.value["container_name"]
+      container_port   = load_balancer.value["container_port"]
+      target_group_arn = load_balancer.value["target_group_arn"]
+    }
   }
 
   dynamic "capacity_provider_strategy" {
