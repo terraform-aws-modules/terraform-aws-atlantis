@@ -1,10 +1,26 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
-<a name="unreleased"></a>
-## [Unreleased]
+## [3.5.2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.1...v3.5.2) (2021-11-19)
 
+
+### Bug Fixes
+
+* correct semantic-release message that is causing releases to fail ([#239](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/239)) ([ff0e47d](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/ff0e47d995e1f2b32b7dafeed78a8e706fc62857))
+
+## [3.5.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.0...v3.5.1) (2021-11-19)
+
+
+### Bug Fixes
+
+* update CI/CD process to enable auto-release workflow ([#237](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/237)) ([75b3376](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/75b33768f7943474070feef5687aa3e147af9814))
+
+<a name="v3.5.0"></a>
+## [v3.5.0] - 2021-11-14
+
+- feat: Add ability to use Fargate Ephemeral Storage ([#229](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/229))
+- docs: Added google oidc example to readme ([#234](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/234))
 
 
 <a name="v3.4.0"></a>
@@ -491,7 +507,8 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.4.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.0...HEAD
+[v3.5.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.4.0...v3.5.0
 [v3.4.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.3.0...v3.4.0
 [v3.3.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.2.0...v3.3.0
 [v3.2.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.1.0...v3.2.0
