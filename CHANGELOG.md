@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.5.3](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.2...v3.5.3) (2021-12-06)
+
+
+### Bug Fixes
+
+* atlantis health check path ([#242](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/242)) ([0b17a41](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/0b17a4102f5f21e7a6de72a3b9ed7760c4ca7c9a))
+* ensure pre-commit is using latest version via HTTPS ([#240](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/240)) ([57935f0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/57935f0530e4502ddc6da2621600d887488f4c76))
+
 ## [3.5.2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.1...v3.5.2) (2021-11-19)
 
 
