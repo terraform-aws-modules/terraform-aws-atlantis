@@ -246,6 +246,9 @@ module "alb" {
       backend_port         = var.atlantis_port
       target_type          = "ip"
       deregistration_delay = 10
+      health_check = {
+        path = "/healthz"
+      }
     },
   ]
 
