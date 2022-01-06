@@ -3,12 +3,13 @@ provider "aws" {
 }
 
 locals {
-  name   = "github-complete"
-  region = "eu-west-1"
+  name   = "atlantis"
+  region = "us-east-1"
 
   tags = {
-    Owner       = "user"
-    Environment = "dev"
+    Owner       = "devops"
+    Environment = "production"
+    Project     = "atlantis"
   }
 }
 
@@ -32,10 +33,11 @@ module "atlantis" {
   name = local.name
 
   # VPC
-  cidr            = "10.20.0.0/16"
-  azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  private_subnets = ["10.20.1.0/24", "10.20.2.0/24", "10.20.3.0/24"]
-  public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
+  vpc_id          = "vpc-9b7fdae0"
+  # cidr            = "	10.0.0.0/20"
+  # azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  private_subnet_ids = ["subnet-6f6c6d0b", "subnet-db6e35f4", "subnet-7d947637"]
+  public_subnet_ids  = ["subnet-7e68691a", "subnet-14712a3b", "subnet-32917378"]
 
   # ECS
   ecs_service_platform_version = "LATEST"
@@ -45,14 +47,14 @@ module "atlantis" {
   container_memory_reservation = 256
   container_cpu                = 512
   container_memory             = 1024
-
+  atlantis_image               = "240167814999.dkr.ecr.sa-east-1.amazonaws.com/rc-production/atlantis:latest"
+  
   entrypoint        = ["docker-entrypoint.sh"]
   command           = ["server"]
   working_directory = "/tmp"
   docker_labels = {
     "org.opencontainers.image.title"       = "Atlantis"
     "org.opencontainers.image.description" = "A self-hosted golang application that listens for Terraform pull request events via webhooks."
-    "org.opencontainers.image.url"         = "https://github.com/runatlantis/atlantis/pkgs/container/atlantis"
   }
   start_timeout = 30
   stop_timeout  = 30
