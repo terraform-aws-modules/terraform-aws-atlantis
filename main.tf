@@ -252,6 +252,9 @@ module "alb" {
       backend_port         = var.atlantis_port
       target_type          = "ip"
       deregistration_delay = 10
+      health_check = {
+        path = "/healthz"
+      }
     },
   ]
 
@@ -273,6 +276,25 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
   condition {
     source_ip {
       values = local.whitelist_unauthenticated_cidr_block_chunks[count.index]
+    }
+  }
+}
+
+# Forward action for certain URL paths to bypass authentication (eg. GitHub webhooks)
+resource "aws_lb_listener_rule" "unauthenticated_access_for_webhook" {
+  count = var.allow_unauthenticated_access && var.allow_github_webhooks ? 1 : 0
+
+  listener_arn = module.alb.https_listener_arns[0]
+  priority     = var.allow_unauthenticated_webhook_access_priority
+
+  action {
+    type             = "forward"
+    target_group_arn = module.alb.target_group_arns[0]
+  }
+
+  condition {
+    path_pattern {
+      values = ["/events"]
     }
   }
 }
@@ -596,6 +618,13 @@ resource "aws_ecs_task_definition" "atlantis" {
 
   container_definitions = local.container_definitions
 
+  dynamic "ephemeral_storage" {
+    for_each = var.enable_ephemeral_storage ? [1] : []
+    content {
+      size_in_gib = var.ephemeral_storage_size
+    }
+  }
+
   tags = local.tags
 }
 
@@ -630,6 +659,15 @@ resource "aws_ecs_service" "atlantis" {
     container_name   = var.name
     container_port   = var.atlantis_port
     target_group_arn = element(module.alb.target_group_arns, 0)
+  }
+
+  dynamic "load_balancer" {
+    for_each = var.extra_load_balancers
+    content {
+      container_name   = load_balancer.value["container_name"]
+      container_port   = load_balancer.value["container_port"]
+      target_group_arn = load_balancer.value["target_group_arn"]
+    }
   }
 
   dynamic "capacity_provider_strategy" {

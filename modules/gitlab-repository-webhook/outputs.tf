@@ -6,4 +6,5 @@ output "repository_webhook_urls" {
 output "repository_webhook_secret" {
   description = "Webhook secret"
   value       = var.webhook_secret
+  sensitive   = true
 }

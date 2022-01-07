@@ -144,6 +144,12 @@ variable "allow_unauthenticated_access_priority" {
   default     = 10
 }
 
+variable "allow_unauthenticated_webhook_access_priority" {
+  description = "ALB listener rule priority for allow unauthenticated webhook access rule"
+  type        = number
+  default     = 15
+}
+
 variable "allow_github_webhooks" {
   description = "Whether to allow access for GitHub webhooks"
   type        = bool
@@ -153,7 +159,7 @@ variable "allow_github_webhooks" {
 variable "github_webhooks_cidr_blocks" {
   description = "List of CIDR blocks used by GitHub webhooks" # This is hardcoded to avoid dependency on github provider. Source: https://api.github.com/meta
   type        = list(string)
-  default     = ["140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22"]
+  default     = ["140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22", "143.55.64.0/20"]
 }
 
 variable "whitelist_unauthenticated_cidr_blocks" {
@@ -166,6 +172,12 @@ variable "alb_listener_ssl_policy_default" {
   description = "The security policy if using HTTPS externally on the load balancer. [See](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html)."
   type        = string
   default     = "ELBSecurityPolicy-2016-08"
+}
+
+variable "extra_load_balancers" {
+  description = "A list of maps for additional ECS task load balancers"
+  type        = list(map(string))
+  default     = []
 }
 
 # ACM
@@ -618,4 +630,21 @@ variable "ecs_service_enable_execute_command" {
   description = "Enable ECS exec for the service. This can be used to allow interactive sessions and commands to be executed in the container"
   type        = bool
   default     = true
+}
+
+variable "enable_ephemeral_storage" {
+  description = "Enable to use Fargate Ephemeral Storage"
+  type        = bool
+  default     = false
+}
+
+variable "ephemeral_storage_size" {
+  description = "Size of Ephemeral Storage in GiB"
+  type        = number
+  default     = 21
+
+  validation {
+    condition     = var.ephemeral_storage_size >= 21 && var.ephemeral_storage_size <= 200
+    error_message = "The minimum supported value is 21 GiB and the maximum supported value is 200 GiB."
+  }
 }
