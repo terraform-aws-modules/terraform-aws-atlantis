@@ -1,17 +1,20 @@
 provider "aws" {
-  region = var.region
+  region = local.region
 }
 
 locals {
+  name   = "github-complete"
+  region = "eu-west-1"
+
   tags = {
     Owner       = "user"
     Environment = "dev"
   }
 }
 
-##############################################################
-# Data sources for existing resources
-##############################################################
+################################################################################
+# Supporting Resources
+################################################################################
 
 data "aws_caller_identity" "current" {}
 
@@ -26,11 +29,11 @@ data "aws_elb_service_account" "current" {}
 module "atlantis" {
   source = "../../"
 
-  name = "atlantiscomplete"
+  name = local.name
 
   # VPC
   cidr            = "10.20.0.0/16"
-  azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
+  azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
   private_subnets = ["10.20.1.0/24", "10.20.2.0/24", "10.20.3.0/24"]
   public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
 
@@ -49,7 +52,7 @@ module "atlantis" {
   docker_labels = {
     "org.opencontainers.image.title"       = "Atlantis"
     "org.opencontainers.image.description" = "A self-hosted golang application that listens for Terraform pull request events via webhooks."
-    "org.opencontainers.image.url"         = "https://github.com/runatlantis/atlantis/blob/master/Dockerfile"
+    "org.opencontainers.image.url"         = "https://github.com/runatlantis/atlantis/pkgs/container/atlantis"
   }
   start_timeout = 30
   stop_timeout  = 30
@@ -62,24 +65,25 @@ module "atlantis" {
     hardLimit = 16384
   }]
 
-  # Security
-  trusted_principals = var.trusted_principals
-
   # DNS
   route53_zone_name = var.domain
+
+  # Trusted roles
+  trusted_principals = ["ssm.amazonaws.com"]
 
   # Atlantis
   atlantis_github_user        = var.github_user
   atlantis_github_user_token  = var.github_token
-  atlantis_repo_whitelist     = ["github.com/${var.github_organization}/*"]
+  atlantis_repo_allowlist     = ["github.com/${var.github_owner}/*"]
   atlantis_allowed_repo_names = var.allowed_repo_names
 
   # ALB access
   alb_ingress_cidr_blocks         = var.alb_ingress_cidr_blocks
   alb_logging_enabled             = true
-  alb_log_bucket_name             = module.atlantis_access_log_bucket.this_s3_bucket_id
+  alb_log_bucket_name             = module.atlantis_access_log_bucket.s3_bucket_id
   alb_log_location_prefix         = "atlantis-alb"
   alb_listener_ssl_policy_default = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  alb_drop_invalid_header_fields  = true
 
   allow_unauthenticated_access              = true
   allow_unauthenticated_access_path_pattern = "/events"
@@ -96,8 +100,8 @@ module "atlantis" {
 module "github_repository_webhook" {
   source = "../../modules/github-repository-webhook"
 
-  github_organization = var.github_organization
-  github_token        = var.github_token
+  github_owner = var.github_owner
+  github_token = var.github_token
 
   atlantis_allowed_repo_names = module.atlantis.atlantis_allowed_repo_names
 
@@ -110,9 +114,9 @@ module "github_repository_webhook" {
 ################################################################################
 module "atlantis_access_log_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = ">= 1.9"
+  version = "~> 2"
 
-  bucket = "${data.aws_caller_identity.current.account_id}-atlantis-access-logs-${data.aws_region.current.name}"
+  bucket = "atlantis-access-logs-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}"
 
   attach_policy = true
   policy        = data.aws_iam_policy_document.atlantis_access_log_bucket_policy.json
@@ -166,7 +170,7 @@ data "aws_iam_policy_document" "atlantis_access_log_bucket_policy" {
     effect  = "Allow"
     actions = ["s3:PutObject"]
     resources = [
-      "${module.atlantis_access_log_bucket.this_s3_bucket_arn}/*/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+      "${module.atlantis_access_log_bucket.s3_bucket_arn}/*/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
     ]
 
     principals {
@@ -183,7 +187,7 @@ data "aws_iam_policy_document" "atlantis_access_log_bucket_policy" {
     effect  = "Allow"
     actions = ["s3:PutObject"]
     resources = [
-      "${module.atlantis_access_log_bucket.this_s3_bucket_arn}/*/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
+      "${module.atlantis_access_log_bucket.s3_bucket_arn}/*/AWSLogs/${data.aws_caller_identity.current.account_id}/*"
     ]
 
     principals {
@@ -208,7 +212,7 @@ data "aws_iam_policy_document" "atlantis_access_log_bucket_policy" {
     effect  = "Allow"
     actions = ["s3:GetBucketAcl"]
     resources = [
-      module.atlantis_access_log_bucket.this_s3_bucket_arn
+      module.atlantis_access_log_bucket.s3_bucket_arn
     ]
 
     principals {

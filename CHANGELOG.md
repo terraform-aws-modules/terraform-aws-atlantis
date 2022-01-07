@@ -1,10 +1,117 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file.
 
-<a name="unreleased"></a>
-## [Unreleased]
+## [3.5.3](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.2...v3.5.3) (2021-12-06)
 
+
+### Bug Fixes
+
+* atlantis health check path ([#242](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/242)) ([0b17a41](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/0b17a4102f5f21e7a6de72a3b9ed7760c4ca7c9a))
+* ensure pre-commit is using latest version via HTTPS ([#240](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/240)) ([57935f0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/57935f0530e4502ddc6da2621600d887488f4c76))
+
+## [3.5.2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.1...v3.5.2) (2021-11-19)
+
+
+### Bug Fixes
+
+* correct semantic-release message that is causing releases to fail ([#239](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/239)) ([ff0e47d](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/ff0e47d995e1f2b32b7dafeed78a8e706fc62857))
+
+## [3.5.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.0...v3.5.1) (2021-11-19)
+
+
+### Bug Fixes
+
+* update CI/CD process to enable auto-release workflow ([#237](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/237)) ([75b3376](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/75b33768f7943474070feef5687aa3e147af9814))
+
+<a name="v3.5.0"></a>
+## [v3.5.0] - 2021-11-14
+
+- feat: Add ability to use Fargate Ephemeral Storage ([#229](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/229))
+- docs: Added google oidc example to readme ([#234](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/234))
+
+
+<a name="v3.4.0"></a>
+## [v3.4.0] - 2021-11-01
+
+- feat: Added ability to add extra loadbalancer blocks to ECS task ([#232](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/232))
+
+
+<a name="v3.3.0"></a>
+## [v3.3.0] - 2021-09-24
+
+- feat: Allow unauthenticated access for webhooks to /events endpoint if needed ([#226](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/226))
+- fix: Add missing netblock (143.55.64.0/20) to GitHub webhook IP ranges ([#225](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/225))
+
+
+<a name="v3.2.0"></a>
+## [v3.2.0] - 2021-09-16
+
+- feat: Add sensitive flag for webhook secret outputs ([#222](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/222))
+
+
+<a name="v3.1.0"></a>
+## [v3.1.0] - 2021-09-01
+
+- feat: update default image to ghcr.io one ([#219](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/219))
+
+
+<a name="v3.0.0"></a>
+## [v3.0.0] - 2021-08-31
+
+- BREAKING CHANGE: update internal modules to latest, replace `github_organization` with `github_owner`, bump Terraform version to >=0.13.1 ([#218](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/218))
+
+
+<a name="v2.43.0"></a>
+## [v2.43.0] - 2021-08-17
+
+- feat: Added outputs of ECS and ALB resources ([#216](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/216))
+
+
+<a name="v2.42.0"></a>
+## [v2.42.0] - 2021-06-29
+
+- feat: Add support for AWS ECS Exec ([#209](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/209))
+
+
+<a name="v2.41.0"></a>
+## [v2.41.0] - 2021-05-17
+
+- feat: Only tag ecs service if longer arns are enabled in the aws account ([#153](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/153))
+- docs: Example of providing server yaml configuration ([#205](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/205))
+- chore: update CI/CD to use stable `terraform-docs` release artifact and discoverable Apache2.0 license ([#203](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/203))
+
+
+<a name="v2.40.0"></a>
+## [v2.40.0] - 2021-04-15
+
+- feat: Renamed option to repo_allowlist ([#198](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/198))
+
+
+<a name="v2.39.0"></a>
+## [v2.39.0] - 2021-04-13
+
+- feat: Add `force_new_deployment` switch ([#196](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/196))
+
+
+<a name="v2.38.0"></a>
+## [v2.38.0] - 2021-04-13
+
+- feat: Add enable deletion protection and drop invalid header fields ([#195](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/195))
+
+
+<a name="v2.37.0"></a>
+## [v2.37.0] - 2021-04-07
+
+- feat: allow adding more trusted principals to task role ([#193](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/193))
+- chore: update documentation and pin `terraform_docs` version to avoid future changes ([#191](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/191))
+
+
+<a name="v2.36.0"></a>
+## [v2.36.0] - 2021-03-16
+
+- fix: Optionally lookup for the latest task definition ([#163](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/163))
+- chore: Add okta oidc details in README ([#188](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/188))
 
 
 <a name="v2.35.0"></a>
@@ -408,7 +515,21 @@ All notable changes to this project will be documented in this file.
 - Initial commit
 
 
-[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.35.0...HEAD
+[Unreleased]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.0...HEAD
+[v3.5.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.4.0...v3.5.0
+[v3.4.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.3.0...v3.4.0
+[v3.3.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.2.0...v3.3.0
+[v3.2.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.1.0...v3.2.0
+[v3.1.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.0.0...v3.1.0
+[v3.0.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.43.0...v3.0.0
+[v2.43.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.42.0...v2.43.0
+[v2.42.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.41.0...v2.42.0
+[v2.41.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.40.0...v2.41.0
+[v2.40.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.39.0...v2.40.0
+[v2.39.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.38.0...v2.39.0
+[v2.38.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.37.0...v2.38.0
+[v2.37.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.36.0...v2.37.0
+[v2.36.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.35.0...v2.36.0
 [v2.35.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.34.0...v2.35.0
 [v2.34.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.33.0...v2.34.0
 [v2.33.0]: https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v2.32.0...v2.33.0

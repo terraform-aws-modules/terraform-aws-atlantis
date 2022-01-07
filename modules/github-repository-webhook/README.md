@@ -5,40 +5,40 @@
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.12.26 |
-| github | >= 2.4.1 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
+| <a name="requirement_github"></a> [github](#requirement\_github) | >= 4.8 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| github | >= 2.4.1 |
+| <a name="provider_github"></a> [github](#provider\_github) | >= 4.8 |
 
 ## Modules
 
-No Modules.
+No modules.
 
 ## Resources
 
-| Name |
-|------|
-| [github_repository_webhook](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_webhook) |
+| Name | Type |
+|------|------|
+| [github_repository_webhook.this](https://registry.terraform.io/providers/integrations/github/latest/docs/resources/repository_webhook) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| atlantis\_allowed\_repo\_names | List of names of repositories which belong to the organization specified in `github_organization` | `list(string)` | n/a | yes |
-| create\_github\_repository\_webhook | Whether to create Github repository webhook for Atlantis | `bool` | `true` | no |
-| github\_organization | Github organization to use when creating webhook | `string` | `""` | no |
-| github\_token | Github token to use when creating webhook | `string` | `""` | no |
-| webhook\_secret | Webhook secret | `string` | `""` | no |
-| webhook\_url | Webhook URL | `string` | `""` | no |
+| <a name="input_atlantis_allowed_repo_names"></a> [atlantis\_allowed\_repo\_names](#input\_atlantis\_allowed\_repo\_names) | List of names of repositories which belong to the owner specified in `github_owner` | `list(string)` | n/a | yes |
+| <a name="input_create_github_repository_webhook"></a> [create\_github\_repository\_webhook](#input\_create\_github\_repository\_webhook) | Whether to create Github repository webhook for Atlantis | `bool` | `true` | no |
+| <a name="input_github_owner"></a> [github\_owner](#input\_github\_owner) | Github owner to use when creating webhook | `string` | `""` | no |
+| <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token to use when creating webhook | `string` | `""` | no |
+| <a name="input_webhook_secret"></a> [webhook\_secret](#input\_webhook\_secret) | Webhook secret | `string` | `""` | no |
+| <a name="input_webhook_url"></a> [webhook\_url](#input\_webhook\_url) | Webhook URL | `string` | `""` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| this\_repository\_webhook\_secret | Webhook secret |
-| this\_repository\_webhook\_urls | Webhook URL |
+| <a name="output_repository_webhook_secret"></a> [repository\_webhook\_secret](#output\_repository\_webhook\_secret) | Webhook secret |
+| <a name="output_repository_webhook_urls"></a> [repository\_webhook\_urls](#output\_repository\_webhook\_urls) | Webhook URL |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

@@ -120,6 +120,18 @@ variable "alb_authenticate_cognito" {
   default     = {}
 }
 
+variable "alb_enable_deletion_protection" {
+  description = "If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false."
+  type        = bool
+  default     = null
+}
+
+variable "alb_drop_invalid_header_fields" {
+  description = "Indicates whether invalid header fields are dropped in application load balancers. Defaults to false."
+  type        = bool
+  default     = null
+}
+
 variable "allow_unauthenticated_access" {
   description = "Whether to create ALB listener rule to allow unauthenticated access for certain CIDR blocks (eg. allow GitHub webhooks to bypass OIDC authentication)"
   type        = bool
@@ -138,6 +150,12 @@ variable "allow_unauthenticated_access_priority" {
   default     = 10
 }
 
+variable "allow_unauthenticated_webhook_access_priority" {
+  description = "ALB listener rule priority for allow unauthenticated webhook access rule"
+  type        = number
+  default     = 15
+}
+
 variable "allow_github_webhooks" {
   description = "Whether to allow access for GitHub webhooks"
   type        = bool
@@ -147,7 +165,7 @@ variable "allow_github_webhooks" {
 variable "github_webhooks_cidr_blocks" {
   description = "List of CIDR blocks used by GitHub webhooks" # This is hardcoded to avoid dependency on github provider. Source: https://api.github.com/meta
   type        = list(string)
-  default     = ["140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22"]
+  default     = ["140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22", "143.55.64.0/20"]
 }
 
 variable "whitelist_unauthenticated_cidr_blocks" {
@@ -160,6 +178,12 @@ variable "alb_listener_ssl_policy_default" {
   description = "The security policy if using HTTPS externally on the load balancer. [See](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html)."
   type        = string
   default     = "ELBSecurityPolicy-2016-08"
+}
+
+variable "extra_load_balancers" {
+  description = "A list of maps for additional ECS task load balancers"
+  type        = list(map(string))
+  default     = []
 }
 
 # ACM
@@ -248,11 +272,17 @@ variable "permissions_boundary" {
 variable "policies_arn" {
   description = "A list of the ARN of the policies you want to apply"
   type        = list(string)
-  default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+  default     = null
 }
 
 variable "trusted_principals" {
   description = "A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role"
+  type        = list(string)
+  default     = []
+}
+
+variable "trusted_entities" {
+  description = "A list of  users or roles, that can assume the task role"
   type        = list(string)
   default     = []
 }
@@ -429,6 +459,12 @@ variable "ulimits" {
   default = null
 }
 
+variable "external_task_definition_updates" {
+  description = "Enable to allow the task definition to be updated outside of this Terraform module. This should be enabled when using a deployment tool such as ecs-deploy which updates the task definition and will then keep the ECS service using the latest version of the task definition."
+  type        = bool
+  default     = false
+}
+
 # https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html
 variable "firelens_configuration" {
   description = "The FireLens configuration for the container. This is used to specify and configure a log router for container logs. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html"
@@ -458,7 +494,7 @@ variable "atlantis_port" {
   default     = 4141
 }
 
-variable "atlantis_repo_whitelist" {
+variable "atlantis_repo_allowlist" {
   description = "List of allowed repositories Atlantis can be used with"
   type        = list(string)
 }
@@ -582,4 +618,39 @@ variable "enable_ecs_managed_tags" {
   description = "Specifies whether to enable Amazon ECS managed tags for the tasks within the service"
   type        = bool
   default     = false
+}
+
+variable "use_ecs_old_arn_format" {
+  description = "A flag to enable/disable tagging the ecs resources that require the new longer arn format"
+  type        = bool
+  default     = false
+}
+
+variable "ecs_service_force_new_deployment" {
+  description = "Enable to force a new task deployment of the service. This can be used to update tasks to use a newer Docker image with same image/tag combination (e.g. myimage:latest)"
+  type        = bool
+  default     = false
+}
+
+variable "ecs_service_enable_execute_command" {
+  description = "Enable ECS exec for the service. This can be used to allow interactive sessions and commands to be executed in the container"
+  type        = bool
+  default     = true
+}
+
+variable "enable_ephemeral_storage" {
+  description = "Enable to use Fargate Ephemeral Storage"
+  type        = bool
+  default     = false
+}
+
+variable "ephemeral_storage_size" {
+  description = "Size of Ephemeral Storage in GiB"
+  type        = number
+  default     = 21
+
+  validation {
+    condition     = var.ephemeral_storage_size >= 21 && var.ephemeral_storage_size <= 200
+    error_message = "The minimum supported value is 21 GiB and the maximum supported value is 200 GiB."
+  }
 }
