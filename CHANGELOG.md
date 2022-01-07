@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.6.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.3...v3.6.0) (2022-01-07)
+
+
+### Features
+
+* Allow more than 5 CIDRs in whitelist_unauthenticated_cidr_blocks ([#220](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/220)) ([df10f7b](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/df10f7bc3d703dacdca3de2dc2b773c730d72898))
+
 ## [3.5.3](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.2...v3.5.3) (2021-12-06)
 
 
