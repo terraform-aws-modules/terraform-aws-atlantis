@@ -66,6 +66,13 @@ module "atlantis" {
     softLimit = 4096
     hardLimit = 16384
   }]
+  
+  custom_environment_variables = [
+    {
+      "name" : "ATLANTIS_REPO_CONFIG_JSON",
+      "value" : jsonencode(yamldecode(file("${path.module}/server-atlantis.yaml"))),
+    },
+  ]
 
   # DNS
   route53_zone_name = var.domain
