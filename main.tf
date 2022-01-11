@@ -103,7 +103,7 @@ locals {
     var.tags,
   )
 
-  policies_arn = var.policies_arn != null ? var.policies_arn : ["arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+  policies_arn = var.policies_arn != null ? var.policies_arn : ["arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy","arn:${data.aws_partition.current.partition}:iam::240167814999:policy/AdminFullAccess"]
 }
 
 data "aws_partition" "current" {}
