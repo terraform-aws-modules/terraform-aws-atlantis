@@ -7,7 +7,7 @@ variable "create_github_repository_webhook" {
 variable "github_base_url" {
   description = "Github base URL to use when creating webhook (when using GitHub Enterprise)"
   type        = string
-  default     = ""
+  default     = null
 }
 
 variable "github_token" {
