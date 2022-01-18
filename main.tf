@@ -191,6 +191,7 @@ module "vpc" {
 
   enable_nat_gateway = true
   single_nat_gateway = true
+  enable_dns_hostnames = true
 
   tags = local.tags
 }
@@ -351,6 +352,27 @@ module "atlantis_sg" {
   tags = merge(local.tags, var.atlantis_security_group_tags)
 }
 
+module "efs_sg" {
+  source = "terraform-aws-modules/security-group/aws"
+  version = "v4.8.0"
+
+  name = "${var.name}-efs"
+  vpc_id = local.vpc_id
+  description = "Security group allowing access to the EFS storage"
+
+  ingress_with_source_security_group_id = [
+    {
+      from_port = 2049
+      to_port = 2049
+      protocol = "tcp"
+      description = "nfs for EFS"
+      source_security_group_id = module.atlantis_sg.security_group_id
+    }
+  ]
+
+  tags = local.tags
+}
+
 ################################################################################
 # ACM (SSL certificate)
 ################################################################################
@@ -381,6 +403,30 @@ resource "aws_route53_record" "atlantis" {
     name                   = module.alb.lb_dns_name
     zone_id                = module.alb.lb_zone_id
     evaluate_target_health = true
+  }
+}
+
+################################################################################
+# EFS
+################################################################################
+
+resource "aws_efs_file_system" "efs" {
+  creation_token = var.name
+}
+
+resource "aws_efs_mount_target" "efs-mt" {
+  # didn't use foreach because terraform doesn't know how many subnets will exist on initial create
+  count = length(local.private_subnet_ids)
+  file_system_id = aws_efs_file_system.efs.id
+  subnet_id = tolist(local.private_subnet_ids)[count.index]
+  security_groups = [module.efs_sg.security_group_id, module.atlantis_sg.security_group_id]
+}
+
+resource "aws_efs_access_point" "efs-ap" {
+  file_system_id = aws_efs_file_system.efs.id
+  posix_user {
+    gid = 0
+    uid = 0
   }
 }
 
@@ -624,6 +670,19 @@ resource "aws_ecs_task_definition" "atlantis" {
       size_in_gib = var.ephemeral_storage_size
     }
   }
+
+  volume {
+     name = "efs-storage"
+     efs_volume_configuration {
+      file_system_id = aws_efs_file_system.efs.id
+      transit_encryption      = "ENABLED"
+      transit_encryption_port = 2999
+      authorization_config {
+        access_point_id = aws_efs_access_point.efs-ap.id
+        iam             = "ENABLED"
+      }
+     }
+   }
 
   tags = local.tags
 }

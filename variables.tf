@@ -308,13 +308,13 @@ variable "ecs_service_platform_version" {
 variable "ecs_service_deployment_maximum_percent" {
   description = "The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment"
   type        = number
-  default     = 200
+  default     = 100
 }
 
 variable "ecs_service_deployment_minimum_healthy_percent" {
   description = "The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment"
   type        = number
-  default     = 50
+  default     = 0
 }
 
 variable "ecs_task_cpu" {
@@ -425,7 +425,13 @@ variable "readonly_root_filesystem" {
 variable "mount_points" {
   description = "Container mount points. This is a list of maps, where each map should contain a `containerPath` and `sourceVolume`. The `readOnly` key is optional."
   type        = list(any)
-  default     = []
+  default     = [
+    {
+      containerPath = "/home/atlantis"
+      sourceVolume = "efs-storage"
+      readOnly = "false"
+    }
+  ]
 }
 
 variable "volumes_from" {
@@ -647,4 +653,10 @@ variable "ephemeral_storage_size" {
     condition     = var.ephemeral_storage_size >= 21 && var.ephemeral_storage_size <= 200
     error_message = "The minimum supported value is 21 GiB and the maximum supported value is 200 GiB."
   }
+}
+
+variable "enable_efs_storage" {
+  description = "Enable to use EFS to persist Atlantis's locks and other application state"
+  type = bool
+  default = false
 }
