@@ -110,6 +110,17 @@ locals {
     sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.whitelist_unauthenticated_cidr_blocks))),
     5
   )
+
+  # break up user to uid and gid -- set both to 0 if null
+  uid = var.user == null ? 0 : split(":", var.user)[0]
+  gid = var.user == null ? 0 : split(":", var.user)[1]
+
+  # default mount points for efs if ephemeral storage is not enabled and mount points aren't specified
+  mount_points = var.enable_ephemeral_storage ? var.mount_points : var.mount_points.count > 0 ? var.mount_points : {
+      containerPath = "/home/atlantis"
+      sourceVolume = "efs-storage"
+      readOnly = "false"
+    }
 }
 
 data "aws_partition" "current" {}
@@ -353,6 +364,7 @@ module "atlantis_sg" {
 }
 
 module "efs_sg" {
+  count = var.enable_ephemeral_storage ? 0 : 1
   source = "terraform-aws-modules/security-group/aws"
   version = "v4.8.0"
 
@@ -411,22 +423,24 @@ resource "aws_route53_record" "atlantis" {
 ################################################################################
 
 resource "aws_efs_file_system" "efs" {
+  count = var.enable_ephemeral_storage ? 0 : 1
   creation_token = var.name
 }
 
 resource "aws_efs_mount_target" "efs-mt" {
   # didn't use foreach because terraform doesn't know how many subnets will exist on initial create
-  count = length(local.private_subnet_ids)
+  count = var.enable_ephemeral_storage ? 0 : length(local.private_subnet_ids)
   file_system_id = aws_efs_file_system.efs.id
   subnet_id = tolist(local.private_subnet_ids)[count.index]
   security_groups = [module.efs_sg.security_group_id, module.atlantis_sg.security_group_id]
 }
 
 resource "aws_efs_access_point" "efs-ap" {
+  count = var.enable_ephemeral_storage ? 0 : 1
   file_system_id = aws_efs_file_system.efs.id
   posix_user {
-    gid = 0
-    uid = 0
+    gid = local.gid
+    uid = local.uid
   }
 }
 

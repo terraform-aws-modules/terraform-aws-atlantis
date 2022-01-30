@@ -444,7 +444,7 @@ variable "volumes_from" {
 }
 
 variable "user" {
-  description = "The user to run as inside the container. Can be any of these formats: user, user:group, uid, uid:gid, user:gid, uid:group. The default (null) will use the container's configured `USER` directive or root if not set."
+  description = "The user to run as inside the container. Must be in the uid:gid or the default (null) will use the container's configured `USER` directive or root if not set."
   type        = string
   default     = null
 }
@@ -653,10 +653,4 @@ variable "ephemeral_storage_size" {
     condition     = var.ephemeral_storage_size >= 21 && var.ephemeral_storage_size <= 200
     error_message = "The minimum supported value is 21 GiB and the maximum supported value is 200 GiB."
   }
-}
-
-variable "enable_efs_storage" {
-  description = "Enable to use EFS to persist Atlantis's locks and other application state"
-  type = bool
-  default = false
 }
