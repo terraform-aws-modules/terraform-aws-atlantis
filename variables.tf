@@ -71,6 +71,24 @@ variable "azs" {
   default     = []
 }
 
+variable "manage_default_security_group" {
+  description = "Should be true to adopt and manage default security group"
+  type        = bool
+  default     = false
+}
+
+variable "default_security_group_ingress" {
+  description = "List of maps of ingress rules to set on the default security group"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "default_security_group_egress" {
+  description = "List of maps of egress rules to set on the default security group"
+  type        = list(map(string))
+  default     = []
+}
+
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
   type        = list(string)
@@ -217,6 +235,12 @@ variable "cloudwatch_log_retention_in_days" {
   description = "Retention period of Atlantis CloudWatch logs"
   type        = number
   default     = 7
+}
+
+variable "cloudwatch_logs_kms_key_id" {
+  description = "The ARN of the KMS Key to use when encrypting log data."
+  type        = string
+  default     = null
 }
 
 # SSM parameters for secrets
