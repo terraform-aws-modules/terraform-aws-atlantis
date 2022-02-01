@@ -27,3 +27,26 @@ variable "allowed_repo_names" {
   description = "Repositories that Atlantis will listen for events from and a webhook will be installed"
   type        = list(string)
 }
+
+variable "vpc_id" {
+  description = "Repositories that Atlantis will listen for events from and a webhook will be installed"
+  type        = string
+}
+
+variable "private_subnet_ids" {
+  description = "A list of IDs of existing private subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "public_subnet_ids" {
+  description = "A list of IDs of existing public subnets inside the VPC"
+  type        = list(string)
+  default     = []
+}
+
+variable "atlantis_image" {
+  description = "Docker image to run Atlantis with. If not specified, official Atlantis image will be used"
+  type        = string
+  default     = ""
+}

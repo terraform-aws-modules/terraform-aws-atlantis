@@ -12,6 +12,8 @@ workflows:
           command: 'echo "terraform${ATLANTIS_TERRAFORM_VERSION}"'
       - run: terragrunt plan -no-color -out=$PLANFILE
       - run: terragrunt show -no-color -json $PLANFILE > $SHOWFILE
+      - run: infracost breakdown --path $SHOWFILE --no-color true
+      - run: infracost diff --path $SHOWFILE --no-color true
     apply:
       steps:
       - env:

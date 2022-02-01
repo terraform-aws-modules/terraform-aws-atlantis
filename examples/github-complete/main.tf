@@ -33,11 +33,11 @@ module "atlantis" {
   name = local.name
 
   # VPC
-  vpc_id          = "vpc-9b7fdae0"
+  vpc_id          = var.vpc_id
   # cidr            = "	10.0.0.0/20"
   # azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
-  private_subnet_ids = ["subnet-6f6c6d0b", "subnet-db6e35f4", "subnet-7d947637"]
-  public_subnet_ids  = ["subnet-7e68691a", "subnet-14712a3b", "subnet-32917378"]
+  private_subnet_ids = var.private_subnet_ids
+  public_subnet_ids  = var.public_subnet_ids
 
   # ECS
   ecs_service_platform_version = "LATEST"
@@ -47,7 +47,7 @@ module "atlantis" {
   container_memory_reservation = 256
   container_cpu                = 512
   container_memory             = 1024
-  atlantis_image               = "240167814999.dkr.ecr.sa-east-1.amazonaws.com/rc-production/atlantis:latest"
+  atlantis_image               = var.atlantis_image
   
   entrypoint        = ["docker-entrypoint.sh"]
   command           = ["server"]
