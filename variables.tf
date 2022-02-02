@@ -718,3 +718,9 @@ variable "runtime_platform" {
   type        = any
   default     = null
 }
+
+variable "max_session_duration" {
+  description = "Maximum session duration (in seconds) for ecs task execution role. Default is 3600."
+  type        = number
+  default     = null
+}
