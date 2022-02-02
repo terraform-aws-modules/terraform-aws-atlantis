@@ -688,3 +688,9 @@ variable "ephemeral_storage_size" {
     error_message = "The minimum supported value is 21 GiB and the maximum supported value is 200 GiB."
   }
 }
+
+variable "max_session_duration" {
+  description = "Maximum session duration (in seconds) for ecs task execution role. Default is 3600."
+  type        = number
+  default     = null
+}
