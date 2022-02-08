@@ -22,7 +22,7 @@ variable "github_owner" {
   default     = ""
 }
 
-variable "atlantis_allowed_repo_names" {
+variable "atlantis_repo_allowlist" {
   description = "List of names of repositories which belong to the owner specified in `github_owner`"
   type        = list(string)
 }
