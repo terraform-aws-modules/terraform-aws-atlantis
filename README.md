@@ -102,8 +102,8 @@ module "atlantis" {
 
   custom_environment_variables = [
     {
-      "name" : "ATLANTIS_REPO_CONFIG_JSON",
-      "value" : jsonencode(yamldecode(file("${path.module}/server-atlantis.yaml"))),
+      name : "ATLANTIS_REPO_CONFIG_JSON",
+      value : jsonencode(yamldecode(file("${path.module}/server-atlantis.yaml"))),
     },
   ]
 
@@ -297,7 +297,6 @@ allow_github_webhooks        = true
 | <a name="input_allow_unauthenticated_access"></a> [allow\_unauthenticated\_access](#input\_allow\_unauthenticated\_access) | Whether to create ALB listener rule to allow unauthenticated access for certain CIDR blocks (eg. allow GitHub webhooks to bypass OIDC authentication) | `bool` | `false` | no |
 | <a name="input_allow_unauthenticated_access_priority"></a> [allow\_unauthenticated\_access\_priority](#input\_allow\_unauthenticated\_access\_priority) | ALB listener rule priority for allow unauthenticated access rule | `number` | `10` | no |
 | <a name="input_allow_unauthenticated_webhook_access_priority"></a> [allow\_unauthenticated\_webhook\_access\_priority](#input\_allow\_unauthenticated\_webhook\_access\_priority) | ALB listener rule priority for allow unauthenticated webhook access rule | `number` | `15` | no |
-| <a name="input_atlantis_allowed_repo_names"></a> [atlantis\_allowed\_repo\_names](#input\_atlantis\_allowed\_repo\_names) | Git repositories where webhook should be created | `list(string)` | `[]` | no |
 | <a name="input_atlantis_bitbucket_base_url"></a> [atlantis\_bitbucket\_base\_url](#input\_atlantis\_bitbucket\_base\_url) | Base URL of Bitbucket Server, use for Bitbucket on prem (Stash) | `string` | `""` | no |
 | <a name="input_atlantis_bitbucket_user"></a> [atlantis\_bitbucket\_user](#input\_atlantis\_bitbucket\_user) | Bitbucket username that is running the Atlantis command | `string` | `""` | no |
 | <a name="input_atlantis_bitbucket_user_token"></a> [atlantis\_bitbucket\_user\_token](#input\_atlantis\_bitbucket\_user\_token) | Bitbucket token of the user that is running the Atlantis command | `string` | `""` | no |
@@ -399,7 +398,7 @@ allow_github_webhooks        = true
 | <a name="output_alb_https_listeners_id"></a> [alb\_https\_listeners\_id](#output\_alb\_https\_listeners\_id) | Ids of alb https listeners |
 | <a name="output_alb_security_group_id"></a> [alb\_security\_group\_id](#output\_alb\_security\_group\_id) | Security group of alb |
 | <a name="output_alb_zone_id"></a> [alb\_zone\_id](#output\_alb\_zone\_id) | Zone ID of alb |
-| <a name="output_atlantis_allowed_repo_names"></a> [atlantis\_allowed\_repo\_names](#output\_atlantis\_allowed\_repo\_names) | Git repositories where webhook should be created |
+| <a name="output_atlantis_repo_allowlist"></a> [atlantis\_repo\_allowlist](#output\_atlantis\_repo\_allowlist) | Git repositories where webhook should be created |
 | <a name="output_atlantis_url"></a> [atlantis\_url](#output\_atlantis\_url) | URL of Atlantis |
 | <a name="output_atlantis_url_events"></a> [atlantis\_url\_events](#output\_atlantis\_url\_events) | Webhook events URL of Atlantis |
 | <a name="output_ecs_cluster_arn"></a> [ecs\_cluster\_arn](#output\_ecs\_cluster\_arn) | ECS cluster ARN |

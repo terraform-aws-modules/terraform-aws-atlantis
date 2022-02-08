@@ -18,7 +18,7 @@ module "github_repository_webhook" {
   #
   # This assumes that you are the owner of these repositories and they are available at:
   # https://github.com/mygithubusername/awesome-repo and https://github.com/mygithubusername/another-awesome-repo
-  atlantis_allowed_repo_names = data.terraform_remote_state.atlantis.outputs.atlantis_allowed_repo_names
+  atlantis_repo_allowlist = data.terraform_remote_state.atlantis.outputs.atlantis_repo_allowlist
 
   webhook_url    = element(data.terraform_remote_state.atlantis.outputs.github_webhook_urls, 0)
   webhook_secret = data.terraform_remote_state.atlantis.outputs.github_webhook_secret
