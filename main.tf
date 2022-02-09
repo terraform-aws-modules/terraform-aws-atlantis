@@ -429,11 +429,10 @@ resource "aws_efs_file_system" "this" {
 }
 
 resource "aws_efs_mount_target" "this" {
-  # didn't use foreach because terraform doesn't know how many subnets will exist on initial create
-  count = var.enable_ephemeral_storage ? 0 : length(local.private_subnet_ids)
+  for_each = toset(local.private_subnet_ids)
 
   file_system_id = aws_efs_file_system.this[0].id
-  subnet_id = tolist(local.private_subnet_ids)[count.index]
+  subnet_id = each.key
   security_groups = [module.efs_sg[0].security_group_id, module.atlantis_sg.security_group_id]
 }
 
@@ -691,7 +690,7 @@ resource "aws_ecs_task_definition" "atlantis" {
 
   dynamic "volume" {
     for_each = var.enable_ephemeral_storage ? [] : [1]
-    
+
     content {
       name = "efs-storage"
       efs_volume_configuration {
