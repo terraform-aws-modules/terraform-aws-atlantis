@@ -116,7 +116,7 @@ locals {
   gid = var.user == null ? 0 : split(":", var.user)[1]
 
   # default mount points for efs if ephemeral storage is not enabled and mount points aren't specified
-  mount_points = var.enable_ephemeral_storage ? var.mount_points : length(var.mount_points) > 0 ? var.mount_points : [{
+  mount_points = var.enable_ephemeral_storage || length(var.mount_points) > 0 ? var.mount_points : [{
       containerPath = "/home/atlantis"
       sourceVolume = "efs-storage"
       readOnly = "false"
