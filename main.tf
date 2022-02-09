@@ -368,9 +368,9 @@ module "atlantis_sg" {
 }
 
 module "efs_sg" {
-  count = var.enable_ephemeral_storage ? 0 : 1
   source = "terraform-aws-modules/security-group/aws"
   version = "v4.8.0"
+  count = var.enable_ephemeral_storage ? 0 : 1
 
   name = "${var.name}-efs"
   vpc_id = local.vpc_id
@@ -428,12 +428,14 @@ resource "aws_route53_record" "atlantis" {
 
 resource "aws_efs_file_system" "efs" {
   count = var.enable_ephemeral_storage ? 0 : 1
+
   creation_token = var.name
 }
 
 resource "aws_efs_mount_target" "efs-mt" {
   # didn't use foreach because terraform doesn't know how many subnets will exist on initial create
   count = var.enable_ephemeral_storage ? 0 : length(local.private_subnet_ids)
+
   file_system_id = aws_efs_file_system.efs[0].id
   subnet_id = tolist(local.private_subnet_ids)[count.index]
   security_groups = [module.efs_sg[0].security_group_id, module.atlantis_sg.security_group_id]
@@ -441,6 +443,7 @@ resource "aws_efs_mount_target" "efs-mt" {
 
 resource "aws_efs_access_point" "efs-ap" {
   count = var.enable_ephemeral_storage ? 0 : 1
+
   file_system_id = aws_efs_file_system.efs[0].id
   posix_user {
     gid = local.gid
@@ -752,6 +755,7 @@ resource "aws_ecs_service" "atlantis" {
 
   dynamic "capacity_provider_strategy" {
     for_each = var.ecs_fargate_spot ? [true] : []
+    
     content {
       capacity_provider = "FARGATE_SPOT"
       weight            = 100
