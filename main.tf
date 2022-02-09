@@ -202,7 +202,7 @@ module "vpc" {
 
   enable_nat_gateway = true
   single_nat_gateway = true
-  enable_dns_hostnames = true
+  enable_dns_hostnames = !var.enable_ephemeral_storage
 
   manage_default_security_group  = var.manage_default_security_group
   default_security_group_ingress = var.default_security_group_ingress
