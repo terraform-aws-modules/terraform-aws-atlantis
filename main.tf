@@ -377,7 +377,7 @@ module "efs_sg" {
   description = "Security group allowing access to the EFS storage"
 
   ingress_with_source_security_group_id = [ {
-    rule = "NFS/EFS"
+    rule = "nfs"
     source_security_group_id = module.atlantis_sg.security_group_id
   }]
 
