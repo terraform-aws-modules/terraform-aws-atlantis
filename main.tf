@@ -426,12 +426,12 @@ resource "aws_route53_record" "atlantis" {
 # EFS
 ################################################################################
 
-resource "aws_efs_file_system" "efs" {
+resource "aws_efs_file_system" "this" {
   count = var.enable_ephemeral_storage ? 0 : 1
   creation_token = var.name
 }
 
-resource "aws_efs_mount_target" "efs-mt" {
+resource "aws_efs_mount_target" "this" {
   # didn't use foreach because terraform doesn't know how many subnets will exist on initial create
   count = var.enable_ephemeral_storage ? 0 : length(local.private_subnet_ids)
   file_system_id = aws_efs_file_system.efs[0].id
@@ -439,7 +439,7 @@ resource "aws_efs_mount_target" "efs-mt" {
   security_groups = [module.efs_sg[0].security_group_id, module.atlantis_sg.security_group_id]
 }
 
-resource "aws_efs_access_point" "efs-ap" {
+resource "aws_efs_access_point" "this" {
   count = var.enable_ephemeral_storage ? 0 : 1
   file_system_id = aws_efs_file_system.efs[0].id
   posix_user {
