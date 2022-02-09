@@ -683,6 +683,7 @@ resource "aws_ecs_task_definition" "atlantis" {
 
   dynamic "ephemeral_storage" {
     for_each = var.enable_ephemeral_storage ? [1] : []
+
     content {
       size_in_gib = var.ephemeral_storage_size
     }
@@ -690,6 +691,7 @@ resource "aws_ecs_task_definition" "atlantis" {
 
   dynamic "volume" {
     for_each = var.enable_ephemeral_storage ? [] : [1]
+    
     content {
       name = "efs-storage"
       efs_volume_configuration {
