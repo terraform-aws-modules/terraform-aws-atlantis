@@ -57,7 +57,6 @@ module "atlantis" {
   start_timeout = 30
   stop_timeout  = 30
 
-  user                     = "atlantis"
   readonly_root_filesystem = false # atlantis currently mutable access to root filesystem
   ulimits = [{
     name      = "nofile"
