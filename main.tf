@@ -368,23 +368,13 @@ module "atlantis_sg" {
 }
 
 module "efs_sg" {
-  source = "terraform-aws-modules/security-group/aws"
+  source = "terraform-aws-modules/security-group/aws//modules/nfs"
   version = "v4.8.0"
   count = var.enable_ephemeral_storage ? 0 : 1
 
   name = "${var.name}-efs"
   vpc_id = local.vpc_id
   description = "Security group allowing access to the EFS storage"
-
-  ingress_with_source_security_group_id = [
-    {
-      from_port = 2049
-      to_port = 2049
-      protocol = "tcp"
-      description = "nfs for EFS"
-      source_security_group_id = module.atlantis_sg.security_group_id
-    }
-  ]
 
   tags = local.tags
 }
