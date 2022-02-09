@@ -436,7 +436,7 @@ resource "aws_efs_mount_target" "this" {
   # didn't use foreach because terraform doesn't know how many subnets will exist on initial create
   count = var.enable_ephemeral_storage ? 0 : length(local.private_subnet_ids)
 
-  file_system_id = aws_efs_file_system.efs[0].id
+  file_system_id = aws_efs_file_system.this[0].id
   subnet_id = tolist(local.private_subnet_ids)[count.index]
   security_groups = [module.efs_sg[0].security_group_id, module.atlantis_sg.security_group_id]
 }
@@ -444,7 +444,7 @@ resource "aws_efs_mount_target" "this" {
 resource "aws_efs_access_point" "this" {
   count = var.enable_ephemeral_storage ? 0 : 1
 
-  file_system_id = aws_efs_file_system.efs[0].id
+  file_system_id = aws_efs_file_system.this[0].id
   posix_user {
     gid = local.gid
     uid = local.uid
@@ -697,11 +697,11 @@ resource "aws_ecs_task_definition" "atlantis" {
     content {
       name = "efs-storage"
       efs_volume_configuration {
-        file_system_id = aws_efs_file_system.efs[0].id
+        file_system_id = aws_efs_file_system.this[0].id
         transit_encryption      = "ENABLED"
         transit_encryption_port = 2999
         authorization_config {
-          access_point_id = aws_efs_access_point.efs-ap[0].id
+          access_point_id = aws_efs_access_point.this[0].id
           iam             = "ENABLED"
         }
       }
@@ -755,7 +755,7 @@ resource "aws_ecs_service" "atlantis" {
 
   dynamic "capacity_provider_strategy" {
     for_each = var.ecs_fargate_spot ? [true] : []
-    
+
     content {
       capacity_provider = "FARGATE_SPOT"
       weight            = 100
