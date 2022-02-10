@@ -429,10 +429,11 @@ resource "aws_efs_file_system" "this" {
 }
 
 resource "aws_efs_mount_target" "this" {
-  for_each = toset(local.private_subnet_ids)
+  # we coalescelist in order to specify the resource keys when we create the subnets using the VPC or they're specified for us.  This works around the for_each value depends on attributes which can't be determined until apply error
+  for_each = zipmap(coalescelist(var.private_subnets, var.private_subnet_ids),local.private_subnet_ids)
 
   file_system_id  = aws_efs_file_system.this[0].id
-  subnet_id       = each.key
+  subnet_id       = each.value
   security_groups = [module.efs_sg[0].security_group_id, module.atlantis_sg.security_group_id]
 }
 
