@@ -117,10 +117,10 @@ locals {
 
   # default mount points for efs if ephemeral storage is not enabled and mount points aren't specified
   mount_points = var.enable_ephemeral_storage || length(var.mount_points) > 0 ? var.mount_points : [{
-      containerPath = "/home/atlantis"
-      sourceVolume = "efs-storage"
-      readOnly = "false"
-    }]
+    containerPath = "/home/atlantis"
+    sourceVolume  = "efs-storage"
+    readOnly      = "false"
+  }]
 }
 
 data "aws_partition" "current" {}
@@ -200,8 +200,8 @@ module "vpc" {
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
 
-  enable_nat_gateway = true
-  single_nat_gateway = true
+  enable_nat_gateway   = true
+  single_nat_gateway   = true
   enable_dns_hostnames = !var.enable_ephemeral_storage
 
   manage_default_security_group  = var.manage_default_security_group
@@ -368,17 +368,17 @@ module "atlantis_sg" {
 }
 
 module "efs_sg" {
-  source = "terraform-aws-modules/security-group/aws//modules/nfs"
+  source  = "terraform-aws-modules/security-group/aws//modules/nfs"
   version = "v4.8.0"
-  count = var.enable_ephemeral_storage ? 0 : 1
+  count   = var.enable_ephemeral_storage ? 0 : 1
 
-  name = "${var.name}-efs"
-  vpc_id = local.vpc_id
+  name        = "${var.name}-efs"
+  vpc_id      = local.vpc_id
   description = "Security group allowing access to the EFS storage"
 
   ingress_cidr_blocks = [var.cidr]
-  ingress_with_source_security_group_id = [ {
-    rule = "nfs-tcp",
+  ingress_with_source_security_group_id = [{
+    rule                     = "nfs-tcp",
     source_security_group_id = module.atlantis_sg.security_group_id
   }]
 
@@ -431,8 +431,8 @@ resource "aws_efs_file_system" "this" {
 resource "aws_efs_mount_target" "this" {
   for_each = toset(local.private_subnet_ids)
 
-  file_system_id = aws_efs_file_system.this[0].id
-  subnet_id = each.key
+  file_system_id  = aws_efs_file_system.this[0].id
+  subnet_id       = each.key
   security_groups = [module.efs_sg[0].security_group_id, module.atlantis_sg.security_group_id]
 }
 
@@ -579,7 +579,7 @@ module "container_definition_github_gitlab" {
   container_depends_on     = var.container_depends_on
   essential                = var.essential
   readonly_root_filesystem = var.readonly_root_filesystem
-  mount_points             = var.mount_points
+  mount_points             = local.mount_points
   volumes_from             = var.volumes_from
 
   port_mappings = [
@@ -694,7 +694,7 @@ resource "aws_ecs_task_definition" "atlantis" {
     content {
       name = "efs-storage"
       efs_volume_configuration {
-        file_system_id = aws_efs_file_system.this[0].id
+        file_system_id          = aws_efs_file_system.this[0].id
         transit_encryption      = "ENABLED"
         transit_encryption_port = 2999
         authorization_config {
