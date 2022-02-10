@@ -224,6 +224,12 @@ variable "route53_record_name" {
   default     = null
 }
 
+variable "route53_private_zone" {
+  description = "Enable to use a private Route53 zone"
+  type        = bool
+  default     = false
+}
+
 variable "create_route53_record" {
   description = "Whether to create Route53 record for Atlantis"
   type        = bool
