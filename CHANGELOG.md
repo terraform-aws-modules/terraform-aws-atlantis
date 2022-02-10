@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.10.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.9.0...v3.10.0) (2022-02-10)
+
+
+### Features
+
+* Added support for persisting Atlantis state using EFS ([#247](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/247)) ([79d152e](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/79d152eeaea5fdf512c4d6ef3cb11143e38e0803))
+
 ## [3.9.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.8.0...v3.9.0) (2022-02-08)
 
 
