@@ -53,7 +53,7 @@ output "ecs_security_group" {
 
 output "ecs_cluster_id" {
   description = "ECS cluster id"
-  value       = module.ecs.ecs_cluster_id
+  value       = local.ecs_cluster_id
 }
 
 output "ecs_cluster_arn" {

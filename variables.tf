@@ -311,6 +311,18 @@ variable "trusted_entities" {
   default     = []
 }
 
+variable "create_ecs_cluster" {
+  description = "Whether to create an ECS cluster or not"
+  type        = bool
+  default     = true
+}
+
+variable "ecs_cluster_id" {
+  description = "ID of an existing ECS cluster where resources will be created"
+  type        = string
+  default     = ""
+}
+
 variable "ecs_fargate_spot" {
   description = "Whether to run ECS Fargate Spot or not"
   type        = bool
