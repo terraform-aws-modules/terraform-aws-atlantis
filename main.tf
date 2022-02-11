@@ -107,6 +107,23 @@ locals {
   )
 
   policies_arn = var.policies_arn != null ? var.policies_arn : ["arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+
+  # Chunk these into groups of 5, the limit for IPs in an AWS lb listener
+  whitelist_unauthenticated_cidr_block_chunks = chunklist(
+    sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.whitelist_unauthenticated_cidr_blocks))),
+    5
+  )
+
+  # break up user to uid and gid -- set both to 0 if null
+  uid = var.user == null ? 0 : split(":", var.user)[0]
+  gid = var.user == null ? 0 : split(":", var.user)[1]
+
+  # default mount points for efs if ephemeral storage is not enabled and mount points aren't specified
+  mount_points = var.enable_ephemeral_storage || length(var.mount_points) > 0 ? var.mount_points : [{
+    containerPath = "/home/atlantis"
+    sourceVolume  = "efs-storage"
+    readOnly      = "false"
+  }]
 }
 
 data "aws_partition" "current" {}
@@ -117,7 +134,7 @@ data "aws_route53_zone" "this" {
   count = var.create_route53_record ? 1 : 0
 
   name         = var.route53_zone_name
-  private_zone = false
+  private_zone = var.route53_private_zone
 }
 
 ################################################################################
@@ -186,8 +203,13 @@ module "vpc" {
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
 
-  enable_nat_gateway = true
-  single_nat_gateway = true
+  enable_nat_gateway   = true
+  single_nat_gateway   = true
+  enable_dns_hostnames = !var.enable_ephemeral_storage
+
+  manage_default_security_group  = var.manage_default_security_group
+  default_security_group_ingress = var.default_security_group_ingress
+  default_security_group_egress  = var.default_security_group_egress
 
   tags = local.tags
 }
@@ -249,6 +271,9 @@ module "alb" {
       backend_port         = var.atlantis_port
       target_type          = "ip"
       deregistration_delay = 10
+      health_check = {
+        path = "/healthz"
+      }
     },
   ]
 
@@ -257,10 +282,10 @@ module "alb" {
 
 # Forward action for certain CIDR blocks to bypass authentication (eg. GitHub webhooks)
 resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
-  count = var.allow_unauthenticated_access ? 1 : 0
+  count = var.allow_unauthenticated_access ? length(local.whitelist_unauthenticated_cidr_block_chunks) : 0
 
   listener_arn = module.alb.https_listener_arns[0]
-  priority     = var.allow_unauthenticated_access_priority
+  priority     = var.allow_unauthenticated_access_priority + count.index
 
   action {
     type             = "forward"
@@ -269,7 +294,7 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
 
   condition {
     source_ip {
-      values = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.whitelist_unauthenticated_cidr_blocks)))
+      values = local.whitelist_unauthenticated_cidr_block_chunks[count.index]
     }
   }
 }
@@ -345,6 +370,24 @@ module "atlantis_sg" {
   tags = merge(local.tags, var.atlantis_security_group_tags)
 }
 
+module "efs_sg" {
+  source  = "terraform-aws-modules/security-group/aws//modules/nfs"
+  version = "v4.8.0"
+  count   = var.enable_ephemeral_storage ? 0 : 1
+
+  name        = "${var.name}-efs"
+  vpc_id      = local.vpc_id
+  description = "Security group allowing access to the EFS storage"
+
+  ingress_cidr_blocks = [var.cidr]
+  ingress_with_source_security_group_id = [{
+    rule                     = "nfs-tcp",
+    source_security_group_id = module.atlantis_sg.security_group_id
+  }]
+
+  tags = local.tags
+}
+
 ################################################################################
 # ACM (SSL certificate)
 ################################################################################
@@ -375,6 +418,35 @@ resource "aws_route53_record" "atlantis" {
     name                   = module.alb.lb_dns_name
     zone_id                = module.alb.lb_zone_id
     evaluate_target_health = true
+  }
+}
+
+################################################################################
+# EFS
+################################################################################
+
+resource "aws_efs_file_system" "this" {
+  count = var.enable_ephemeral_storage ? 0 : 1
+
+  creation_token = var.name
+}
+
+resource "aws_efs_mount_target" "this" {
+  # we coalescelist in order to specify the resource keys when we create the subnets using the VPC or they're specified for us.  This works around the for_each value depends on attributes which can't be determined until apply error
+  for_each = zipmap(coalescelist(var.private_subnets, var.private_subnet_ids), local.private_subnet_ids)
+
+  file_system_id  = aws_efs_file_system.this[0].id
+  subnet_id       = each.value
+  security_groups = [module.efs_sg[0].security_group_id, module.atlantis_sg.security_group_id]
+}
+
+resource "aws_efs_access_point" "this" {
+  count = var.enable_ephemeral_storage ? 0 : 1
+
+  file_system_id = aws_efs_file_system.this[0].id
+  posix_user {
+    gid = local.gid
+    uid = local.uid
   }
 }
 
@@ -513,7 +585,7 @@ module "container_definition_github_gitlab" {
   container_depends_on     = var.container_depends_on
   essential                = var.essential
   readonly_root_filesystem = var.readonly_root_filesystem
-  mount_points             = var.mount_points
+  mount_points             = local.mount_points
   volumes_from             = var.volumes_from
 
   port_mappings = [
@@ -616,8 +688,26 @@ resource "aws_ecs_task_definition" "atlantis" {
 
   dynamic "ephemeral_storage" {
     for_each = var.enable_ephemeral_storage ? [1] : []
+
     content {
       size_in_gib = var.ephemeral_storage_size
+    }
+  }
+
+  dynamic "volume" {
+    for_each = var.enable_ephemeral_storage ? [] : [1]
+
+    content {
+      name = "efs-storage"
+      efs_volume_configuration {
+        file_system_id          = aws_efs_file_system.this[0].id
+        transit_encryption      = "ENABLED"
+        transit_encryption_port = 2999
+        authorization_config {
+          access_point_id = aws_efs_access_point.this[0].id
+          iam             = "ENABLED"
+        }
+      }
     }
   }
 
@@ -668,6 +758,7 @@ resource "aws_ecs_service" "atlantis" {
 
   dynamic "capacity_provider_strategy" {
     for_each = var.ecs_fargate_spot ? [true] : []
+
     content {
       capacity_provider = "FARGATE_SPOT"
       weight            = 100
@@ -686,6 +777,7 @@ resource "aws_ecs_service" "atlantis" {
 resource "aws_cloudwatch_log_group" "atlantis" {
   name              = var.name
   retention_in_days = var.cloudwatch_log_retention_in_days
+  kms_key_id        = var.cloudwatch_logs_kms_key_id
 
   tags = local.tags
 }

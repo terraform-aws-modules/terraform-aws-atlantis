@@ -2,6 +2,56 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.11.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.10.0...v3.11.0) (2022-02-10)
+
+
+### Features
+
+* Added a possibility to allow private hosted zone usage ([#250](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/250)) ([5a53f39](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/5a53f39f0dc4942a2044451ef63752b7b9c807ab))
+
+## [3.10.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.9.0...v3.10.0) (2022-02-10)
+
+
+### Features
+
+* Added support for persisting Atlantis state using EFS ([#247](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/247)) ([79d152e](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/79d152eeaea5fdf512c4d6ef3cb11143e38e0803))
+
+## [3.9.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.8.0...v3.9.0) (2022-02-08)
+
+
+### Features
+
+* Remove not used parameter `atlantis_allowed_repo_names` ([#221](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/221)) ([6cbd47d](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/6cbd47dfe45fb45c0b5d99b238a7837a51e667f5))
+
+## [3.8.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.7.0...v3.8.0) (2022-01-19)
+
+
+### Features
+
+* Allow CloudWatch Log Encryption and Default Security Group Management ([#246](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/246)) ([6a27fff](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/6a27fffbd64fc92e49ee6449b937498a9dc35856))
+
+## [3.7.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.6.0...v3.7.0) (2022-01-17)
+
+
+### Features
+
+* Add base URL for GitHub Enterprise ([#244](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/244)) ([4195ea2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/4195ea27c69db0b1863be5cc479eea7bd9051dfe))
+
+## [3.6.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.3...v3.6.0) (2022-01-07)
+
+
+### Features
+
+* Allow more than 5 CIDRs in whitelist_unauthenticated_cidr_blocks ([#220](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/220)) ([df10f7b](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/df10f7bc3d703dacdca3de2dc2b773c730d72898))
+
+## [3.5.3](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.2...v3.5.3) (2021-12-06)
+
+
+### Bug Fixes
+
+* atlantis health check path ([#242](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/242)) ([0b17a41](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/0b17a4102f5f21e7a6de72a3b9ed7760c4ca7c9a))
+* ensure pre-commit is using latest version via HTTPS ([#240](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/240)) ([57935f0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/57935f0530e4502ddc6da2621600d887488f4c76))
+
 ## [3.5.2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.5.1...v3.5.2) (2021-11-19)
 
 
