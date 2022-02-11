@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.12.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.11.0...v3.12.0) (2022-02-11)
+
+
+### Features
+
+* Allow for an existing ECS cluster to be used ([#233](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/233)) ([6b7594a](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/6b7594ae487472d4947518571209c2e380341d45))
+
 ## [3.11.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.10.0...v3.11.0) (2022-02-10)
 
 
