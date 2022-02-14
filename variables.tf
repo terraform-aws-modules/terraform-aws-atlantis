@@ -231,7 +231,7 @@ variable "route53_private_zone" {
 }
 
 variable "create_route53_record" {
-  description = "Whether to create Route53 record for Atlantis"
+  description = "Whether to create Route53 A record for Atlantis"
   type        = bool
   default     = true
 }
@@ -687,4 +687,16 @@ variable "ephemeral_storage_size" {
     condition     = var.ephemeral_storage_size >= 21 && var.ephemeral_storage_size <= 200
     error_message = "The minimum supported value is 21 GiB and the maximum supported value is 200 GiB."
   }
+}
+
+variable "alb_ip_address_type" {
+  description = "The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack"
+  type        = string
+  default     = "ipv4"
+}
+
+variable "create_route53_aaaa_record" {
+  description = "Whether to create Route53 AAAA record for Atlantis"
+  type        = bool
+  default     = false
 }
