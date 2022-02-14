@@ -379,7 +379,8 @@ module "efs_sg" {
   vpc_id      = local.vpc_id
   description = "Security group allowing access to the EFS storage"
 
-  ingress_cidr_blocks = [var.cidr]
+  auto_ingress_rules = []
+
   ingress_with_source_security_group_id = [{
     rule                     = "nfs-tcp",
     source_security_group_id = module.atlantis_sg.security_group_id
@@ -437,7 +438,7 @@ resource "aws_efs_mount_target" "this" {
 
   file_system_id  = aws_efs_file_system.this[0].id
   subnet_id       = each.value
-  security_groups = [module.efs_sg[0].security_group_id, module.atlantis_sg.security_group_id]
+  security_groups = concat([module.efs_sg[0].security_group_id], var.efs_additional_security_group_ids)
 }
 
 resource "aws_efs_access_point" "this" {

@@ -688,3 +688,9 @@ variable "ephemeral_storage_size" {
     error_message = "The minimum supported value is 21 GiB and the maximum supported value is 200 GiB."
   }
 }
+
+variable "efs_additional_security_group_ids" {
+  description = "List of additional security groups to allow access to the EFS filesystem"
+  type        = list(string)
+  default     = []
+}
