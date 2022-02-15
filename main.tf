@@ -19,7 +19,7 @@ locals {
 
   # token
   secret_name_key        = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_TOKEN" : var.atlantis_github_user_token != "" ? "ATLANTIS_GH_TOKEN" : "ATLANTIS_BITBUCKET_TOKEN" : ""
-  secret_name_value_from = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? aws_ssm_parameter.atlantis_github_user_token[0].arn : var.atlantis_github_user_token != "" ? aws_ssm_parameter.atlantis_github_user_token[0].arn : aws_ssm_parameter.atlantis_bitbucket_user_token[0].arn : ""
+  secret_name_value_from = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? aws_ssm_parameter.atlantis_gitlab_user_token[0].arn : var.atlantis_github_user_token != "" ? aws_ssm_parameter.atlantis_github_user_token[0].arn : aws_ssm_parameter.atlantis_bitbucket_user_token[0].arn : ""
 
   # webhook
   secret_webhook_key = local.has_secrets || var.atlantis_github_webhook_secret != "" ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : var.atlantis_github_user_token != "" || var.atlantis_github_webhook_secret != "" ? "ATLANTIS_GH_WEBHOOK_SECRET" : "ATLANTIS_BITBUCKET_WEBHOOK_SECRET" : ""
