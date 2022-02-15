@@ -429,6 +429,10 @@ resource "aws_efs_file_system" "this" {
   count = var.enable_ephemeral_storage ? 0 : 1
 
   creation_token = var.name
+
+  encrypted = true
+
+  tags = local.tags
 }
 
 resource "aws_efs_mount_target" "this" {
