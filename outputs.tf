@@ -16,7 +16,7 @@ output "atlantis_allowed_repo_names" {
 
 output "webhook_secret" {
   description = "Webhook secret"
-  value       = try(random_id.webhook[0].hex, "")
+  value       = try(random_password.webhook[0].result, "")
   sensitive   = true
 }
 
