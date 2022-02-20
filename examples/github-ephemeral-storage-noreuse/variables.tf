@@ -22,9 +22,3 @@ variable "github_user" {
   description = "Github user for Atlantis to utilize when performing Github activities"
   type        = string
 }
-
-variable "enable_ephemeral_storage" {
-  description = "By default this example uses EFS storage, switch to true to use ephemeral storage"
-  type = bool
-  default = false
-}

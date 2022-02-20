@@ -24,7 +24,7 @@ variable "github_user" {
 }
 
 variable "enable_ephemeral_storage" {
-  description = "By default this example uses EFS storage, switch to true to use ephemeral storage"
+  description = "By default this example uses ephemeral storage"
   type = bool
-  default = false
+  default = true
 }

@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  name   = "github-complete"
+  name   = "github-efs"
   region = "eu-west-1"
 
   tags = {
@@ -46,8 +46,7 @@ module "atlantis" {
   container_cpu                = 512
   container_memory             = 1024
 
-  # EFS
-  enable_ephemeral_storage = var.enable_ephemeral_storage
+  enable_ephemeral_storage = true
 
   entrypoint        = ["docker-entrypoint.sh"]
   command           = ["server"]
@@ -73,7 +72,7 @@ module "atlantis" {
   # Trusted roles
   trusted_principals = ["ssm.amazonaws.com"]
 
-  # Atlantis
+    # Atlantis
   atlantis_github_user       = var.github_user
   atlantis_github_user_token = var.github_token
   atlantis_repo_allowlist    = ["github.com/${var.github_owner}/*"]
