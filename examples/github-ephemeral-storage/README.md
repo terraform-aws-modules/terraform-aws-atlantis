@@ -27,13 +27,15 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Requirements
 
-No requirements.
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 3.45 |
+| <a name="requirement_github"></a> [github](#requirement\_github) | >= 4.8 |
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | n/a |
+No providers.
 
 ## Modules
 
@@ -43,11 +45,7 @@ No requirements.
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
-| [aws_elb_service_account.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/elb_service_account) | data source |
-| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+No resources.
 
 ## Inputs
 
@@ -59,8 +57,16 @@ No requirements.
 | <a name="input_github_owner"></a> [github\_owner](#input\_github\_owner) | Github owner | `string` | n/a | yes |
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token | `string` | n/a | yes |
 | <a name="input_github_user"></a> [github\_user](#input\_github\_user) | Github user for Atlantis to utilize when performing Github activities | `string` | n/a | yes |
+| <a name="input_name"></a> [name](#input\_name) | Name of the resource | `string` | `"github-complete"` | no |
+| <a name="input_region"></a> [region](#input\_region) | AWS region to deploy the resources | `string` | `"eu-west-1"` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | tags to be applied to the resources | `map(any)` | <pre>{<br>  "Environment": "dev",<br>  "Owner": "user"<br>}</pre> | no |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_atlantis_repo_allowlist"></a> [atlantis\_repo\_allowlist](#output\_atlantis\_repo\_allowlist) | Git repositories where webhook should be created |
+| <a name="output_atlantis_url"></a> [atlantis\_url](#output\_atlantis\_url) | URL of Atlantis |
+| <a name="output_ecs_task_definition"></a> [ecs\_task\_definition](#output\_ecs\_task\_definition) | Task definition for ECS service (used for external triggers) |
+| <a name="output_task_role_arn"></a> [task\_role\_arn](#output\_task\_role\_arn) | The Atlantis ECS task role arn |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

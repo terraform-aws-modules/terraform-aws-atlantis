@@ -25,25 +25,25 @@ variable "github_user" {
 
 variable "enable_ephemeral_storage" {
   description = "By default this example uses ephemeral storage"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "name" {
   description = "Name of the resource"
-  type = string
-  default = "github-complete"
+  type        = string
+  default     = "github-complete"
 }
 
 variable "region" {
   description = "AWS region to deploy the resources"
-  type = string
-  default = "eu-west-1"
+  type        = string
+  default     = "eu-west-1"
 }
 
 variable "tags" {
   description = "tags to be applied to the resources"
-  type = map
+  type        = map(any)
   default = {
     Owner       = "user"
     Environment = "dev"

@@ -66,6 +66,9 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 | <a name="input_github_owner"></a> [github\_owner](#input\_github\_owner) | Github owner | `string` | n/a | yes |
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token | `string` | n/a | yes |
 | <a name="input_github_user"></a> [github\_user](#input\_github\_user) | Github user for Atlantis to utilize when performing Github activities | `string` | n/a | yes |
+| <a name="input_name"></a> [name](#input\_name) | Name of the resource | `string` | `"github-complete"` | no |
+| <a name="input_region"></a> [region](#input\_region) | AWS region to deploy the resources | `string` | `"eu-west-1"` | no |
+| <a name="input_tags"></a> [tags](#input\_tags) | tags to be applied to the resources | `map(any)` | <pre>{<br>  "Environment": "dev",<br>  "Owner": "user"<br>}</pre> | no |
 
 ## Outputs
 
