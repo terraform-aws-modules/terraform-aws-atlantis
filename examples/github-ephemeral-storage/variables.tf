@@ -28,3 +28,24 @@ variable "enable_ephemeral_storage" {
   type = bool
   default = true
 }
+
+variable "name" {
+  description = "Name of the resource"
+  type = string
+  default = "github-complete"
+}
+
+variable "region" {
+  description = "AWS region to deploy the resources"
+  type = string
+  default = "eu-west-1"
+}
+
+variable "tags" {
+  description = "tags to be applied to the resources"
+  type = map
+  default = {
+    Owner       = "user"
+    Environment = "dev"
+  }
+}

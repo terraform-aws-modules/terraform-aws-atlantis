@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  name   = "github-complete"
+  name   = "github-ephemeral-storage"
   region = "eu-west-1"
 
   tags = {

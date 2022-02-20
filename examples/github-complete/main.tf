@@ -1,15 +1,5 @@
 provider "aws" {
-  region = local.region
-}
-
-locals {
-  name   = "github-complete"
-  region = "eu-west-1"
-
-  tags = {
-    Owner       = "user"
-    Environment = "dev"
-  }
+  region = var.region
 }
 
 ################################################################################
@@ -29,11 +19,11 @@ data "aws_elb_service_account" "current" {}
 module "atlantis" {
   source = "../../"
 
-  name = local.name
+  name = var.name
 
   # VPC
   cidr            = "10.20.0.0/16"
-  azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
+  azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
   private_subnets = ["10.20.1.0/24", "10.20.2.0/24", "10.20.3.0/24"]
   public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
 
@@ -90,7 +80,7 @@ module "atlantis" {
   allow_github_webhooks        = true
   allow_repo_config            = true
 
-  tags = local.tags
+  tags = var.tags
 }
 
 ################################################################################
@@ -128,7 +118,7 @@ module "atlantis_access_log_bucket" {
 
   force_destroy = true
 
-  tags = local.tags
+  tags = var.tags
 
   server_side_encryption_configuration = {
     rule = {
