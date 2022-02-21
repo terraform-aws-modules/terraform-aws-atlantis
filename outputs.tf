@@ -9,14 +9,14 @@ output "atlantis_url_events" {
   value       = local.atlantis_url_events
 }
 
-output "atlantis_allowed_repo_names" {
+output "atlantis_repo_allowlist" {
   description = "Git repositories where webhook should be created"
-  value       = var.atlantis_allowed_repo_names
+  value       = var.atlantis_repo_allowlist
 }
 
 output "webhook_secret" {
   description = "Webhook secret"
-  value       = element(concat(random_id.webhook.*.hex, [""]), 0)
+  value       = try(random_id.webhook[0].hex, "")
   sensitive   = true
 }
 
@@ -53,7 +53,7 @@ output "ecs_security_group" {
 
 output "ecs_cluster_id" {
   description = "ECS cluster id"
-  value       = module.ecs.ecs_cluster_id
+  value       = local.ecs_cluster_id
 }
 
 output "ecs_cluster_arn" {

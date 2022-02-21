@@ -23,7 +23,6 @@ route53_zone_name = "example.com"
 ecs_service_assign_public_ip = true
 
 # Atlantis
-atlantis_allowed_repo_names = ["awesome-repo", "another-awesome-repo"]
 atlantis_repo_allowlist = ["github.com/terraform-aws-modules/*"]
 
 # Specify one of the following block.

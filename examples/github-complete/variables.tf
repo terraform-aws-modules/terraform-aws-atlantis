@@ -22,8 +22,3 @@ variable "github_user" {
   description = "Github user for Atlantis to utilize when performing Github activities"
   type        = string
 }
-
-variable "allowed_repo_names" {
-  description = "Repositories that Atlantis will listen for events from and a webhook will be installed"
-  type        = list(string)
-}

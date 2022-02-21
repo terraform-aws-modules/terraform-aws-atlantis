@@ -4,9 +4,9 @@ provider "gitlab" {
 }
 
 resource "gitlab_project_hook" "this" {
-  count = var.create_gitlab_repository_webhook ? length(var.atlantis_allowed_repo_names) : 0
+  count = var.create_gitlab_repository_webhook ? length(var.atlantis_repo_allowlist) : 0
 
-  project                 = var.atlantis_allowed_repo_names[count.index]
+  project                 = var.atlantis_repo_allowlist[count.index]
   url                     = var.webhook_url
   token                   = var.webhook_secret
   enable_ssl_verification = false

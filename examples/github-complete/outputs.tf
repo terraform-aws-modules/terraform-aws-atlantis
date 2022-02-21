@@ -4,9 +4,9 @@ output "atlantis_url" {
   value       = module.atlantis.atlantis_url
 }
 
-output "atlantis_allowed_repo_names" {
+output "atlantis_repo_allowlist" {
   description = "Git repositories where webhook should be created"
-  value       = module.atlantis.atlantis_allowed_repo_names
+  value       = module.atlantis.atlantis_repo_allowlist
 }
 
 output "task_role_arn" {
