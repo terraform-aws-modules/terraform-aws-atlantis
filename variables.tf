@@ -224,6 +224,12 @@ variable "route53_record_name" {
   default     = null
 }
 
+variable "route53_private_zone" {
+  description = "Enable to use a private Route53 zone"
+  type        = bool
+  default     = false
+}
+
 variable "create_route53_record" {
   description = "Whether to create Route53 record for Atlantis"
   type        = bool
@@ -305,6 +311,18 @@ variable "trusted_entities" {
   default     = []
 }
 
+variable "create_ecs_cluster" {
+  description = "Whether to create an ECS cluster or not"
+  type        = bool
+  default     = true
+}
+
+variable "ecs_cluster_id" {
+  description = "ID of an existing ECS cluster where resources will be created"
+  type        = string
+  default     = ""
+}
+
 variable "ecs_fargate_spot" {
   description = "Whether to run ECS Fargate Spot or not"
   type        = bool
@@ -332,13 +350,13 @@ variable "ecs_service_platform_version" {
 variable "ecs_service_deployment_maximum_percent" {
   description = "The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment"
   type        = number
-  default     = 200
+  default     = 100
 }
 
 variable "ecs_service_deployment_minimum_healthy_percent" {
   description = "The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment"
   type        = number
-  default     = 50
+  default     = 0
 }
 
 variable "ecs_task_cpu" {
@@ -462,9 +480,13 @@ variable "volumes_from" {
 }
 
 variable "user" {
-  description = "The user to run as inside the container. Can be any of these formats: user, user:group, uid, uid:gid, user:gid, uid:group. The default (null) will use the container's configured `USER` directive or root if not set."
+  description = "The user to run as inside the container. Must be in the uid:gid or the default (null) will use the container's configured `USER` directive or root if not set."
   type        = string
   default     = null
+  validation {
+    condition     = can(regex("[0-9]+:[0-9]+", var.user)) || var.user == null
+    error_message = "User variable must be in the uid:gid format or null."
+  }
 }
 
 variable "ulimits" {
@@ -515,12 +537,6 @@ variable "atlantis_port" {
 variable "atlantis_repo_allowlist" {
   description = "List of allowed repositories Atlantis can be used with"
   type        = list(string)
-}
-
-variable "atlantis_allowed_repo_names" {
-  description = "Git repositories where webhook should be created"
-  type        = list(string)
-  default     = []
 }
 
 variable "allow_repo_config" {

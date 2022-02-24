@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.12.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.11.0...v3.12.0) (2022-02-11)
+
+
+### Features
+
+* Allow for an existing ECS cluster to be used ([#233](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/233)) ([6b7594a](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/6b7594ae487472d4947518571209c2e380341d45))
+
+## [3.11.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.10.0...v3.11.0) (2022-02-10)
+
+
+### Features
+
+* Added a possibility to allow private hosted zone usage ([#250](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/250)) ([5a53f39](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/5a53f39f0dc4942a2044451ef63752b7b9c807ab))
+
+## [3.10.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.9.0...v3.10.0) (2022-02-10)
+
+
+### Features
+
+* Added support for persisting Atlantis state using EFS ([#247](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/247)) ([79d152e](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/79d152eeaea5fdf512c4d6ef3cb11143e38e0803))
+
+## [3.9.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.8.0...v3.9.0) (2022-02-08)
+
+
+### Features
+
+* Remove not used parameter `atlantis_allowed_repo_names` ([#221](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/221)) ([6cbd47d](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/6cbd47dfe45fb45c0b5d99b238a7837a51e667f5))
+
 ## [3.8.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.7.0...v3.8.0) (2022-01-19)
 
 
