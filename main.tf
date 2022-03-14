@@ -424,15 +424,22 @@ resource "aws_route53_record" "atlantis" {
 ################################################################################
 # EFS
 ################################################################################
-
 resource "aws_efs_file_system" "this" {
   count = var.enable_ephemeral_storage ? 0 : 1
 
-  encrypted      = var.efs_encrption_enabled 
-  kms_key_id     = var.efs_kms_key_id
-  tags           = merge(var.efs_additional_tags, local.tags) 
+  encrypted                         = var.efs_encrption_enabled 
+  kms_key_id                        = var.efs_kms_key_id
 
-  creation_token = var.name
+  performance_mode                  = var.efs_performance_mode
+  lifecycle_policy                  = var.efs_lifecycle_policy 
+
+  throughput_mode                   = var.efs_throughput_mode
+  provisioned_throughput_in_mibps   = var.provisioned_throughput_in_mibps 
+
+  creation_token                    = var.name
+
+  tags                              = merge(var.efs_additional_tags, local.tags) 
+  
 }
 
 resource "aws_efs_mount_target" "this" {
