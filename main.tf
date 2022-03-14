@@ -428,6 +428,10 @@ resource "aws_route53_record" "atlantis" {
 resource "aws_efs_file_system" "this" {
   count = var.enable_ephemeral_storage ? 0 : 1
 
+  encrypted      = var.efs_encrption_enabled 
+  kms_key_id     = var.efs_kms_key_id
+  tags           = merge(var.efs_additional_tags, local.tags) 
+
   creation_token = var.name
 }
 

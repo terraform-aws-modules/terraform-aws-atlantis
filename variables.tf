@@ -688,3 +688,46 @@ variable "ephemeral_storage_size" {
     error_message = "The minimum supported value is 21 GiB and the maximum supported value is 200 GiB."
   }
 }
+
+# EFS
+variable "efs_encryption_enabled" {
+  description  = "(Optional) If true, the disk will be encrypted for this Atlantis EFS storage. Default is true"
+  default      = true 
+  type         = bool
+}
+
+variable "efs_kms_key_id" {
+  description  = "(Optional) The ARN for the KMS encryption key you wish to use to encrypt this Atlantis EFS with. When specifying `efs_kms_key_id`, encrypted needs to be set to true."
+  default      = null 
+  type         = string 
+}
+
+variable "efs_lifecycle_policy" {
+  description  = "(Optional) A file system [lifecycle policy](https://docs.aws.amazon.com/efs/latest/ug/API_LifecyclePolicy.html) object."
+  default      = null
+  type         = map(any)
+}
+
+variable "efs_performance_mode" {
+  description  = "(Optional) The file system performance mode. Can be either `generalPurpose` or `maxIO` (Default: `generalPurpose`)."
+  default      = null 
+  type         = string 
+}
+
+variable "efs_additional_tags" {
+  description  = "(Optional) Additional tags you would like to add to the EFS for this Atlanis instance"
+  default      = {}
+  type         = map(any)
+}
+
+variable "efs_provisioned_throughput_in_mibps" {
+  description  = "(Optional) The throughput, measured in MiB/s, that you want to provision for the file system. Only applicable with throughput_mode set to provisioned."
+  type         = string 
+  default      = null
+}
+
+variable "efs_throughput_mode" {
+  description  = "(Optional) Throughput mode for the file system. Defaults to `bursting`. Valid values: `bursting`, `provisioned`. When using `provisioned`, also set `efs_provisioned_throughput_in_mibps`."
+  type         = string 
+  default      = null
+}
