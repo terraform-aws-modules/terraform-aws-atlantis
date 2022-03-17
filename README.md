@@ -155,17 +155,17 @@ alb_authenticate_oidc = {
 
 ```hcl
 alb_authenticate_oidc = {
-  issuer                              = "https://dev-42069.okta.com/"
-  token_endpoint                      = "https://dev-42069.okta.com/oauth2/v1/token"
-  user_info_endpoint                  = "https://dev-42069.okta.com/oauth2/v1/userinfo"
-  authorization_endpoint              = "https://dev-42069.okta.com/oauth2/v1/authorize"
+  issuer                              = "https://dev-42069.okta.com/oauth2/default"
+  token_endpoint                      = "https://dev-42069.okta.com/oauth2/default/v1/token"
+  user_info_endpoint                  = "https://dev-42069.okta.com/oauth2/default/v1/userinfo"
+  authorization_endpoint              = "https://dev-42069.okta.com/oauth2/default/v1/authorize"
   authentication_request_extra_params = {}
   client_id                           = "clientid"
   client_secret                       = "secret123" # a data source would be good here
 }
 ```
 
-Read more in [this post](https://medium.com/swlh/aws-alb-authentication-with-okta-oidc-using-terraform-902cd8289db4)
+Read more in [this post](https://medium.com/@jainendramandavi/okta-oidc-integration-with-aws-application-load-balancer-alb-5f6e03bbb66b)
 
 ##### Google
 
