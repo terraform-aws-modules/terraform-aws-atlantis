@@ -645,6 +645,14 @@ module "container_definition_bitbucket" {
   mount_points             = var.mount_points
   volumes_from             = var.volumes_from
 
+  healthcheck = {
+    command  = ["CMD-SHELL", "curl -f http://localhost:${var.atlantis_port}/healthz || exit 1"]
+    retries  = 5
+    interval = 5
+    startPeriod = 10
+    timeout = 3
+  }
+
   port_mappings = [
     {
       containerPort = var.atlantis_port
