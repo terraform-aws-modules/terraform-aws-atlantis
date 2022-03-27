@@ -124,6 +124,14 @@ locals {
     sourceVolume  = "efs-storage"
     readOnly      = "false"
   }]
+
+  task_healthcheck = {
+    command     = ["CMD-SHELL", "curl -f http://localhost:${var.atlantis_port}/healthz || exit 1"]
+    retries     = 5
+    interval    = 5
+    startPeriod = 10
+    timeout     = 3
+  }
 }
 
 data "aws_partition" "current" {}
@@ -588,13 +596,7 @@ module "container_definition_github_gitlab" {
   mount_points             = local.mount_points
   volumes_from             = var.volumes_from
 
-  healthcheck = {
-    command     = ["CMD-SHELL", "curl -f http://localhost:${var.atlantis_port}/healthz || exit 1"]
-    retries     = 5
-    interval    = 5
-    startPeriod = 10
-    timeout     = 3
-  }
+  healthcheck = local.task_healthcheck
 
   port_mappings = [
     {
@@ -653,13 +655,7 @@ module "container_definition_bitbucket" {
   mount_points             = var.mount_points
   volumes_from             = var.volumes_from
 
-  healthcheck = {
-    command     = ["CMD-SHELL", "curl -f http://localhost:${var.atlantis_port}/healthz || exit 1"]
-    retries     = 5
-    interval    = 5
-    startPeriod = 10
-    timeout     = 3
-  }
+  healthcheck = local.task_healthcheck
 
   port_mappings = [
     {
