@@ -589,11 +589,11 @@ module "container_definition_github_gitlab" {
   volumes_from             = var.volumes_from
 
   healthcheck = {
-    command  = ["CMD-SHELL", "curl -f http://localhost:${var.atlantis_port}/healthz || exit 1"]
-    retries  = 5
-    interval = 5
+    command     = ["CMD-SHELL", "curl -f http://localhost:${var.atlantis_port}/healthz || exit 1"]
+    retries     = 5
+    interval    = 5
     startPeriod = 10
-    timeout = 3
+    timeout     = 3
   }
 
   port_mappings = [
@@ -654,11 +654,11 @@ module "container_definition_bitbucket" {
   volumes_from             = var.volumes_from
 
   healthcheck = {
-    command  = ["CMD-SHELL", "curl -f http://localhost:${var.atlantis_port}/healthz || exit 1"]
-    retries  = 5
-    interval = 5
+    command     = ["CMD-SHELL", "curl -f http://localhost:${var.atlantis_port}/healthz || exit 1"]
+    retries     = 5
+    interval    = 5
     startPeriod = 10
-    timeout = 3
+    timeout     = 3
   }
 
   port_mappings = [
