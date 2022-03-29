@@ -212,8 +212,14 @@ variable "acm_certificate_domain_name" {
 }
 
 # Route53
-variable "route53_zone_name" {
-  description = "Route53 zone name to create ACM certificate in and main A-record, without trailing dot"
+variable "route53_public_zone_name" {
+  description = "Public Route53 zone name to create ACM certificate in and main A-record, without trailing dot"
+  type        = string
+  default     = ""
+}
+
+variable "route53_private_zone_name" {
+  description = "Private Route53 zone name to create the main A-record, without trailing dot"
   type        = string
   default     = ""
 }
@@ -222,12 +228,6 @@ variable "route53_record_name" {
   description = "Name of Route53 record to create ACM certificate in and main A-record. If null is specified, var.name is used instead. Provide empty string to point root domain name to ALB."
   type        = string
   default     = null
-}
-
-variable "route53_private_zone" {
-  description = "Enable to use a private Route53 zone"
-  type        = bool
-  default     = false
 }
 
 variable "create_route53_record" {

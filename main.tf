@@ -14,6 +14,9 @@ locals {
   )}"
   atlantis_url_events = "${local.atlantis_url}/events"
 
+  route53_zone_id   = var.route53_private_zone_name != "" ? data.aws_route53_zone.private[0].zone_id : data.aws_route53_zone.public[0].zone_id
+  route53_zone_name = var.route53_private_zone_name != "" ? var.route53_private_zone_name : var.route53_public_zone_name
+
   # Include only one group of secrets - for github, gitlab or bitbucket
   has_secrets = var.atlantis_gitlab_user_token != "" || var.atlantis_github_user_token != "" || var.atlantis_bitbucket_user_token != ""
 
@@ -130,11 +133,18 @@ data "aws_partition" "current" {}
 
 data "aws_region" "current" {}
 
-data "aws_route53_zone" "this" {
+data "aws_route53_zone" "private" {
+  count = var.create_route53_record && var.route53_private_zone_name != "" ? 1 : 0
+
+  name         = var.route53_private_zone_name
+  private_zone = true
+}
+
+data "aws_route53_zone" "public" {
   count = var.create_route53_record ? 1 : 0
 
-  name         = var.route53_zone_name
-  private_zone = var.route53_private_zone
+  name         = var.route53_public_zone_name
+  private_zone = false
 }
 
 ################################################################################
@@ -397,9 +407,9 @@ module "acm" {
 
   create_certificate = var.certificate_arn == ""
 
-  domain_name = var.acm_certificate_domain_name == "" ? join(".", [var.name, var.route53_zone_name]) : var.acm_certificate_domain_name
+  domain_name = var.acm_certificate_domain_name == "" ? join(".", [var.name, local.route53_zone_name]) : var.acm_certificate_domain_name
 
-  zone_id = var.certificate_arn == "" ? element(concat(data.aws_route53_zone.this.*.id, [""]), 0) : ""
+  zone_id = var.certificate_arn == "" ? element(concat(data.aws_route53_zone.public.*.id, [""]), 0) : ""
 
   tags = local.tags
 }
@@ -410,7 +420,7 @@ module "acm" {
 resource "aws_route53_record" "atlantis" {
   count = var.create_route53_record ? 1 : 0
 
-  zone_id = data.aws_route53_zone.this[0].zone_id
+  zone_id = local.route53_zone_id
   name    = var.route53_record_name != null ? var.route53_record_name : var.name
   type    = "A"
 
