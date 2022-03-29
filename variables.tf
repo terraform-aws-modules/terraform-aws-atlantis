@@ -206,7 +206,7 @@ variable "certificate_arn" {
 }
 
 variable "acm_certificate_domain_name" {
-  description = "Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name`"
+  description = "Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_public_zone_name`"
   type        = string
   default     = ""
 }

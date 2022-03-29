@@ -13,7 +13,7 @@ public_subnets = ["10.10.11.0/24", "10.10.12.0/24"]
 # public_subnet_ids = ["subnet-1211eef5", "subnet-163466ab"]
 
 # DNS
-route53_zone_name = "example.com"
+route53_public_zone_name = "example.com"
 
 # ACM (SSL certificate)
 # Specify ARN of an existing certificate or new one will be created and validated using Route53 DNS:

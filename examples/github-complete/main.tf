@@ -65,7 +65,7 @@ module "atlantis" {
   }]
 
   # DNS
-  route53_zone_name = var.domain
+  route53_public_zone_name = var.domain
 
   # Trusted roles
   trusted_principals = ["ssm.amazonaws.com"]
