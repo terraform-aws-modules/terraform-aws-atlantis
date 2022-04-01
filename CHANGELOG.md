@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.13.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.12.0...v3.13.0) (2022-03-12)
+
+
+### Features
+
+* Made it clear that we stand with Ukraine ([e798c34](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/e798c34cb40e8e8041c55367b99a310c06a03d13))
+
 ## [3.12.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.11.0...v3.12.0) (2022-02-11)
 
 
