@@ -22,30 +22,3 @@ variable "github_user" {
   description = "Github user for Atlantis to utilize when performing Github activities"
   type        = string
 }
-
-variable "enable_ephemeral_storage" {
-  description = "By default this example uses EFS storage, switch to true to use ephemeral storage"
-  type        = bool
-  default     = false
-}
-
-variable "name" {
-  description = "Name of the resource"
-  type        = string
-  default     = "github-complete"
-}
-
-variable "region" {
-  description = "AWS region to deploy the resources"
-  type        = string
-  default     = "eu-west-1"
-}
-
-variable "tags" {
-  description = "tags to be applied to the resources"
-  type        = map(any)
-  default = {
-    Owner       = "user"
-    Environment = "dev"
-  }
-}

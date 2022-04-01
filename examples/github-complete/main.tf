@@ -1,5 +1,15 @@
 provider "aws" {
-  region = var.region
+  region = local.region
+}
+
+locals {
+  name   = "github-complete"
+  region = "eu-west-1"
+
+  tags = {
+    Owner       = "user"
+    Environment = "dev"
+  }
 }
 
 ################################################################################
@@ -19,13 +29,16 @@ data "aws_elb_service_account" "current" {}
 module "atlantis" {
   source = "../../"
 
-  name = var.name
+  name = local.name
 
   # VPC
   cidr            = "10.20.0.0/16"
-  azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
+  azs             = ["${local.region}a", "${local.region}b", "${local.region}c"]
   private_subnets = ["10.20.1.0/24", "10.20.2.0/24", "10.20.3.0/24"]
   public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
+
+  # EFS
+  enable_ephemeral_storage = true
 
   # ECS
   ecs_service_platform_version = "LATEST"
@@ -35,9 +48,6 @@ module "atlantis" {
   container_memory_reservation = 256
   container_cpu                = 512
   container_memory             = 1024
-
-  # EFS
-  enable_ephemeral_storage = var.enable_ephemeral_storage
 
   entrypoint        = ["docker-entrypoint.sh"]
   command           = ["server"]
@@ -80,7 +90,7 @@ module "atlantis" {
   allow_github_webhooks        = true
   allow_repo_config            = true
 
-  tags = var.tags
+  tags = local.tags
 }
 
 ################################################################################
@@ -104,7 +114,7 @@ module "github_repository_webhook" {
 ################################################################################
 module "atlantis_access_log_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 2"
+  version = "~> 3.0"
 
   bucket = "atlantis-access-logs-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}"
 
@@ -118,7 +128,7 @@ module "atlantis_access_log_bucket" {
 
   force_destroy = true
 
-  tags = var.tags
+  tags = local.tags
 
   server_side_encryption_configuration = {
     rule = {
