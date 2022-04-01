@@ -37,6 +37,9 @@ module "atlantis" {
   private_subnets = ["10.20.1.0/24", "10.20.2.0/24", "10.20.3.0/24"]
   public_subnets  = ["10.20.101.0/24", "10.20.102.0/24", "10.20.103.0/24"]
 
+  # EFS
+  enable_ephemeral_storage = true
+
   # ECS
   ecs_service_platform_version = "LATEST"
   ecs_container_insights       = true
@@ -111,7 +114,7 @@ module "github_repository_webhook" {
 ################################################################################
 module "atlantis_access_log_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = "~> 2"
+  version = "~> 3.0"
 
   bucket = "atlantis-access-logs-${data.aws_caller_identity.current.account_id}-${data.aws_region.current.name}"
 
