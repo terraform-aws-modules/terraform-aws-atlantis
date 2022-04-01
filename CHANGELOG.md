@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.14.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.13.1...v3.14.0) (2022-04-01)
+
+
+### Features
+
+* Add IPv6 support (ALB and Route53 AAAA record) ([#256](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/256)) ([6cefda0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/6cefda0c23ae3632a2198ca61b2fd7c4688c9c87))
+
 ### [3.13.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.13.0...v3.13.1) (2022-04-01)
 
 
