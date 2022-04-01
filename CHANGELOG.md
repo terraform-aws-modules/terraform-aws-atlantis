@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.13.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.13.0...v3.13.1) (2022-04-01)
+
+
+### Bug Fixes
+
+* Only create mount point for EFS when using EFS ([#261](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/261)) ([b1b61f3](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/b1b61f33081b17953a809645b7ed0a09f8c154c0))
+
 ## [3.13.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.12.0...v3.13.0) (2022-03-12)
 
 
