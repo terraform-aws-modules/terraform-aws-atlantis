@@ -11,7 +11,7 @@ module "github_repository_webhook" {
 
   create_github_repository_webhook = true
 
-  github_token = var.github_token
+
   github_owner = var.github_owner
 
   # Fetching these attributes from created already Atlantis Terraform state file

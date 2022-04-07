@@ -4,3 +4,6 @@ github_owner = "myorg"
 github_user = "atlantis"
 github_token = "mygithubpersonalaccesstokenforatlantis"
 github_repo_names = ["mycoolrepo1", "mycoolrepo2"]
+github_app_id = "mygithubappid"
+github_app_key = "-----BEGIN RSA PRIVATE KEY-----(...)"
+webhook_secret = "mywebhooksecretforatlantis"

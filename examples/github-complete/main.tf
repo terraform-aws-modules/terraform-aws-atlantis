@@ -82,10 +82,24 @@ module "atlantis" {
   permissions_boundary = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/cloud/developer-boundary-policy"
   path                 = "/delegatedadmin/developer/"
 
-  # Atlantis
-  atlantis_github_user       = var.github_user
-  atlantis_github_user_token = var.github_token
-  atlantis_repo_allowlist    = [for repo in var.github_repo_names : "github.com/${var.github_owner}/${repo}"]
+  # Atlantis w/ GitHub user
+
+  atlantis_github_user    = var.github_user
+  atlantis_repo_allowlist = [for repo in var.github_repo_names : "github.com/${var.github_owner}/${repo}"]
+
+  # Atlantis w/ GitHub app
+
+  ################################################################################
+  # Suggestion: instead of allocating the values of the atlantis_github_app_key
+  # and atlantis_github_webhook_secret in the tfvars file,it is suggested to
+  # upload the values in the AWS Parameter Store of the atlantis account and
+  # call the values via the data source function
+  # (e.g. data.aws_ssm_parameter.ghapp_key.value) for security reasons.
+  ################################################################################
+
+  atlantis_github_app_id         = var.github_app_id
+  atlantis_github_app_key        = var.github_app_key
+  atlantis_github_webhook_secret = var.github_webhook_secret # webhook secret associated to GitHub app
 
   # ALB access
   alb_ingress_cidr_blocks         = var.alb_ingress_cidr_blocks
@@ -133,7 +147,7 @@ module "github_repository_webhook" {
   source = "../../modules/github-repository-webhook"
 
   github_owner = var.github_owner
-  github_token = var.github_token
+
 
   atlantis_repo_allowlist = var.github_repo_names
 
