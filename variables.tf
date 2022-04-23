@@ -71,6 +71,24 @@ variable "azs" {
   default     = []
 }
 
+variable "manage_default_security_group" {
+  description = "Should be true to adopt and manage default security group"
+  type        = bool
+  default     = false
+}
+
+variable "default_security_group_ingress" {
+  description = "List of maps of ingress rules to set on the default security group"
+  type        = list(map(string))
+  default     = []
+}
+
+variable "default_security_group_egress" {
+  description = "List of maps of egress rules to set on the default security group"
+  type        = list(map(string))
+  default     = []
+}
+
 variable "public_subnets" {
   description = "A list of public subnets inside the VPC"
   type        = list(string)
@@ -144,6 +162,12 @@ variable "allow_unauthenticated_access_priority" {
   default     = 10
 }
 
+variable "allow_unauthenticated_webhook_access_priority" {
+  description = "ALB listener rule priority for allow unauthenticated webhook access rule"
+  type        = number
+  default     = 15
+}
+
 variable "allow_github_webhooks" {
   description = "Whether to allow access for GitHub webhooks"
   type        = bool
@@ -153,7 +177,7 @@ variable "allow_github_webhooks" {
 variable "github_webhooks_cidr_blocks" {
   description = "List of CIDR blocks used by GitHub webhooks" # This is hardcoded to avoid dependency on github provider. Source: https://api.github.com/meta
   type        = list(string)
-  default     = ["140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22"]
+  default     = ["140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22", "143.55.64.0/20"]
 }
 
 variable "whitelist_unauthenticated_cidr_blocks" {
@@ -166,6 +190,12 @@ variable "alb_listener_ssl_policy_default" {
   description = "The security policy if using HTTPS externally on the load balancer. [See](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html)."
   type        = string
   default     = "ELBSecurityPolicy-2016-08"
+}
+
+variable "extra_load_balancers" {
+  description = "A list of maps for additional ECS task load balancers"
+  type        = list(map(string))
+  default     = []
 }
 
 # ACM
@@ -194,8 +224,14 @@ variable "route53_record_name" {
   default     = null
 }
 
+variable "route53_private_zone" {
+  description = "Enable to use a private Route53 zone"
+  type        = bool
+  default     = false
+}
+
 variable "create_route53_record" {
-  description = "Whether to create Route53 record for Atlantis"
+  description = "Whether to create Route53 A record for Atlantis"
   type        = bool
   default     = true
 }
@@ -205,6 +241,12 @@ variable "cloudwatch_log_retention_in_days" {
   description = "Retention period of Atlantis CloudWatch logs"
   type        = number
   default     = 7
+}
+
+variable "cloudwatch_logs_kms_key_id" {
+  description = "The ARN of the KMS Key to use when encrypting log data."
+  type        = string
+  default     = null
 }
 
 # SSM parameters for secrets
@@ -254,7 +296,7 @@ variable "permissions_boundary" {
 variable "policies_arn" {
   description = "A list of the ARN of the policies you want to apply"
   type        = list(string)
-  default     = ["arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+  default     = null
 }
 
 variable "trusted_principals" {
@@ -267,6 +309,18 @@ variable "trusted_entities" {
   description = "A list of  users or roles, that can assume the task role"
   type        = list(string)
   default     = []
+}
+
+variable "create_ecs_cluster" {
+  description = "Whether to create an ECS cluster or not"
+  type        = bool
+  default     = true
+}
+
+variable "ecs_cluster_id" {
+  description = "ID of an existing ECS cluster where resources will be created"
+  type        = string
+  default     = ""
 }
 
 variable "ecs_fargate_spot" {
@@ -296,13 +350,13 @@ variable "ecs_service_platform_version" {
 variable "ecs_service_deployment_maximum_percent" {
   description = "The upper limit (as a percentage of the service's desiredCount) of the number of running tasks that can be running in a service during a deployment"
   type        = number
-  default     = 200
+  default     = 100
 }
 
 variable "ecs_service_deployment_minimum_healthy_percent" {
   description = "The lower limit (as a percentage of the service's desiredCount) of the number of running tasks that must remain running and healthy in a service during a deployment"
   type        = number
-  default     = 50
+  default     = 0
 }
 
 variable "ecs_task_cpu" {
@@ -426,9 +480,13 @@ variable "volumes_from" {
 }
 
 variable "user" {
-  description = "The user to run as inside the container. Can be any of these formats: user, user:group, uid, uid:gid, user:gid, uid:group. The default (null) will use the container's configured `USER` directive or root if not set."
+  description = "The user to run as inside the container. Must be in the uid:gid or the default (null) will use the container's configured `USER` directive or root if not set."
   type        = string
   default     = null
+  validation {
+    condition     = can(regex("[0-9]+:[0-9]+", var.user)) || var.user == null
+    error_message = "User variable must be in the uid:gid format or null."
+  }
 }
 
 variable "ulimits" {
@@ -479,12 +537,6 @@ variable "atlantis_port" {
 variable "atlantis_repo_allowlist" {
   description = "List of allowed repositories Atlantis can be used with"
   type        = list(string)
-}
-
-variable "atlantis_allowed_repo_names" {
-  description = "Git repositories where webhook should be created"
-  type        = list(string)
-  default     = []
 }
 
 variable "allow_repo_config" {
@@ -618,4 +670,33 @@ variable "ecs_service_enable_execute_command" {
   description = "Enable ECS exec for the service. This can be used to allow interactive sessions and commands to be executed in the container"
   type        = bool
   default     = true
+}
+
+variable "enable_ephemeral_storage" {
+  description = "Enable to use Fargate Ephemeral Storage"
+  type        = bool
+  default     = false
+}
+
+variable "ephemeral_storage_size" {
+  description = "Size of Ephemeral Storage in GiB"
+  type        = number
+  default     = 21
+
+  validation {
+    condition     = var.ephemeral_storage_size >= 21 && var.ephemeral_storage_size <= 200
+    error_message = "The minimum supported value is 21 GiB and the maximum supported value is 200 GiB."
+  }
+}
+
+variable "alb_ip_address_type" {
+  description = "The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack"
+  type        = string
+  default     = "ipv4"
+}
+
+variable "create_route53_aaaa_record" {
+  description = "Whether to create Route53 AAAA record for Atlantis"
+  type        = bool
+  default     = false
 }

@@ -9,14 +9,15 @@ output "atlantis_url_events" {
   value       = local.atlantis_url_events
 }
 
-output "atlantis_allowed_repo_names" {
+output "atlantis_repo_allowlist" {
   description = "Git repositories where webhook should be created"
-  value       = var.atlantis_allowed_repo_names
+  value       = var.atlantis_repo_allowlist
 }
 
 output "webhook_secret" {
   description = "Webhook secret"
-  value       = element(concat(random_id.webhook.*.hex, [""]), 0)
+  value       = try(random_id.webhook[0].hex, "")
+  sensitive   = true
 }
 
 # ECS
@@ -47,17 +48,17 @@ output "ecs_task_definition" {
 
 output "ecs_security_group" {
   description = "Security group assigned to ECS Service in network configuration"
-  value       = module.atlantis_sg.this_security_group_id
+  value       = module.atlantis_sg.security_group_id
 }
 
 output "ecs_cluster_id" {
   description = "ECS cluster id"
-  value       = module.ecs.this_ecs_cluster_id
+  value       = local.ecs_cluster_id
 }
 
 output "ecs_cluster_arn" {
   description = "ECS cluster ARN"
-  value       = module.ecs.this_ecs_cluster_arn
+  value       = module.ecs.ecs_cluster_arn
 }
 
 # VPC
@@ -79,22 +80,22 @@ output "public_subnet_ids" {
 # ALB
 output "alb_dns_name" {
   description = "Dns name of alb"
-  value       = module.alb.this_lb_dns_name
+  value       = module.alb.lb_dns_name
 }
 
 output "alb_zone_id" {
   description = "Zone ID of alb"
-  value       = module.alb.this_lb_zone_id
+  value       = module.alb.lb_zone_id
 }
 
 output "alb_arn" {
   description = "ARN of alb"
-  value       = module.alb.this_lb_arn
+  value       = module.alb.lb_arn
 }
 
 output "alb_security_group_id" {
   description = "Security group of alb"
-  value       = module.alb_https_sg.this_security_group_id
+  value       = module.alb_https_sg.security_group_id
 }
 
 output "alb_http_listeners_id" {

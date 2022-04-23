@@ -1,2 +1,2 @@
 github_token = "mygithubtoken"
-github_organization = "myusername"
+github_owner = "myusername"
