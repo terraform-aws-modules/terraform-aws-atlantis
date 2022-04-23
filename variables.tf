@@ -108,6 +108,12 @@ variable "alb_ingress_cidr_blocks" {
   default     = ["0.0.0.0/0"]
 }
 
+variable "alb_ingress_ipv6_cidr_blocks" {
+  description = "List of IPv6 CIDR ranges to use on all ingress rules of the ALB."
+  type        = list(string)
+  default     = ["::/0"]
+}
+
 variable "alb_log_bucket_name" {
   description = "S3 bucket (externally created) for storing load balancer access logs. Required if alb_logging_enabled is true."
   type        = string
@@ -175,9 +181,15 @@ variable "allow_github_webhooks" {
 }
 
 variable "github_webhooks_cidr_blocks" {
-  description = "List of CIDR blocks used by GitHub webhooks" # This is hardcoded to avoid dependency on github provider. Source: https://api.github.com/meta
+  description = "List of IPv4 CIDR blocks used by GitHub webhooks" # This is hardcoded to avoid dependency on github provider. Source: https://api.github.com/meta
   type        = list(string)
   default     = ["140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22", "143.55.64.0/20"]
+}
+
+variable "github_webhooks_ipv6_cidr_blocks" {
+  description = "List of IPv6 CIDR blocks used by GitHub webhooks" # This is hardcoded to avoid dependency on github provider. Source: https://api.github.com/meta
+  type        = list(string)
+  default     = ["2a0a:a440::/29", "2606:50c0::/32"]
 }
 
 variable "whitelist_unauthenticated_cidr_blocks" {
