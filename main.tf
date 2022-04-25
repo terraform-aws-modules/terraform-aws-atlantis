@@ -329,7 +329,7 @@ module "alb_https_sg" {
 
   name        = "${var.name}-alb-https"
   vpc_id      = local.vpc_id
-  description = "Security group with HTTPS ports open for specific IPv4 and IPv6 CIDR block (or everybody), egress ports are all world open"
+  description = "Security group with HTTPS ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open"
 
   ingress_cidr_blocks = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.alb_ingress_cidr_blocks)))
   ingress_ipv6_cidr_blocks = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_ipv6_cidr_blocks : [], var.alb_ingress_ipv6_cidr_blocks)))
@@ -343,7 +343,7 @@ module "alb_http_sg" {
 
   name        = "${var.name}-alb-http"
   vpc_id      = local.vpc_id
-  description = "Security group with HTTP ports open for specific IPv4 and IPv6 CIDR block (or everybody), egress ports are all world open"
+  description = "Security group with HTTP ports open for specific IPv4 CIDR block (or everybody), egress ports are all world open"
 
   ingress_cidr_blocks = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.alb_ingress_cidr_blocks)))
   ingress_ipv6_cidr_blocks = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_ipv6_cidr_blocks : [], var.alb_ingress_ipv6_cidr_blocks)))
