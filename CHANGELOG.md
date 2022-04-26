@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.15.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.14.0...v3.15.0) (2022-04-26)
+
+
+### Features
+
+* Introduce IPv6 CIDR specific allow ALBs variables ([#275](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/275)) ([bc5ad7c](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/bc5ad7c88b631a9d00e1a88bfb9b45873cbce017))
+
 ## [3.14.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.13.1...v3.14.0) (2022-04-01)
 
 
