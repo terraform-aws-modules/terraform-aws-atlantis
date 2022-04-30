@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.15.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.14.0...v3.15.0) (2022-04-26)
+
+
+### Features
+
+* Introduce IPv6 CIDR specific allow ALBs variables ([#275](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/275)) ([bc5ad7c](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/bc5ad7c88b631a9d00e1a88bfb9b45873cbce017))
+
+## [3.14.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.13.1...v3.14.0) (2022-04-01)
+
+
+### Features
+
+* Add IPv6 support (ALB and Route53 AAAA record) ([#256](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/256)) ([6cefda0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/6cefda0c23ae3632a2198ca61b2fd7c4688c9c87))
+
+### [3.13.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.13.0...v3.13.1) (2022-04-01)
+
+
+### Bug Fixes
+
+* Only create mount point for EFS when using EFS ([#261](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/261)) ([b1b61f3](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/b1b61f33081b17953a809645b7ed0a09f8c154c0))
+
 ## [3.13.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.12.0...v3.13.0) (2022-03-12)
 
 
