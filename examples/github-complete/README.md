@@ -65,6 +65,7 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 | <a name="input_github_owner"></a> [github\_owner](#input\_github\_owner) | Github owner | `string` | n/a | yes |
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token | `string` | n/a | yes |
 | <a name="input_github_user"></a> [github\_user](#input\_github\_user) | Github user for Atlantis to utilize when performing Github activities | `string` | n/a | yes |
+| <a name="input_github_repo_names"></a> [github\_repo\_names](#input\_github\_repo\_names) | Github user for Atlantis to utilize when performing Github activities | `list(string)` | n/a | yes |
 
 ## Outputs
 

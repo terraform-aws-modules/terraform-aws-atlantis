@@ -22,3 +22,9 @@ variable "github_user" {
   description = "Github user for Atlantis to utilize when performing Github activities"
   type        = string
 }
+
+variable "github_repo_names" {
+  description = "List of Github repositories that should be monitored by Atlantis"
+  type        = list(string)
+}
+
