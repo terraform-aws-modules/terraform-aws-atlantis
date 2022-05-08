@@ -76,7 +76,7 @@ module "atlantis" {
   # Atlantis
   atlantis_github_user       = var.github_user
   atlantis_github_user_token = var.github_token
-  atlantis_repo_allowlist    = [for repo in var.github_repo_names : "github.com/${repo}/*"]
+  atlantis_repo_allowlist    = [for repo in var.github_repo_names : "github.com/${var.github_owner}/${repo}"]
 
   # ALB access
   alb_ingress_cidr_blocks         = var.alb_ingress_cidr_blocks
