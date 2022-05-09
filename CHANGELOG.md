@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.15.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.15.0...v3.15.1) (2022-05-09)
+
+
+### Bug Fixes
+
+* Fix the GitHub complete example ([#277](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/277)) ([47bd5d4](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/47bd5d476cba1bcf716923bfdb110ae81555783c))
+
 ## [3.15.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.14.0...v3.15.0) (2022-04-26)
 
 
