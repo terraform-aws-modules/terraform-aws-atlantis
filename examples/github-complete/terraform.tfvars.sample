@@ -3,3 +3,4 @@ alb_ingress_cidr_blocks = ["x.x.x.x/32"]
 github_owner = "myorg"
 github_user = "atlantis"
 github_token = "mygithubpersonalaccesstokenforatlantis"
+github_repo_names = ["mycoolrepo1", "mycoolrepo2"]

@@ -76,7 +76,7 @@ module "atlantis" {
   # Atlantis
   atlantis_github_user       = var.github_user
   atlantis_github_user_token = var.github_token
-  atlantis_repo_allowlist    = ["github.com/${var.github_owner}/*"]
+  atlantis_repo_allowlist    = [for repo in var.github_repo_names : "github.com/${var.github_owner}/${repo}"]
 
   # ALB access
   alb_ingress_cidr_blocks         = var.alb_ingress_cidr_blocks
@@ -103,7 +103,7 @@ module "github_repository_webhook" {
   github_owner = var.github_owner
   github_token = var.github_token
 
-  atlantis_repo_allowlist = module.atlantis.atlantis_repo_allowlist
+  atlantis_repo_allowlist = var.github_repo_names
 
   webhook_url    = module.atlantis.atlantis_url_events
   webhook_secret = module.atlantis.webhook_secret
