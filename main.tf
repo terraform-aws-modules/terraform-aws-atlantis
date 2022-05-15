@@ -712,7 +712,7 @@ resource "aws_ecs_task_definition" "atlantis" {
 
     content {
       operating_system_family = try(runtime_platform.value.operating_system_family, null)
-      cpu_architecture        = var.runtime_platform.cpu_architecture
+      cpu_architecture        = try(runtime_platform.value.cpu_architecture, null)
     }
   }
 
