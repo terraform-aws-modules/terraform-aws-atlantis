@@ -49,6 +49,11 @@ module "atlantis" {
   container_cpu                = 512
   container_memory             = 1024
 
+  runtime_platform = {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "ARM64"
+  }
+
   entrypoint        = ["docker-entrypoint.sh"]
   command           = ["server"]
   working_directory = "/tmp"
