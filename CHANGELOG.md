@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.16.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.15.1...v3.16.0) (2022-05-15)
+
+
+### Features
+
+* Add support for runtime_platform config block ([#279](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/279)) ([4b93dee](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/4b93deee7032072811e9d5f8192154a58c40fb82))
+
 ### [3.15.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.15.0...v3.15.1) (2022-05-09)
 
 
