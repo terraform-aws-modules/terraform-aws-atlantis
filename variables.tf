@@ -719,5 +719,5 @@ variable "runtime_platform" {
     operating_system_family = string
     cpu_architecture        = string
   })
-  default = null
+  default = {}
 }
