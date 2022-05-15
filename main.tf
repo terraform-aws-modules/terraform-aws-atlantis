@@ -707,6 +707,15 @@ resource "aws_ecs_task_definition" "atlantis" {
 
   container_definitions = local.container_definitions
 
+  dynamic "runtime_platform" {
+    for_each = var.runtime_platform != null ? [true] : []
+
+    content {
+      operating_system_family = var.runtime_platform.operating_system_family
+      cpu_architecture        = var.runtime_platform.cpu_architecture
+    }
+  }
+
   dynamic "ephemeral_storage" {
     for_each = var.enable_ephemeral_storage ? [1] : []
 
