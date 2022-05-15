@@ -708,7 +708,7 @@ resource "aws_ecs_task_definition" "atlantis" {
   container_definitions = local.container_definitions
 
   dynamic "runtime_platform" {
-    for_each = var.runtime_platform != null ? [true] : []
+    for_each = var.runtime_platform != null ? [var.runtime_platform] : []
 
     content {
       operating_system_family = var.runtime_platform.operating_system_family
