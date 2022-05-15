@@ -711,7 +711,7 @@ resource "aws_ecs_task_definition" "atlantis" {
     for_each = var.runtime_platform != null ? [var.runtime_platform] : []
 
     content {
-      operating_system_family = var.runtime_platform.operating_system_family
+      operating_system_family = try(runtime_platform.value.operating_system_family, null)
       cpu_architecture        = var.runtime_platform.cpu_architecture
     }
   }
