@@ -21,7 +21,7 @@ Note that this example may create resources which cost money. Run `terraform des
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.45 |
-| <a name="requirement_gitlab"></a> [gitlab](#requirement\_gitlab) | >= 3.0 |
+| <a name="requirement_bitbucket"></a> [bitbucket](#requirement\_bitbucket) | >= 2.17.0 |
 
 ## Providers
 
@@ -33,7 +33,7 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_gitlab_repository_webhook"></a> [gitlab\_repository\_webhook](#module\_gitlab\_repository\_webhook) | ../../modules/gitlab-repository-webhook | n/a |
+| <a name="module_bitbucket_repository_webhook"></a> [bitbucket\_repository\_webhook](#module\_bitbucket\_repository\_webhook) | ../../modules/bitbucket-repository-webhook | n/a |
 
 ## Resources
 
@@ -45,13 +45,13 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_gitlab_base_url"></a> [gitlab\_base\_url](#input\_gitlab\_base\_url) | Bitbucket base\_url | `string` | `""` | no |
-| <a name="input_gitlab_token"></a> [gitlab\_token](#input\_gitlab\_token) | Bitbucket token | `string` | n/a | yes |
+| <a name="input_bitbucket_owner"></a> [bitbucket\_owner](#input\_bitbucket\_owner) | Bitbucket owner(or org) | `string` | `""` | no |
+| <a name="input_bitbucket_password"></a> [bitbucket\_password](#input\_bitbucket\_password) | Bitbucket App Password used to authenticate | `string` | `""` | no |
+| <a name="input_bitbucket_username"></a> [bitbucket\_username](#input\_bitbucket\_username) | Bitbucket Username used to authneticate | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_gitlab_webhook_secret"></a> [gitlab\_webhook\_secret](#output\_gitlab\_webhook\_secret) | Bitbucket webhook secret |
-| <a name="output_gitlab_webhook_urls"></a> [gitlab\_webhook\_urls](#output\_gitlab\_webhook\_urls) | Bitbucket webhook URL |
+| <a name="output_bitbucket_webhook_urls"></a> [bitbucket\_webhook\_urls](#output\_bitbucket\_webhook\_urls) | Gitlab webhook URL |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->

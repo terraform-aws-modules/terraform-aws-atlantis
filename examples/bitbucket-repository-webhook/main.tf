@@ -11,7 +11,8 @@ module "bitbucket_repository_webhook" {
 
   create_bitbucket_repository_webhook = true
 
-  bitbucket_username = var.bitbucket_token
+  bitbucket_owner    = var.bitbucket_owner
+  bitbucket_username = var.bitbucket_username
   bitbucket_password = var.bitbucket_password
 
   # Fetching these attributes from created already Atlantis Terraform state file

@@ -8,3 +8,9 @@ variable "bitbucket_password" {
   type        = string
   default     = ""
 }
+
+variable "bitbucket_owner" {
+  description = "Bitbucket owner(or org)"
+  type        = string
+  default     = ""
+}
