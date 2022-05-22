@@ -8,7 +8,7 @@ resource "bitbucket_hook" "this" {
 
   owner       = var.bitbucket_owner
   repository  = var.atlantis_repo_allowlist[count.index]
-  url         = var.webhook_secret
+  url         = var.webhook_url
   description = "Atlantis Webhook for ${var.atlantis_repo_allowlist[count.index]}"
 
   events = [
