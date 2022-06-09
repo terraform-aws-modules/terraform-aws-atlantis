@@ -106,8 +106,9 @@ locals {
     var.tags,
   )
 
-  policies_arn     = var.policies_arn != null ? var.policies_arn : ["arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
-  policies_arn_map = { for idx, arn in local.policies_arn : idx => arn }
+  # combine the default AWS policy with the policies specified in policies_arn
+  default_policy   = var.attach_task_execution_policy ? { "aws-default-task-execution-policy" = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy" } : {}
+  policies_arn_map = var.policies_arn != null ? merge(local.default_policy, { for idx, arn in var.policies_arn : idx => arn }) : local.default_policy
 
   # Chunk these into groups of 5, the limit for IPs in an AWS lb listener
   whitelist_unauthenticated_cidr_block_chunks = chunklist(

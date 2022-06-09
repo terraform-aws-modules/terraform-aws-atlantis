@@ -311,6 +311,12 @@ variable "policies_arn" {
   default     = null
 }
 
+variable "attach_task_execution_policy" {
+  description = "Attaches the AmazonECSTaskExecutionRolePolicy to the role the Atlantis ECS container runs on"
+  type        = bool
+  default     = true
+}
+
 variable "trusted_principals" {
   description = "A list of principals, in addition to ecs-tasks.amazonaws.com, that can assume the task role"
   type        = list(string)
