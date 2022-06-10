@@ -326,6 +326,7 @@ allow_github_webhooks        = true
 | <a name="input_atlantis_repo_allowlist"></a> [atlantis\_repo\_allowlist](#input\_atlantis\_repo\_allowlist) | List of allowed repositories Atlantis can be used with | `list(string)` | n/a | yes |
 | <a name="input_atlantis_security_group_tags"></a> [atlantis\_security\_group\_tags](#input\_atlantis\_security\_group\_tags) | Additional tags to put on the atlantis security group | `map(string)` | `{}` | no |
 | <a name="input_atlantis_version"></a> [atlantis\_version](#input\_atlantis\_version) | Verion of Atlantis to run. If not specified latest will be used | `string` | `"latest"` | no |
+| <a name="input_attach_task_execution_policy"></a> [attach\_task\_execution\_policy](#input\_attach\_task\_execution\_policy) | Attaches the AmazonECSTaskExecutionRolePolicy to the role the Atlantis ECS container runs on | `bool` | `true` | no |
 | <a name="input_azs"></a> [azs](#input\_azs) | A list of availability zones in the region | `list(string)` | `[]` | no |
 | <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | `string` | `""` | no |
 | <a name="input_cidr"></a> [cidr](#input\_cidr) | The CIDR block for the VPC which will be created if `vpc_id` is not specified | `string` | `""` | no |
