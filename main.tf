@@ -471,7 +471,7 @@ resource "aws_efs_access_point" "this" {
   }
 
   root_directory {
-    path = "/"
+    path = "/home/atlantis"
     creation_info {
       owner_gid   = local.gid
       owner_uid   = local.uid
