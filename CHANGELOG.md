@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.17.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.16.0...v3.17.0) (2022-06-15)
+
+
+### Features
+
+* Ensure EFS is owned by the posix_user to avoid permission issues ([#287](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/287)) ([61cdf8f](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/61cdf8fd3dec550c47f3b817ea301927e2f18473))
+
 ## [3.16.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.15.1...v3.16.0) (2022-05-15)
 
 
