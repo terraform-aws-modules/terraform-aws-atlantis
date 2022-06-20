@@ -286,6 +286,24 @@ variable "atlantis_bitbucket_user_token_ssm_parameter_name" {
   default     = "/atlantis/bitbucket/user/token"
 }
 
+variable "atlantis_github_user_token_overwrite" {
+  description = "Overwrite an existing github_user_token parameter."
+  type        = bool
+  default     = false
+}
+
+variable "atlantis_gitlab_user_token_overwrite" {
+  description = "Overwrite an existing gitlab_user_token parameter."
+  type        = bool
+  default     = false
+}
+
+variable "atlantis_bitbucket_user_token_overwrite" {
+  description = "Overwrite an existing bitbucket_user_token parameter."
+  type        = bool
+  default     = false
+}
+
 variable "ssm_kms_key_arn" {
   description = "ARN of KMS key to use for encryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key"
   type        = string

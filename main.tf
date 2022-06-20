@@ -159,9 +159,10 @@ resource "aws_ssm_parameter" "webhook" {
 resource "aws_ssm_parameter" "atlantis_github_user_token" {
   count = var.atlantis_github_user_token != "" ? 1 : 0
 
-  name  = var.atlantis_github_user_token_ssm_parameter_name
-  type  = "SecureString"
-  value = var.atlantis_github_user_token
+  name      = var.atlantis_github_user_token_ssm_parameter_name
+  type      = "SecureString"
+  value     = var.atlantis_github_user_token
+  overwrite = var.atlantis_github_user_token_overwrite
 
   tags = local.tags
 }
@@ -169,9 +170,10 @@ resource "aws_ssm_parameter" "atlantis_github_user_token" {
 resource "aws_ssm_parameter" "atlantis_gitlab_user_token" {
   count = var.atlantis_gitlab_user_token != "" ? 1 : 0
 
-  name  = var.atlantis_gitlab_user_token_ssm_parameter_name
-  type  = "SecureString"
-  value = var.atlantis_gitlab_user_token
+  name      = var.atlantis_gitlab_user_token_ssm_parameter_name
+  type      = "SecureString"
+  value     = var.atlantis_gitlab_user_token
+  overwrite = var.atlantis_gitlab_user_token_overwrite
 
   tags = local.tags
 }
@@ -179,9 +181,10 @@ resource "aws_ssm_parameter" "atlantis_gitlab_user_token" {
 resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
   count = var.atlantis_bitbucket_user_token != "" ? 1 : 0
 
-  name  = var.atlantis_bitbucket_user_token_ssm_parameter_name
-  type  = "SecureString"
-  value = var.atlantis_bitbucket_user_token
+  name      = var.atlantis_bitbucket_user_token_ssm_parameter_name
+  type      = "SecureString"
+  value     = var.atlantis_bitbucket_user_token
+  overwrite = var.atlantis_bitbucket_user_token_overwrite
 
   tags = local.tags
 }
