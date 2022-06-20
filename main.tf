@@ -212,6 +212,9 @@ module "vpc" {
   default_security_group_egress  = var.default_security_group_egress
 
   tags = local.tags
+
+  private_subnet_tags = var.private_subnet_tags
+  public_subnet_tags  = var.public_subnet_tags
 }
 
 ################################################################################

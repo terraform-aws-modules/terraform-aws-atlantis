@@ -16,6 +16,18 @@ variable "tags" {
   default     = {}
 }
 
+variable "public_subnet_tags" {
+  description = "Additional tags for the public subnets"
+  type        = map(string)
+  default     = {}
+}
+
+variable "private_subnet_tags" {
+  description = "Additional tags for the private subnets"
+  type        = map(string)
+  default     = {}
+}
+
 variable "alb_https_security_group_tags" {
   description = "Additional tags to put on the https security group"
   type        = map(string)
