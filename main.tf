@@ -379,9 +379,10 @@ module "efs_sg" {
   version = "v4.8.0"
   count   = var.enable_ephemeral_storage ? 0 : 1
 
-  name        = "${var.name}-efs"
-  vpc_id      = local.vpc_id
-  description = "Security group allowing access to the EFS storage"
+  name            = "${var.name}-efs"
+  use_name_prefix = var.use_name_prefix
+  vpc_id          = local.vpc_id
+  description     = "Security group allowing access to the EFS storage"
 
   ingress_cidr_blocks = [var.cidr]
   ingress_with_source_security_group_id = [{
