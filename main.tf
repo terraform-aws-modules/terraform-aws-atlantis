@@ -389,7 +389,7 @@ module "efs_sg" {
     source_security_group_id = module.atlantis_sg.security_group_id
   }]
 
-  tags = local.tags
+  tags = merge(local.tags, var.atlantis_efs_security_group_tags)
 }
 
 ################################################################################

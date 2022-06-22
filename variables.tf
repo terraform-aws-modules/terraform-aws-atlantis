@@ -34,6 +34,12 @@ variable "atlantis_security_group_tags" {
   default     = {}
 }
 
+variable "atlantis_efs_security_group_tags" {
+  description = "Additional tags to put on the atlantis security group"
+  type        = map(string)
+  default     = {}
+}
+
 variable "atlantis_fqdn" {
   description = "FQDN of Atlantis to use. Set this only to override Route53 and ALB's DNS name."
   type        = string
