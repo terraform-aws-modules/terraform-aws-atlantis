@@ -701,6 +701,12 @@ variable "ephemeral_storage_size" {
   }
 }
 
+variable "efs_file_system_token" {
+  description = "Be able to import other EFS instance created by the other module"
+  type        = string
+  default     = ""
+}
+
 variable "alb_ip_address_type" {
   description = "The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack"
   type        = string
