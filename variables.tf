@@ -716,5 +716,5 @@ variable "create_route53_aaaa_record" {
 variable "runtime_platform" {
   description = "Configuration block for runtime_platform that containers in your task may use."
   type        = any
-  default     = {}
+  default     = null
 }
