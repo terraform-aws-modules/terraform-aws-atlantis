@@ -701,6 +701,12 @@ variable "ephemeral_storage_size" {
   }
 }
 
+variable "efs_file_system_encrypted" {
+  description = "If true, the disk will be encrypted."
+  type        = bool
+  default     = false
+}
+
 variable "alb_ip_address_type" {
   description = "The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack"
   type        = string
