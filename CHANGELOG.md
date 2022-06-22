@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.17.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.17.0...v3.17.1) (2022-06-22)
+
+
+### Bug Fixes
+
+* set correct default for runtime_platform variable to ensure idempotence ([#291](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/291)) ([96c8613](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/96c861355985b81226c0119afab46fc8eb44ec30))
+
 ## [3.17.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.16.0...v3.17.0) (2022-06-15)
 
 
