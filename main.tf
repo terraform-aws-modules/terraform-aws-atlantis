@@ -110,8 +110,14 @@ locals {
 
   # Chunk these into groups of 5, the limit for IPs in an AWS lb listener
   whitelist_unauthenticated_cidr_block_chunks = chunklist(
-    sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.whitelist_unauthenticated_cidr_blocks))),
+    sort(compact(var.whitelist_unauthenticated_cidr_blocks)),
     5
+  )
+
+  # Chunk these into groups of 4, since we have one value for the path (and the limit is 5 values per rule in an AWS lb listener)
+  github_webhooks_all_cidr_block_chucks = chunklist(
+    sort(compact(concat(var.github_webhooks_cidr_blocks, var.github_webhooks_ipv6_cidr_blocks))),
+    4
   )
 
   # break up user to uid and gid -- set both to 0 if null
@@ -282,7 +288,7 @@ module "alb" {
   tags = local.tags
 }
 
-# Forward action for certain CIDR blocks to bypass authentication (eg. GitHub webhooks)
+# Forward action for certain CIDR blocks to bypass authentication
 resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
   count = var.allow_unauthenticated_access ? length(local.whitelist_unauthenticated_cidr_block_chunks) : 0
 
@@ -301,16 +307,22 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
   }
 }
 
-# Forward action for certain URL paths to bypass authentication (eg. GitHub webhooks)
+# Forward action for GitHub webhooks to bypass authentication for certains URL paths
 resource "aws_lb_listener_rule" "unauthenticated_access_for_webhook" {
-  count = var.allow_unauthenticated_access && var.allow_github_webhooks ? 1 : 0
+  count = var.allow_github_webhooks ? length(local.github_webhooks_all_cidr_block_chucks) : 0
 
   listener_arn = module.alb.https_listener_arns[0]
-  priority     = var.allow_unauthenticated_webhook_access_priority
+  priority     = var.allow_unauthenticated_webhook_access_priority + count.index
 
   action {
     type             = "forward"
     target_group_arn = module.alb.target_group_arns[0]
+  }
+
+  condition {
+    source_ip {
+      values = local.github_webhooks_all_cidr_block_chucks[count.index]
+    }
   }
 
   condition {

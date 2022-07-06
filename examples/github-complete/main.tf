@@ -91,9 +91,8 @@ module "atlantis" {
   alb_listener_ssl_policy_default = "ELBSecurityPolicy-TLS-1-2-2017-01"
   alb_drop_invalid_header_fields  = true
 
-  allow_unauthenticated_access = true
-  allow_github_webhooks        = true
-  allow_repo_config            = true
+  allow_github_webhooks = true
+  allow_repo_config     = true
 
   tags = local.tags
 }

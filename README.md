@@ -206,7 +206,6 @@ alb_authenticate_cognito = {
 If you are using one of the authentication methods above along with managed GitHub (not self-hosted enterprise version), you'll need to allow unauthenticated access to GitHub's Webhook static IPs:
 
 ```hcl
-allow_unauthenticated_access = true
 allow_github_webhooks        = true
 ```
 
