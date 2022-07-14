@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.18.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.17.1...v3.18.0) (2022-07-14)
+
+
+### Features
+
+* Add `task_execution_session_duration` for task execution role ([#300](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/300)) ([16162ff](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/16162ff6b679f6d084aae81d016756c7165ff461))
+
 ### [3.17.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.17.0...v3.17.1) (2022-06-22)
 
 
