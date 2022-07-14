@@ -530,6 +530,7 @@ data "aws_iam_policy_document" "ecs_tasks" {
 resource "aws_iam_role" "ecs_task_execution" {
   name                 = "${var.name}-ecs_task_execution"
   assume_role_policy   = data.aws_iam_policy_document.ecs_tasks.json
+  max_session_duration = var.max_session_duration
   permissions_boundary = var.permissions_boundary
 
   tags = local.tags
