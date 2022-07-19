@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.18.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.17.1...v3.18.0) (2022-07-14)
+
+
+### Features
+
+* Add `task_execution_session_duration` for task execution role ([#300](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/300)) ([16162ff](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/16162ff6b679f6d084aae81d016756c7165ff461))
+
+### [3.17.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.17.0...v3.17.1) (2022-06-22)
+
+
+### Bug Fixes
+
+* set correct default for runtime_platform variable to ensure idempotence ([#291](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/291)) ([96c8613](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/96c861355985b81226c0119afab46fc8eb44ec30))
+
+## [3.17.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.16.0...v3.17.0) (2022-06-15)
+
+
+### Features
+
+* Ensure EFS is owned by the posix_user to avoid permission issues ([#287](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/287)) ([61cdf8f](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/61cdf8fd3dec550c47f3b817ea301927e2f18473))
+
 ## [3.16.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.15.1...v3.16.0) (2022-05-15)
 
 

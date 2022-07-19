@@ -471,6 +471,15 @@ resource "aws_efs_access_point" "this" {
     gid = local.gid
     uid = local.uid
   }
+
+  root_directory {
+    path = "/home/atlantis"
+    creation_info {
+      owner_gid   = local.gid
+      owner_uid   = local.uid
+      permissions = 0750
+    }
+  }
 }
 
 ################################################################################
@@ -523,6 +532,7 @@ data "aws_iam_policy_document" "ecs_tasks" {
 resource "aws_iam_role" "ecs_task_execution" {
   name                 = "${var.name}-ecs_task_execution"
   assume_role_policy   = data.aws_iam_policy_document.ecs_tasks.json
+  max_session_duration = var.max_session_duration
   permissions_boundary = var.permissions_boundary
 
   tags = local.tags
