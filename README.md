@@ -169,6 +169,8 @@ Read more in [this post](https://medium.com/swlh/aws-alb-authentication-with-okt
 
 ##### Google
 
+
+
 ```hcl
   alb_authenticate_oidc = {
     issuer                              = "https://accounts.google.com"
@@ -180,8 +182,8 @@ Read more in [this post](https://medium.com/swlh/aws-alb-authentication-with-okt
     client_secret                       = "google_client_secret"
   }
 ```
-
-Note: remember to set your google consent screen to internal to only allow users from your own domain.
+* See the [iap_client resource](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iap_client) in the Google provider if you want to create this configuration in Terraform.
+* Remember to set your google consent screen to internal to only allow users from your own domain.
 
 #### AWS Cognito with SAML
 
