@@ -9,7 +9,6 @@ locals {
   tags = {
     Owner       = "claird"
     Environment = "dev"
-    Project     = "xrp"
   }
 }
 
