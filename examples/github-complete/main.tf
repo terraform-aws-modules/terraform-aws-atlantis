@@ -4,10 +4,10 @@ provider "aws" {
 
 locals {
   name   = "github-complete"
-  region = "eu-west-1"
+  region = "us-east-1"
 
   tags = {
-    Owner       = "user"
+    Owner       = "claird"
     Environment = "dev"
   }
 }
