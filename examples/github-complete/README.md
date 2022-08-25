@@ -81,6 +81,7 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 | <a name="input_github_app_key"></a> [github\_app\_key](#input\_github\_app\_key) | The PEM encoded private key for the GitHub App | `string` | n/a | yes |
 | <a name="input_github_owner"></a> [github\_owner](#input\_github\_owner) | Github owner | `string` | n/a | yes |
 | <a name="input_github_repo_names"></a> [github\_repo\_names](#input\_github\_repo\_names) | List of Github repositories that should be monitored by Atlantis | `list(string)` | n/a | yes |
+| <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token | `string` | n/a | yes |
 | <a name="input_github_user"></a> [github\_user](#input\_github\_user) | Github user for Atlantis to utilize when performing Github activities | `string` | n/a | yes |
 | <a name="input_github_webhook_secret"></a> [github\_webhook\_secret](#input\_github\_webhook\_secret) | Webhook secret | `string` | n/a | yes |
 

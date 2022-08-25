@@ -147,6 +147,7 @@ module "github_repository_webhook" {
   source = "../../modules/github-repository-webhook"
 
   github_owner = var.github_owner
+  github_token = var.github_token
 
 
   atlantis_repo_allowlist = var.github_repo_names

@@ -8,6 +8,11 @@ variable "alb_ingress_cidr_blocks" {
   type        = list(string)
 }
 
+variable "github_token" {
+  description = "Github token"
+  type        = string
+}
+
 variable "github_owner" {
   description = "Github owner"
   type        = string
