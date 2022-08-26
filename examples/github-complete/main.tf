@@ -140,23 +140,6 @@ module "atlantis" {
 }
 
 ################################################################################
-# GitHub Webhooks
-################################################################################
-
-module "github_repository_webhook" {
-  source = "../../modules/github-repository-webhook"
-
-  github_owner = var.github_owner
-  github_token = var.github_token
-
-
-  atlantis_repo_allowlist = var.github_repo_names
-
-  webhook_url    = module.atlantis.atlantis_url_events
-  webhook_secret = module.atlantis.webhook_secret
-}
-
-################################################################################
 # ALB Access Log Bucket + Policy
 ################################################################################
 module "atlantis_access_log_bucket" {
