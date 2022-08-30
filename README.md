@@ -10,7 +10,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 - SSL certificate using Amazon Certificate Manager (ACM)
 - Application Load Balancer (ALB)
 - Domain name using AWS Route53 which points to ALB
-- [AWS Elastic Cloud Service (ECS)](https://aws.amazon.com/ecs/) and [AWS Fargate](https://aws.amazon.com/fargate/) running Atlantis Docker image
+- [AWS Elastic Container Service (ECS)](https://aws.amazon.com/ecs/) and [AWS Fargate](https://aws.amazon.com/fargate/) running Atlantis Docker image
 - AWS Parameter Store to keep secrets and access them in ECS task natively
 
 [AWS Fargate](https://aws.amazon.com/fargate/) with optional support for [Fargate Spot](https://aws.amazon.com/blogs/aws/aws-fargate-spot-now-generally-available/) is used to reduce the bill, and it is also a cool AWS service.
