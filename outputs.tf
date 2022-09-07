@@ -120,5 +120,5 @@ output "alb_https_listeners_arn" {
 
 output "vpc_nat_public_ips" {
   description = "List of public Elastic IPs created for AWS NAT Gateway"
-  value       = module.vpc.vpc_nat_public_ips
+  value       = module.vpc.nat_public_ips
 }
