@@ -117,3 +117,8 @@ output "alb_https_listeners_arn" {
   description = "ARN of alb https listeners"
   value       = module.alb.https_listener_arns
 }
+
+output "vpc_nat_public_ips" {
+  description = "List of public Elastic IPs created for AWS NAT Gateway"
+  value       = module.vpc.vpc_nat_public_ips
+}
