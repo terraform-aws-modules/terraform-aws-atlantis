@@ -430,6 +430,7 @@ allow_github_webhooks        = true
 | <a name="output_task_role_name"></a> [task\_role\_name](#output\_task\_role\_name) | The Atlantis ECS task role name |
 | <a name="output_task_role_unique_id"></a> [task\_role\_unique\_id](#output\_task\_role\_unique\_id) | The stable and unique string identifying the Atlantis ECS task role. |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | ID of the VPC that was created or passed in |
+| <a name="output_vpc_nat_public_ips"></a> [vpc\_nat\_public\_ips](#output\_vpc\_nat\_public\_ips) | List of public Elastic IPs created for AWS NAT Gateway |
 | <a name="output_webhook_secret"></a> [webhook\_secret](#output\_webhook\_secret) | Webhook secret |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
