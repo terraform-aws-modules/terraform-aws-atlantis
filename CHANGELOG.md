@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.19.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.18.0...v3.19.0) (2022-09-07)
+
+
+### Features
+
+* Add output with public IP for whitelisting ([#309](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/309)) ([eb50e48](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/eb50e48854339969f480432d987ce4e1b3b69bee))
+
 ## [3.18.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.17.1...v3.18.0) (2022-07-14)
 
 

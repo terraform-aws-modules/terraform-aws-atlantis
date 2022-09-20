@@ -10,7 +10,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 - SSL certificate using Amazon Certificate Manager (ACM)
 - Application Load Balancer (ALB)
 - Domain name using AWS Route53 which points to ALB
-- [AWS Elastic Cloud Service (ECS)](https://aws.amazon.com/ecs/) and [AWS Fargate](https://aws.amazon.com/fargate/) running Atlantis Docker image
+- [AWS Elastic Container Service (ECS)](https://aws.amazon.com/ecs/) and [AWS Fargate](https://aws.amazon.com/fargate/) running Atlantis Docker image
 - AWS Parameter Store to keep secrets and access them in ECS task natively
 
 [AWS Fargate](https://aws.amazon.com/fargate/) with optional support for [Fargate Spot](https://aws.amazon.com/blogs/aws/aws-fargate-spot-now-generally-available/) is used to reduce the bill, and it is also a cool AWS service.
@@ -169,6 +169,8 @@ Read more in [this post](https://medium.com/swlh/aws-alb-authentication-with-okt
 
 ##### Google
 
+
+
 ```hcl
   alb_authenticate_oidc = {
     issuer                              = "https://accounts.google.com"
@@ -180,8 +182,8 @@ Read more in [this post](https://medium.com/swlh/aws-alb-authentication-with-okt
     client_secret                       = "google_client_secret"
   }
 ```
-
-Note: remember to set your google consent screen to internal to only allow users from your own domain.
+* See the [iap_client resource](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/iap_client) in the Google provider if you want to create this configuration in Terraform.
+* Remember to set your google consent screen to internal to only allow users from your own domain.
 
 #### AWS Cognito with SAML
 
@@ -429,6 +431,7 @@ allow_github_webhooks        = true
 | <a name="output_task_role_name"></a> [task\_role\_name](#output\_task\_role\_name) | The Atlantis ECS task role name |
 | <a name="output_task_role_unique_id"></a> [task\_role\_unique\_id](#output\_task\_role\_unique\_id) | The stable and unique string identifying the Atlantis ECS task role. |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | ID of the VPC that was created or passed in |
+| <a name="output_vpc_nat_public_ips"></a> [vpc\_nat\_public\_ips](#output\_vpc\_nat\_public\_ips) | List of public Elastic IPs created for AWS NAT Gateway |
 | <a name="output_webhook_secret"></a> [webhook\_secret](#output\_webhook\_secret) | Webhook secret |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
