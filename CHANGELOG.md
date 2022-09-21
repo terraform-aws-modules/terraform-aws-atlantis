@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.20.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.19.0...v3.20.0) (2022-09-21)
+
+
+### Features
+
+* Add arguments in EFS file system ([#294](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/294)) ([089eb6c](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/089eb6c1e8dfeef45f4e9891714d86cb0783ac6b))
+
 ## [3.19.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.18.0...v3.19.0) (2022-09-07)
 
 
