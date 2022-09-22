@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.21.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.20.0...v3.21.0) (2022-09-22)
+
+
+### Features
+
+* Enable encrypt function on EFS ([#296](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/296)) ([792a685](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/792a685d8feea43e38d081d316c0b1915d656001))
+
 ## [3.20.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.19.0...v3.20.0) (2022-09-21)
 
 
