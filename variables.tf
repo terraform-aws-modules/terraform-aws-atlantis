@@ -736,3 +736,9 @@ variable "max_session_duration" {
   type        = number
   default     = null
 }
+
+variable "iam_assume_role_arn" {
+  description = "Role the ecs task role can assume"
+  type        = string
+  default     = ""
+}
