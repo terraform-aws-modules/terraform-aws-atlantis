@@ -10,7 +10,7 @@ This repository contains Terraform infrastructure code which creates AWS resourc
 - SSL certificate using Amazon Certificate Manager (ACM)
 - Application Load Balancer (ALB)
 - Domain name using AWS Route53 which points to ALB
-- [AWS Elastic Cloud Service (ECS)](https://aws.amazon.com/ecs/) and [AWS Fargate](https://aws.amazon.com/fargate/) running Atlantis Docker image
+- [AWS Elastic Container Service (ECS)](https://aws.amazon.com/ecs/) and [AWS Fargate](https://aws.amazon.com/fargate/) running Atlantis Docker image
 - AWS Parameter Store to keep secrets and access them in ECS task natively
 
 [AWS Fargate](https://aws.amazon.com/fargate/) with optional support for [Fargate Spot](https://aws.amazon.com/blogs/aws/aws-fargate-spot-now-generally-available/) is used to reduce the bill, and it is also a cool AWS service.
@@ -358,6 +358,8 @@ allow_github_webhooks        = true
 | <a name="input_ecs_service_platform_version"></a> [ecs\_service\_platform\_version](#input\_ecs\_service\_platform\_version) | The platform version on which to run your service | `string` | `"LATEST"` | no |
 | <a name="input_ecs_task_cpu"></a> [ecs\_task\_cpu](#input\_ecs\_task\_cpu) | The number of cpu units used by the task | `number` | `256` | no |
 | <a name="input_ecs_task_memory"></a> [ecs\_task\_memory](#input\_ecs\_task\_memory) | The amount (in MiB) of memory used by the task | `number` | `512` | no |
+| <a name="input_efs_file_system_encrypted"></a> [efs\_file\_system\_encrypted](#input\_efs\_file\_system\_encrypted) | If true, the disk will be encrypted. | `bool` | `false` | no |
+| <a name="input_efs_file_system_token"></a> [efs\_file\_system\_token](#input\_efs\_file\_system\_token) | Be able to import other EFS instance created by the other module | `string` | `""` | no |
 | <a name="input_enable_ecs_managed_tags"></a> [enable\_ecs\_managed\_tags](#input\_enable\_ecs\_managed\_tags) | Specifies whether to enable Amazon ECS managed tags for the tasks within the service | `bool` | `false` | no |
 | <a name="input_enable_ephemeral_storage"></a> [enable\_ephemeral\_storage](#input\_enable\_ephemeral\_storage) | Enable to use Fargate Ephemeral Storage | `bool` | `false` | no |
 | <a name="input_entrypoint"></a> [entrypoint](#input\_entrypoint) | The entry point that is passed to the container | `list(string)` | `null` | no |
@@ -429,6 +431,7 @@ allow_github_webhooks        = true
 | <a name="output_task_role_name"></a> [task\_role\_name](#output\_task\_role\_name) | The Atlantis ECS task role name |
 | <a name="output_task_role_unique_id"></a> [task\_role\_unique\_id](#output\_task\_role\_unique\_id) | The stable and unique string identifying the Atlantis ECS task role. |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | ID of the VPC that was created or passed in |
+| <a name="output_vpc_nat_public_ips"></a> [vpc\_nat\_public\_ips](#output\_vpc\_nat\_public\_ips) | List of public Elastic IPs created for AWS NAT Gateway |
 | <a name="output_webhook_secret"></a> [webhook\_secret](#output\_webhook\_secret) | Webhook secret |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 

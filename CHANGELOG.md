@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.21.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.20.0...v3.21.0) (2022-09-22)
+
+
+### Features
+
+* Enable encrypt function on EFS ([#296](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/296)) ([792a685](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/792a685d8feea43e38d081d316c0b1915d656001))
+
+## [3.20.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.19.0...v3.20.0) (2022-09-21)
+
+
+### Features
+
+* Add arguments in EFS file system ([#294](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/294)) ([089eb6c](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/089eb6c1e8dfeef45f4e9891714d86cb0783ac6b))
+
+## [3.19.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.18.0...v3.19.0) (2022-09-07)
+
+
+### Features
+
+* Add output with public IP for whitelisting ([#309](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/309)) ([eb50e48](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/eb50e48854339969f480432d987ce4e1b3b69bee))
+
 ## [3.18.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.17.1...v3.18.0) (2022-07-14)
 
 
