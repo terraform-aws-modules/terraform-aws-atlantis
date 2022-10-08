@@ -446,7 +446,9 @@ resource "aws_route53_record" "atlantis_aaaa" {
 resource "aws_efs_file_system" "this" {
   count = var.enable_ephemeral_storage ? 0 : 1
 
-  creation_token = var.name
+  creation_token = coalesce(var.efs_file_system_token, var.name)
+
+  encrypted = var.efs_file_system_encrypted
 }
 
 resource "aws_efs_mount_target" "this" {
