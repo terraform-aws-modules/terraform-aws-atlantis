@@ -77,6 +77,8 @@ module "atlantis" {
 
   # Trusted roles
   trusted_principals = ["ssm.amazonaws.com"]
+
+  # IAM role options
   permissions_boundary = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/cloud/developer-boundary-policy"
   path = "/delegatedadmin/developer/"
 
