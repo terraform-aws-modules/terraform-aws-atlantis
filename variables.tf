@@ -305,6 +305,12 @@ variable "permissions_boundary" {
   default     = null
 }
 
+variable "path" {
+  description = "If provided, all IAM roles will be created with this path."
+  type        = string
+  default     = "/"
+}
+
 variable "policies_arn" {
   description = "A list of the ARN of the policies you want to apply"
   type        = list(string)
