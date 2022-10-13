@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.22.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.21.0...v3.22.0) (2022-10-13)
+
+
+### Features
+
+* Add path option to IAM roles created under this module ([#311](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/311)) ([fe833a0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/fe833a0420e517ba2b63390c2063a49b6859ee62))
+
 ## [3.21.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.20.0...v3.21.0) (2022-09-22)
 
 
