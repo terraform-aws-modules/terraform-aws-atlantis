@@ -37,7 +37,7 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.69 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 4.11.0 |
 
 ## Modules
 
