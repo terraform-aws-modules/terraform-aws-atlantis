@@ -454,7 +454,7 @@ resource "aws_efs_file_system" "this" {
 resource "aws_efs_mount_target" "this" {
   # we coalescelist in order to specify the resource keys when we create the subnets using the VPC or they're specified for us.  This works around the for_each value depends on attributes which can't be determined until apply error
   for_each = {
-    for k, v in zipmap(coalescelist(var.private_subnets, var.private_subnet_ids), local.private_subnet_ids) : k => v
+    for k, v in zipmap(coalescelist(var.private_subnets, var.private_subnet_ids, [""]), local.private_subnet_ids) : k => v
     if var.enable_ephemeral_storage == false
   }
 
@@ -534,6 +534,7 @@ resource "aws_iam_role" "ecs_task_execution" {
   assume_role_policy   = data.aws_iam_policy_document.ecs_tasks.json
   max_session_duration = var.max_session_duration
   permissions_boundary = var.permissions_boundary
+  path                 = var.path
 
   tags = local.tags
 }
