@@ -80,7 +80,7 @@ module "atlantis" {
 
   # IAM role options
   permissions_boundary = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/cloud/developer-boundary-policy"
-  path = "/delegatedadmin/developer/"
+  path                 = "/delegatedadmin/developer/"
 
   # Atlantis
   atlantis_github_user       = var.github_user
