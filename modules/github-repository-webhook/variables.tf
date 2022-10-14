@@ -48,5 +48,9 @@ variable "webhook_insecure_ssl" {
 variable "webhook_content_type" {
   description = "Webhook Content Type"
   type        = string
-  default     = "application/json"
+  default     = "json"
+  validation {
+    condition     = contains(["json", "form"], var.webhook_content_type)
+    error_message = "Valid values are either `json` or `form`"
+  }
 }
