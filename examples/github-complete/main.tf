@@ -116,6 +116,9 @@ module "github_repository_webhook" {
 
   webhook_url    = module.atlantis.atlantis_url_events
   webhook_secret = module.atlantis.webhook_secret
+
+  webhook_content_type = "json"
+  webhook_insecure_ssl = true
 }
 
 ################################################################################
