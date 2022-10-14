@@ -38,3 +38,15 @@ variable "webhook_secret" {
   type        = string
   default     = ""
 }
+
+variable "webhook_insecure_ssl" {
+  description = "Disable verify SSL certificates when delivering payloads"
+  type        = bool
+  default     = false
+}
+
+variable "webhook_content_type" {
+  description = "Webhook Content Type"
+  type        = string
+  default     = "application/json"
+}

@@ -11,8 +11,8 @@ resource "github_repository_webhook" "this" {
 
   configuration {
     url          = var.webhook_url
-    content_type = "application/json"
-    insecure_ssl = false
+    content_type = var.webhook_content_type
+    insecure_ssl = var.webhook_insecure_ssl
     secret       = var.webhook_secret
   }
 
