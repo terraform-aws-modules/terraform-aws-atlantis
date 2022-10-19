@@ -413,10 +413,193 @@ variable "custom_container_definitions" {
   default     = ""
 }
 
+# Derived from https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_ContainerDefinition.html
 variable "extra_container_definitions" {
-  description = "A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition"
-  type        = list(any)
-  default     = []
+  description = "A list of valid container definitions objects. These will be provided as supplimentary to the main Atlantis container definition"
+  type = list(
+    object({
+      command = optional(list(string))
+      cpu     = optional(number)
+      dependsOn = optional(
+        list(
+          object({
+            condition     = string
+            containerName = string
+          })
+        )
+      )
+      disableNetworking     = optional(bool)
+      dnsSearchDomains      = optional(list(string))
+      dnsServers            = optional(list(string))
+      dockerLabels          = optional(map(string))
+      dockerSecurityOptions = optional(list(string))
+      entryPoint            = optional(list(string))
+      environment = optional(
+        list(
+          object({
+            name  = optional(string)
+            value = optional(string)
+          })
+        )
+      )
+      environmentFiles = optional(
+        list(
+          object({
+            type  = string
+            value = string
+          })
+        )
+      )
+      essential = optional(bool)
+      extraHosts = optional(
+        list(
+          object({
+            hostname  = string
+            ipAddress = string
+          })
+        )
+      )
+      firelensConfiguration = optional(
+        object({
+          options = map(string)
+          type    = string
+        })
+      )
+      healthCheck = optional(
+        object({
+          command     = list(string)
+          interval    = optional(number)
+          retries     = optional(number)
+          startPeriod = optional(number)
+          timeout     = optional(number)
+        })
+      )
+      hostname    = optional(string)
+      image       = optional(string)
+      interactive = optional(bool)
+      links       = optional(list(string))
+      linuxParameters = optional(
+        object({
+          capabilities = optional(
+            object(
+              {
+                add  = optional(list(string))
+                drop = optional(list(string))
+          }))
+          devices = optional(
+            list(
+              object({
+                containerPath = optional(string)
+                hostPath      = string
+                permissions   = optional(list(string))
+              })
+            )
+          )
+          initProcessEnabled = optional(bool)
+          maxSwap            = optional(number)
+          sharedMemorySize   = optional(number)
+          swappiness         = optional(number)
+          tmpfs = optional(
+            list(
+              object({
+                containerPath = string
+                mountOptions  = optional(list(string))
+                size          = number
+              })
+            )
+          )
+        })
+      )
+      logConfiguration = optional(
+        object({
+          logDriver = string
+          options   = optional(map(string))
+          secretOptions = optional(
+            list(
+              object({
+                name      = string
+                valueFrom = string
+              })
+            )
+          )
+        })
+      )
+      memory            = optional(number)
+      memoryReservation = optional(number)
+      mountPoints = optional(
+        list(
+          object({
+            containerPath = optional(string)
+            readOnly      = optional(bool)
+            sourceVolume  = optional(string)
+          })
+        )
+      )
+      name = optional(string)
+      portMappings = optional(
+        list(
+          object({
+            containerPort = optional(number)
+            hostPort      = optional(number)
+            protocol      = optional(string)
+          })
+        )
+      )
+      privileged             = optional(bool)
+      readonlyRootFilesystem = optional(bool)
+      repositoryCredentials = optional(
+        object({
+          credentialsParameter = string
+        })
+      )
+      resourceRequirements = optional(
+        list(
+          object({
+            type  = string
+            value = string
+          })
+        )
+      )
+      secrets = optional(
+        list(
+          object({
+            name      = string
+            valueFrom = string
+          })
+        )
+      )
+      startTimeout = optional(number)
+      stopTimeout  = optional(number)
+      systemControls = optional(
+        list(
+          object({
+            namespace = optional(string)
+            valueFrom = optional(string)
+          })
+        )
+      )
+      ulimits = optional(
+        list(
+          object({
+            hardLimit = number
+            name      = string
+            softLimit = number
+          })
+        )
+      )
+      user = optional(string)
+      volumesFrom = optional(
+        list(
+          object({
+            readOnly        = optional(bool)
+            sourceContainer = optional(string)
+          })
+        )
+      )
+      workingDirectory = optional(string)
+    })
+  )
+  default = []
 }
 
 variable "entrypoint" {

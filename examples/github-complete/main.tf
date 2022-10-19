@@ -99,6 +99,29 @@ module "atlantis" {
   allow_github_webhooks        = true
   allow_repo_config            = true
 
+  # Extra container definitions
+  extra_container_definitions = [
+    {
+      name      = "log-router"
+      image     = "amazon/aws-for-fluent-bit:latest"
+      essential = true
+
+      firelens_configuration = {
+        type = "fluentbit"
+
+        logConfiguration = {
+          logDriver = "awslogs",
+          options = {
+            awslogs-group         = "firelens-container",
+            awslogs-region        = local.region,
+            awslogs-create-group  = true,
+            awslogs-stream-prefix = "firelens"
+          }
+        }
+      }
+    }
+  ]
+
   tags = local.tags
 }
 
