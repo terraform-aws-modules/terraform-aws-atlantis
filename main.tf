@@ -1,6 +1,7 @@
 locals {
   # VPC - existing or new?
   vpc_id             = var.vpc_id == "" ? module.vpc.vpc_id : var.vpc_id
+  cidr               = var.cidr == "" ? data.aws_vpc.this.cidr : var.cidr
   private_subnet_ids = coalescelist(module.vpc.private_subnets, var.private_subnet_ids, [""])
   public_subnet_ids  = coalescelist(module.vpc.public_subnets, var.public_subnet_ids, [""])
 
@@ -135,6 +136,10 @@ data "aws_route53_zone" "this" {
 
   name         = var.route53_zone_name
   private_zone = var.route53_private_zone
+}
+
+data "aws_vpc" "this" {
+  id = local.vpc_id
 }
 
 ################################################################################
@@ -383,7 +388,8 @@ module "efs_sg" {
   vpc_id      = local.vpc_id
   description = "Security group allowing access to the EFS storage"
 
-  ingress_cidr_blocks = [var.cidr]
+  ingress_cidr_blocks = [local.cidr]
+
   ingress_with_source_security_group_id = [{
     rule                     = "nfs-tcp",
     source_security_group_id = module.atlantis_sg.security_group_id
