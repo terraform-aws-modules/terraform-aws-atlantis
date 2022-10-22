@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.22.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.22.0...v3.22.1) (2022-10-22)
+
+
+### Bug Fixes
+
+* Cannot specify more than one extra_container_definitions ([#314](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/314)) ([7c1ad25](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/7c1ad25b53fb47db1c70086d2154a9532d320cd4))
+
 ## [3.22.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.21.0...v3.22.0) (2022-10-13)
 
 
