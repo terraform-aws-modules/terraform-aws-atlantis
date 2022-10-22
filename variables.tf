@@ -415,7 +415,7 @@ variable "custom_container_definitions" {
 
 variable "extra_container_definitions" {
   description = "A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition"
-  type        = list(any)
+  type        = any
   default     = []
 }
 
