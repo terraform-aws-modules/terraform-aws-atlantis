@@ -1,9 +1,9 @@
 locals {
   # VPC - existing or new?
-  vpc_id             = var.vpc_id == "" ? module.vpc.vpc_id : var.vpc_id
-  cidr               = var.cidr == "" ? data.aws_vpc.this.cidr : var.cidr
-  private_subnet_ids = coalescelist(module.vpc.private_subnets, var.private_subnet_ids, [""])
-  public_subnet_ids  = coalescelist(module.vpc.public_subnets, var.public_subnet_ids, [""])
+  vpc_id              = var.vpc_id == "" ? module.vpc.vpc_id : var.vpc_id
+  efs_sg_ingress_cidr = [ var.cidr == "" ? data.aws_vpc.this.cidr : var.cidr ]
+  private_subnet_ids  = coalescelist(module.vpc.private_subnets, var.private_subnet_ids, [""])
+  public_subnet_ids   = coalescelist(module.vpc.public_subnets, var.public_subnet_ids, [""])
 
   # Atlantis
   atlantis_image = var.atlantis_image == "" ? "ghcr.io/runatlantis/atlantis:${var.atlantis_version}" : var.atlantis_image
@@ -388,7 +388,7 @@ module "efs_sg" {
   vpc_id      = local.vpc_id
   description = "Security group allowing access to the EFS storage"
 
-  ingress_cidr_blocks = [local.cidr]
+  ingress_cidr_blocks = local.efs_sg_ingress_cidr
 
   ingress_with_source_security_group_id = [{
     rule                     = "nfs-tcp",
