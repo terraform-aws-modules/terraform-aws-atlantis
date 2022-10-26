@@ -4,31 +4,22 @@ Configuration in this directory creates the necessary infrastructure and resourc
 
 An existing Route53 hosted zone and domain is required to deploy this example.
 
-The GitHub App can be generated using multiple methods:
-
-- You can follow Atlantis instructions depicted [here](https://www.runatlantis.io/docs/access-credentials.html#github-app). The Atlantis method mostly automates the GitHub App generation using [GitHub App Manifest](https://docs.github.com/en/developers/apps/building-github-apps/creating-a-github-app-from-a-manifest), but you need an exposed endpoint to complete the process.
-- The other method is to manually create the GitHub App as instructed [here](https://docs.github.com/en/developers/apps/building-github-apps/creating-a-github-app).
-
-Once you have your GitHub App registered you will be able to access/manage the required parameters:
-
-- `atlantis_github_app_id` to identify the GitHub app.
-- `atlantis_github_app_key` to interact with GitHub.
-- `atlantis_github_webhook_secret` to receive and validate incoming webhook invocations from GitHub.
-
-## GitHub Personal Access Token (PAT) is no longer recommended
-
-While still supported, the use of GitHub Personal Access Token (PAT) is no longer the recommended method in favor of GitHub App.
-
-[GitHub Apps](https://docs.github.com/en/developers/apps/getting-started-with-apps/about-apps) provide more control over repository access/permissions and does not require the use of bot accounts.
-
 ## Usage
 
-To run this code you need to copy `terraform.tfvars.sample` into `terraform.tfvars` and update the values locally or specify them using environment variables (`TF_VAR_github_app_id=xxx`, `TF_VAR_github_owner=xxx`, etc.). Once ready, execute:
+To run this code you need to copy `terraform.tfvars.sample` into `terraform.tfvars` and update the values locally or specify them using environment variables (`TF_VAR_github_app_id=xxx`, `TF_VAR_github_owner=xxx`, etc.). Ensure that bootstrap_GitHub_app is `true`.  Once ready, execute:
 
 ```bash
 $ terraform init
 $ terraform plan
 $ terraform apply
+```
+
+Terraform will output a URL to setup a new Github App via Atlantis, which should look something like https://$ATLANTIS_HOST/github-app/setup. Open that URL and go through the setup process. Before closing the window, click the link to install the new GitHub App on you repositories and copy the values `github_app_id`, `github_app_key`, and `github_webhook_secret` into `terraform.tfvars`. You should also set `bootstrap_github_app` to `false` . Now execute:
+
+```bash
+$ terraform plan
+$ terraform apply
+
 ```
 
 Note - if you receive the following error when running apply:
@@ -75,18 +66,19 @@ Go to https://eu-west-1.console.aws.amazon.com/ecs/home?region=eu-west-1#/settin
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_alb_ingress_cidr_blocks"></a> [alb\_ingress\_cidr\_blocks](#input\_alb\_ingress\_cidr\_blocks) | List of IPv4 CIDR ranges to use on all ingress rules of the ALB - use your personal IP in the form of `x.x.x.x/32` for restricted testing | `list(string)` | n/a | yes |
+| <a name="input_bootstrap_github_app"></a> [bootstrap\_github\_app](#input\_bootstrap\_github\_app) | Flag to configure Atlantis to bootstrap a new Github App | `bool` | n/a | yes |
 | <a name="input_domain"></a> [domain](#input\_domain) | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance | `string` | n/a | yes |
 | <a name="input_github_app_id"></a> [github\_app\_id](#input\_github\_app\_id) | GitHub App ID that is running the Atlantis command | `string` | n/a | yes |
 | <a name="input_github_app_key"></a> [github\_app\_key](#input\_github\_app\_key) | The PEM encoded private key for the GitHub App | `string` | n/a | yes |
 | <a name="input_github_owner"></a> [github\_owner](#input\_github\_owner) | Github owner | `string` | n/a | yes |
 | <a name="input_github_repo_names"></a> [github\_repo\_names](#input\_github\_repo\_names) | List of Github repositories that should be monitored by Atlantis | `list(string)` | n/a | yes |
-| <a name="input_github_user"></a> [github\_user](#input\_github\_user) | Github user for Atlantis to utilize when performing Github activities | `string` | n/a | yes |
 | <a name="input_github_webhook_secret"></a> [github\_webhook\_secret](#input\_github\_webhook\_secret) | Webhook secret | `string` | n/a | yes |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
+| <a name="output_atlantis_github_app_setup_url"></a> [atlantis\_github\_app\_setup\_url](#output\_atlantis\_github\_app\_setup\_url) | URL to create a new Github App with Atlantis |
 | <a name="output_atlantis_repo_allowlist"></a> [atlantis\_repo\_allowlist](#output\_atlantis\_repo\_allowlist) | Git repositories where webhook should be created |
 | <a name="output_atlantis_url"></a> [atlantis\_url](#output\_atlantis\_url) | URL of Atlantis |
 | <a name="output_ecs_task_definition"></a> [ecs\_task\_definition](#output\_ecs\_task\_definition) | Task definition for ECS service (used for external triggers) |

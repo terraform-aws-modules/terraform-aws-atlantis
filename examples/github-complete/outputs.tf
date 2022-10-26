@@ -4,6 +4,11 @@ output "atlantis_url" {
   value       = module.atlantis.atlantis_url
 }
 
+output "atlantis_github_app_setup_url" {
+  description = "URL to create a new Github App with Atlantis"
+  value       = "${module.atlantis.atlantis_url}/github-app/setup"
+}
+
 output "atlantis_repo_allowlist" {
   description = "Git repositories where webhook should be created"
   value       = module.atlantis.atlantis_repo_allowlist
