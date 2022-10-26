@@ -74,8 +74,8 @@ module "atlantis" {
   certificate_arn = "arn:aws:acm:eu-west-1:135367859851:certificate/70e008e1-c0e1-4c7e-9670-7bb5bd4f5a84"
 
   # Atlantis
-  atlantis_github_user       = "atlantis-bot"
-  atlantis_github_user_token = "examplegithubtoken"
+  atlantis_github_app_id     = "1234567"
+  atlantis_github_app_key    = "-----BEGIN RSA PRIVATE KEY-----(...)"
   atlantis_repo_allowlist    = ["github.com/terraform-aws-modules/*"]
 }
 ```
@@ -128,6 +128,39 @@ If `vpc_id` is specified it will take precedence over `cidr` and existing VPC wi
 Make sure that both private and public subnets were created in the same set of availability zones (ALB will be created in public subnets, ECS Fargate service in private subnets).
 
 If all provided subnets are public (no NAT gateway) then `ecs_service_assign_public_ip` should be set to `true`.
+
+### Using GitHub App
+An Atlantis GitHub App can be generated using multiple methods:
+
+- You can follow Atlantis instructions depicted [here](https://www.runatlantis.io/docs/access-credentials.html#github-app). The Atlantis method mostly automates the GitHub App generation using [GitHub App Manifest](https://docs.github.com/en/developers/apps/building-github-apps/creating-a-github-app-from-a-manifest), but you need an exposed endpoint to complete the process.
+- The other method is to manually create the GitHub App as instructed [here](https://docs.github.com/en/developers/apps/building-github-apps/creating-a-github-app).
+1. You create a GitHub App and give it a name - that name must be unique across the world (you can change it later).
+2. Provide a valid Homepage URL (this can be the atlantis server url, for instance https://atlantis.mydomain.com)
+3. Provide a valid Webhook URL. The Atlantis webhook server path is located by default at https://atlantis.mydomain.com/events
+4. Generate a Webhook Secret - this is used for Atlantis to trust the deliveries. This is your github_webhook_secret.
+5. Generate a Private Key - this is your github_app_key
+6. On the App's settings page (at the top) you find the App ID. This is your github_app_id
+7. On the Permissions & Events you need to setup all the permissions and events according to Atlantis documentation
+
+Now you need to install the App on your organization.
+
+A self-provisioned GitHub App usually has two parts: the App and the Installation.
+
+The App part is the first step and its where you setup all the requirements, such as authentication, webhook, permissions, etc...
+The Installation part is where you add the created App to an organization/personal-account. It is on the installation page where you setup which repositories the application can access and receive events from.
+
+Once you have your GitHub App registered you will be able to access/manage the required parameters:
+
+- `atlantis_github_app_id` to identify the GitHub app.
+- `atlantis_github_app_key` to interact with GitHub.
+- `atlantis_github_webhook_secret` to receive and validate incoming webhook invocations from GitHub.
+
+#### GitHub Personal Access Token (PAT) is no longer recommended
+
+While still supported, the use of GitHub Personal Access Token (PAT) is no longer the recommended method in favor of GitHub App.
+
+[GitHub Apps](https://docs.github.com/en/developers/apps/getting-started-with-apps/about-apps) provide more control over repository access/permissions and does not require the use of bot accounts.
+
 
 ### Secure Atlantis with ALB Built-in Authentication
 

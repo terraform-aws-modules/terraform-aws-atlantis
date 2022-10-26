@@ -13,11 +13,6 @@ variable "github_owner" {
   type        = string
 }
 
-variable "github_user" {
-  description = "Github user for Atlantis to utilize when performing Github activities"
-  type        = string
-}
-
 variable "github_repo_names" {
   description = "List of Github repositories that should be monitored by Atlantis"
   type        = list(string)
@@ -36,4 +31,9 @@ variable "github_app_key" {
 variable "github_webhook_secret" {
   description = "Webhook secret"
   type        = string
+}
+
+variable "bootstrap_github_app" {
+  description = "Flag to configure Atlantis to bootstrap a new Github App"
+  type        = bool
 }
