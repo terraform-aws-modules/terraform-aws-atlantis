@@ -6,7 +6,7 @@ An existing Route53 hosted zone and domain is required to deploy this example.
 
 ## Usage
 
-To run this code you need to copy `terraform.tfvars.sample` into `terraform.tfvars` and update the values locally or specify them using environment variables (`TF_VAR_github_app_id=xxx`, `TF_VAR_github_owner=xxx`, etc.). Ensure that bootstrap_GitHub_app is `true`.  Once ready, execute:
+To run this code you need to copy `terraform.tfvars.sample` into `terraform.tfvars` and update the values locally or specify them using environment variables (`TF_VAR_github_app_id=xxx`, `TF_VAR_github_owner=xxx`, etc.). Ensure that `bootstrap_github_app` is `true`.  Once ready, execute:
 
 ```bash
 $ terraform init
