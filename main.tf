@@ -8,7 +8,7 @@ locals {
   atlantis_image = var.atlantis_image == "" ? "ghcr.io/runatlantis/atlantis:${var.atlantis_version}" : var.atlantis_image
   atlantis_url = "https://${coalesce(
     var.atlantis_fqdn,
-    element(concat(aws_route53_record.atlantis.*.fqdn, [""]), 0),
+    element(concat(aws_route53_record.atlantis[*].fqdn, [""]), 0),
     module.alb.lb_dns_name,
     "_"
   )}"
@@ -159,7 +159,7 @@ resource "aws_ssm_parameter" "webhook" {
 
   name  = var.webhook_ssm_parameter_name
   type  = "SecureString"
-  value = coalesce(var.atlantis_github_webhook_secret, join("", random_id.webhook.*.hex))
+  value = coalesce(var.atlantis_github_webhook_secret, join("", random_id.webhook[*].hex))
 
   tags = local.tags
 }
@@ -420,7 +420,7 @@ module "acm" {
 
   domain_name = var.acm_certificate_domain_name == "" ? join(".", [var.name, var.route53_zone_name]) : var.acm_certificate_domain_name
 
-  zone_id = var.certificate_arn == "" ? element(concat(data.aws_route53_zone.this.*.id, [""]), 0) : ""
+  zone_id = var.certificate_arn == "" ? element(concat(data.aws_route53_zone.this[*].id, [""]), 0) : ""
 
   tags = local.tags
 }
@@ -569,11 +569,11 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
     effect = "Allow"
 
     resources = flatten([
-      aws_ssm_parameter.webhook.*.arn,
-      aws_ssm_parameter.atlantis_github_user_token.*.arn,
-      aws_ssm_parameter.atlantis_gitlab_user_token.*.arn,
-      aws_ssm_parameter.atlantis_bitbucket_user_token.*.arn,
-      aws_ssm_parameter.atlantis_github_app_key.*.arn
+      aws_ssm_parameter.webhook[*].arn,
+      aws_ssm_parameter.atlantis_github_user_token[*].arn,
+      aws_ssm_parameter.atlantis_gitlab_user_token[*].arn,
+      aws_ssm_parameter.atlantis_bitbucket_user_token[*].arn,
+      aws_ssm_parameter.atlantis_github_app_key[*].arn
     ])
 
     actions = [
@@ -606,8 +606,8 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
   policy = element(
     compact(
       concat(
-        data.aws_iam_policy_document.ecs_task_access_secrets_with_kms.*.json,
-        data.aws_iam_policy_document.ecs_task_access_secrets.*.json,
+        data.aws_iam_policy_document.ecs_task_access_secrets_with_kms[*].json,
+        data.aws_iam_policy_document.ecs_task_access_secrets[*].json,
       ),
     ),
     0,
