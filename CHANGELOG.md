@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.23.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.22.1...v3.23.0) (2022-10-31)
+
+
+### Features
+
+* Added support for GitHub app ([#276](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/276)) ([27def83](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/27def8345252cbd17904f3a31188ed4f12aa7a88))
+
 ### [3.22.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.22.0...v3.22.1) (2022-10-22)
 
 
