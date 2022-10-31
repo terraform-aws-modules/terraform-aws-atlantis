@@ -8,21 +8,21 @@ locals {
   atlantis_image = var.atlantis_image == "" ? "ghcr.io/runatlantis/atlantis:${var.atlantis_version}" : var.atlantis_image
   atlantis_url = "https://${coalesce(
     var.atlantis_fqdn,
-    element(concat(aws_route53_record.atlantis.*.fqdn, [""]), 0),
+    element(concat(aws_route53_record.atlantis[*].fqdn, [""]), 0),
     module.alb.lb_dns_name,
     "_"
   )}"
   atlantis_url_events = "${local.atlantis_url}/events"
 
-  # Include only one group of secrets - for github, gitlab or bitbucket
-  has_secrets = var.atlantis_gitlab_user_token != "" || var.atlantis_github_user_token != "" || var.atlantis_bitbucket_user_token != ""
+  # Include only one group of secrets - for github, github app,  gitlab or bitbucket
+  has_secrets = try(coalesce(var.atlantis_gitlab_user_token, var.atlantis_github_user_token, var.atlantis_github_app_key, var.atlantis_bitbucket_user_token) != "", false)
 
-  # token
-  secret_name_key        = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_TOKEN" : var.atlantis_github_user_token != "" ? "ATLANTIS_GH_TOKEN" : "ATLANTIS_BITBUCKET_TOKEN" : ""
-  secret_name_value_from = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? var.atlantis_gitlab_user_token_ssm_parameter_name : var.atlantis_github_user_token != "" ? var.atlantis_github_user_token_ssm_parameter_name : var.atlantis_bitbucket_user_token_ssm_parameter_name : ""
+  # token/key
+  secret_name_key        = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_TOKEN" : var.atlantis_github_user_token != "" ? "ATLANTIS_GH_TOKEN" : var.atlantis_github_app_key != "" ? "ATLANTIS_GH_APP_KEY" : "ATLANTIS_BITBUCKET_TOKEN" : ""
+  secret_name_value_from = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? var.atlantis_gitlab_user_token_ssm_parameter_name : var.atlantis_github_user_token != "" ? var.atlantis_github_user_token_ssm_parameter_name : var.atlantis_github_app_key != "" ? var.atlantis_github_app_key_ssm_parameter_name : var.atlantis_bitbucket_user_token_ssm_parameter_name : ""
 
   # webhook
-  secret_webhook_key = local.has_secrets || var.atlantis_github_webhook_secret != "" ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : var.atlantis_github_user_token != "" || var.atlantis_github_webhook_secret != "" ? "ATLANTIS_GH_WEBHOOK_SECRET" : "ATLANTIS_BITBUCKET_WEBHOOK_SECRET" : ""
+  secret_webhook_key = local.has_secrets || var.atlantis_github_webhook_secret != "" ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_WEBHOOK_SECRET" : var.atlantis_github_user_token != "" || var.atlantis_github_webhook_secret != "" ? "ATLANTIS_GH_WEBHOOK_SECRET" : var.atlantis_github_app_key != "" || var.atlantis_github_webhook_secret != "" ? "ATLANTIS_GH_WEBHOOK_SECRET" : "ATLANTIS_BITBUCKET_WEBHOOK_SECRET" : ""
 
   # determine if the alb has authentication enabled, otherwise forward the traffic unauthenticated
   alb_authentication_method = length(keys(var.alb_authenticate_oidc)) > 0 ? "authenticate-oidc" : length(keys(var.alb_authenticate_cognito)) > 0 ? "authenticate-cognito" : "forward"
@@ -78,6 +78,14 @@ locals {
       name  = "ATLANTIS_HIDE_PREV_PLAN_COMMENTS"
       value = var.atlantis_hide_prev_plan_comments
     },
+    {
+      name  = "ATLANTIS_GH_APP_ID"
+      value = var.atlantis_github_app_id
+    },
+    {
+      name  = "ATLANTIS_WRITE_GIT_CREDS"
+      value = var.atlantis_write_git_creds
+    }
   ]
 
   # ECS task definition
@@ -151,7 +159,7 @@ resource "aws_ssm_parameter" "webhook" {
 
   name  = var.webhook_ssm_parameter_name
   type  = "SecureString"
-  value = coalesce(var.atlantis_github_webhook_secret, join("", random_id.webhook.*.hex))
+  value = coalesce(var.atlantis_github_webhook_secret, join("", random_id.webhook[*].hex))
 
   tags = local.tags
 }
@@ -182,6 +190,16 @@ resource "aws_ssm_parameter" "atlantis_bitbucket_user_token" {
   name  = var.atlantis_bitbucket_user_token_ssm_parameter_name
   type  = "SecureString"
   value = var.atlantis_bitbucket_user_token
+
+  tags = local.tags
+}
+
+resource "aws_ssm_parameter" "atlantis_github_app_key" {
+  count = var.atlantis_github_app_key != "" ? 1 : 0
+
+  name  = var.atlantis_github_app_key_ssm_parameter_name
+  type  = "SecureString"
+  value = var.atlantis_github_app_key
 
   tags = local.tags
 }
@@ -347,8 +365,7 @@ module "alb_http_sg" {
 
   ingress_cidr_blocks      = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_cidr_blocks : [], var.alb_ingress_cidr_blocks)))
   ingress_ipv6_cidr_blocks = sort(compact(concat(var.allow_github_webhooks ? var.github_webhooks_ipv6_cidr_blocks : [], var.alb_ingress_ipv6_cidr_blocks)))
-
-  tags = merge(local.tags, var.alb_http_security_group_tags)
+  tags                     = merge(local.tags, var.alb_http_security_group_tags)
 }
 
 module "atlantis_sg" {
@@ -403,7 +420,7 @@ module "acm" {
 
   domain_name = var.acm_certificate_domain_name == "" ? join(".", [var.name, var.route53_zone_name]) : var.acm_certificate_domain_name
 
-  zone_id = var.certificate_arn == "" ? element(concat(data.aws_route53_zone.this.*.id, [""]), 0) : ""
+  zone_id = var.certificate_arn == "" ? element(concat(data.aws_route53_zone.this[*].id, [""]), 0) : ""
 
   tags = local.tags
 }
@@ -552,10 +569,11 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
     effect = "Allow"
 
     resources = flatten([
-      aws_ssm_parameter.webhook.*.arn,
-      aws_ssm_parameter.atlantis_github_user_token.*.arn,
-      aws_ssm_parameter.atlantis_gitlab_user_token.*.arn,
-      aws_ssm_parameter.atlantis_bitbucket_user_token.*.arn
+      aws_ssm_parameter.webhook[*].arn,
+      aws_ssm_parameter.atlantis_github_user_token[*].arn,
+      aws_ssm_parameter.atlantis_gitlab_user_token[*].arn,
+      aws_ssm_parameter.atlantis_bitbucket_user_token[*].arn,
+      aws_ssm_parameter.atlantis_github_app_key[*].arn
     ])
 
     actions = [
@@ -579,7 +597,7 @@ data "aws_iam_policy_document" "ecs_task_access_secrets_with_kms" {
 }
 
 resource "aws_iam_role_policy" "ecs_task_access_secrets" {
-  count = var.atlantis_github_user_token != "" || var.atlantis_gitlab_user_token != "" || var.atlantis_bitbucket_user_token != "" ? 1 : 0
+  count = local.has_secrets ? 1 : 0
 
   name = "ECSTaskAccessSecretsPolicy"
 
@@ -588,8 +606,8 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
   policy = element(
     compact(
       concat(
-        data.aws_iam_policy_document.ecs_task_access_secrets_with_kms.*.json,
-        data.aws_iam_policy_document.ecs_task_access_secrets.*.json,
+        data.aws_iam_policy_document.ecs_task_access_secrets_with_kms[*].json,
+        data.aws_iam_policy_document.ecs_task_access_secrets[*].json,
       ),
     ),
     0,

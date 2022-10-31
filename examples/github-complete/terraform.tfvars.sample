@@ -1,6 +1,10 @@
 domain = "mydomain.com"
 alb_ingress_cidr_blocks = ["x.x.x.x/32"]
 github_owner = "myorg"
-github_user = "atlantis"
-github_token = "mygithubpersonalaccesstokenforatlantis"
 github_repo_names = ["mycoolrepo1", "mycoolrepo2"]
+bootstrap_github_app = true
+github_app_id = "mygithubappid"
+github_app_key          = <<-EOL
+-----BEGIN RSA PRIVATE KEY-----(...)
+EOL
+github_webhook_secret = "mywebhooksecretforatlantis"
