@@ -286,6 +286,12 @@ variable "atlantis_bitbucket_user_token_ssm_parameter_name" {
   default     = "/atlantis/bitbucket/user/token"
 }
 
+variable "atlantis_github_app_key_ssm_parameter_name" {
+  description = "Name of SSM parameter to keep atlantis_github_app_key"
+  type        = string
+  default     = "/atlantis/github/app/key"
+}
+
 variable "ssm_kms_key_arn" {
   description = "ARN of KMS key to use for encryption and decryption of SSM Parameters. Required only if your key uses a custom KMS key and not the default key"
   type        = string
@@ -415,7 +421,7 @@ variable "custom_container_definitions" {
 
 variable "extra_container_definitions" {
   description = "A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition"
-  type        = list(any)
+  type        = any
   default     = []
 }
 
@@ -575,9 +581,27 @@ variable "atlantis_hide_prev_plan_comments" {
   default     = "false"
 }
 
+variable "atlantis_write_git_creds" {
+  description = "Write out a .git-credentials file with the provider user and token to allow cloning private modules over HTTPS or SSH"
+  type        = string
+  default     = "true"
+}
+
 # Github
 variable "atlantis_github_user" {
   description = "GitHub username that is running the Atlantis command"
+  type        = string
+  default     = ""
+}
+
+variable "atlantis_github_app_id" {
+  description = "GitHub App ID that is running the Atlantis command"
+  type        = string
+  default     = ""
+}
+
+variable "atlantis_github_app_key" {
+  description = "GitHub App private key that is running the Atlantis command"
   type        = string
   default     = ""
 }

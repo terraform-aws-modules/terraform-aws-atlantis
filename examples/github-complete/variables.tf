@@ -8,18 +8,8 @@ variable "alb_ingress_cidr_blocks" {
   type        = list(string)
 }
 
-variable "github_token" {
-  description = "Github token"
-  type        = string
-}
-
 variable "github_owner" {
   description = "Github owner"
-  type        = string
-}
-
-variable "github_user" {
-  description = "Github user for Atlantis to utilize when performing Github activities"
   type        = string
 }
 
@@ -28,3 +18,22 @@ variable "github_repo_names" {
   type        = list(string)
 }
 
+variable "github_app_id" {
+  type        = string
+  description = "GitHub App ID that is running the Atlantis command"
+}
+
+variable "github_app_key" {
+  description = "The PEM encoded private key for the GitHub App"
+  type        = string
+}
+
+variable "github_webhook_secret" {
+  description = "Webhook secret"
+  type        = string
+}
+
+variable "bootstrap_github_app" {
+  description = "Flag to configure Atlantis to bootstrap a new Github App"
+  type        = bool
+}

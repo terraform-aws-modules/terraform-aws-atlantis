@@ -74,8 +74,8 @@ module "atlantis" {
   certificate_arn = "arn:aws:acm:eu-west-1:135367859851:certificate/70e008e1-c0e1-4c7e-9670-7bb5bd4f5a84"
 
   # Atlantis
-  atlantis_github_user       = "atlantis-bot"
-  atlantis_github_user_token = "examplegithubtoken"
+  atlantis_github_app_id     = "1234567"
+  atlantis_github_app_key    = "-----BEGIN RSA PRIVATE KEY-----(...)"
   atlantis_repo_allowlist    = ["github.com/terraform-aws-modules/*"]
 }
 ```
@@ -128,6 +128,39 @@ If `vpc_id` is specified it will take precedence over `cidr` and existing VPC wi
 Make sure that both private and public subnets were created in the same set of availability zones (ALB will be created in public subnets, ECS Fargate service in private subnets).
 
 If all provided subnets are public (no NAT gateway) then `ecs_service_assign_public_ip` should be set to `true`.
+
+### Using GitHub App
+An Atlantis GitHub App can be generated using multiple methods:
+
+- You can follow Atlantis instructions depicted [here](https://www.runatlantis.io/docs/access-credentials.html#github-app). The Atlantis method mostly automates the GitHub App generation using [GitHub App Manifest](https://docs.github.com/en/developers/apps/building-github-apps/creating-a-github-app-from-a-manifest), but you need an exposed endpoint to complete the process.
+- The other method is to manually create the GitHub App as instructed [here](https://docs.github.com/en/developers/apps/building-github-apps/creating-a-github-app).
+1. You create a GitHub App and give it a name - that name must be unique across the world (you can change it later).
+2. Provide a valid Homepage URL (this can be the atlantis server url, for instance https://atlantis.mydomain.com)
+3. Provide a valid Webhook URL. The Atlantis webhook server path is located by default at https://atlantis.mydomain.com/events
+4. Generate a Webhook Secret - this is used for Atlantis to trust the deliveries. This is your github_webhook_secret.
+5. Generate a Private Key - this is your github_app_key
+6. On the App's settings page (at the top) you find the App ID. This is your github_app_id
+7. On the Permissions & Events you need to setup all the permissions and events according to Atlantis documentation
+
+Now you need to install the App on your organization.
+
+A self-provisioned GitHub App usually has two parts: the App and the Installation.
+
+The App part is the first step and its where you setup all the requirements, such as authentication, webhook, permissions, etc...
+The Installation part is where you add the created App to an organization/personal-account. It is on the installation page where you setup which repositories the application can access and receive events from.
+
+Once you have your GitHub App registered you will be able to access/manage the required parameters:
+
+- `atlantis_github_app_id` to identify the GitHub app.
+- `atlantis_github_app_key` to interact with GitHub.
+- `atlantis_github_webhook_secret` to receive and validate incoming webhook invocations from GitHub.
+
+#### GitHub Personal Access Token (PAT) is no longer recommended
+
+While still supported, the use of GitHub Personal Access Token (PAT) is no longer the recommended method in favor of GitHub App.
+
+[GitHub Apps](https://docs.github.com/en/developers/apps/getting-started-with-apps/about-apps) provide more control over repository access/permissions and does not require the use of bot accounts.
+
 
 ### Secure Atlantis with ALB Built-in Authentication
 
@@ -273,6 +306,7 @@ allow_github_webhooks        = true
 | [aws_route53_record.atlantis](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_route53_record.atlantis_aaaa](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_ssm_parameter.atlantis_bitbucket_user_token](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
+| [aws_ssm_parameter.atlantis_github_app_key](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.atlantis_github_user_token](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.atlantis_gitlab_user_token](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
 | [aws_ssm_parameter.webhook](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_parameter) | resource |
@@ -313,6 +347,9 @@ allow_github_webhooks        = true
 | <a name="input_atlantis_bitbucket_user_token"></a> [atlantis\_bitbucket\_user\_token](#input\_atlantis\_bitbucket\_user\_token) | Bitbucket token of the user that is running the Atlantis command | `string` | `""` | no |
 | <a name="input_atlantis_bitbucket_user_token_ssm_parameter_name"></a> [atlantis\_bitbucket\_user\_token\_ssm\_parameter\_name](#input\_atlantis\_bitbucket\_user\_token\_ssm\_parameter\_name) | Name of SSM parameter to keep atlantis\_bitbucket\_user\_token | `string` | `"/atlantis/bitbucket/user/token"` | no |
 | <a name="input_atlantis_fqdn"></a> [atlantis\_fqdn](#input\_atlantis\_fqdn) | FQDN of Atlantis to use. Set this only to override Route53 and ALB's DNS name. | `string` | `null` | no |
+| <a name="input_atlantis_github_app_id"></a> [atlantis\_github\_app\_id](#input\_atlantis\_github\_app\_id) | GitHub App ID that is running the Atlantis command | `string` | `""` | no |
+| <a name="input_atlantis_github_app_key"></a> [atlantis\_github\_app\_key](#input\_atlantis\_github\_app\_key) | GitHub App private key that is running the Atlantis command | `string` | `""` | no |
+| <a name="input_atlantis_github_app_key_ssm_parameter_name"></a> [atlantis\_github\_app\_key\_ssm\_parameter\_name](#input\_atlantis\_github\_app\_key\_ssm\_parameter\_name) | Name of SSM parameter to keep atlantis\_github\_app\_key | `string` | `"/atlantis/github/app/key"` | no |
 | <a name="input_atlantis_github_user"></a> [atlantis\_github\_user](#input\_atlantis\_github\_user) | GitHub username that is running the Atlantis command | `string` | `""` | no |
 | <a name="input_atlantis_github_user_token"></a> [atlantis\_github\_user\_token](#input\_atlantis\_github\_user\_token) | GitHub token of the user that is running the Atlantis command | `string` | `""` | no |
 | <a name="input_atlantis_github_user_token_ssm_parameter_name"></a> [atlantis\_github\_user\_token\_ssm\_parameter\_name](#input\_atlantis\_github\_user\_token\_ssm\_parameter\_name) | Name of SSM parameter to keep atlantis\_github\_user\_token | `string` | `"/atlantis/github/user/token"` | no |
@@ -328,6 +365,7 @@ allow_github_webhooks        = true
 | <a name="input_atlantis_repo_allowlist"></a> [atlantis\_repo\_allowlist](#input\_atlantis\_repo\_allowlist) | List of allowed repositories Atlantis can be used with | `list(string)` | n/a | yes |
 | <a name="input_atlantis_security_group_tags"></a> [atlantis\_security\_group\_tags](#input\_atlantis\_security\_group\_tags) | Additional tags to put on the atlantis security group | `map(string)` | `{}` | no |
 | <a name="input_atlantis_version"></a> [atlantis\_version](#input\_atlantis\_version) | Verion of Atlantis to run. If not specified latest will be used | `string` | `"latest"` | no |
+| <a name="input_atlantis_write_git_creds"></a> [atlantis\_write\_git\_creds](#input\_atlantis\_write\_git\_creds) | Write out a .git-credentials file with the provider user and token to allow cloning private modules over HTTPS or SSH | `string` | `"true"` | no |
 | <a name="input_azs"></a> [azs](#input\_azs) | A list of availability zones in the region | `list(string)` | `[]` | no |
 | <a name="input_certificate_arn"></a> [certificate\_arn](#input\_certificate\_arn) | ARN of certificate issued by AWS ACM. If empty, a new ACM certificate will be created and validated using Route53 DNS | `string` | `""` | no |
 | <a name="input_cidr"></a> [cidr](#input\_cidr) | The CIDR block for the VPC which will be created if `vpc_id` is not specified | `string` | `""` | no |
@@ -367,7 +405,7 @@ allow_github_webhooks        = true
 | <a name="input_ephemeral_storage_size"></a> [ephemeral\_storage\_size](#input\_ephemeral\_storage\_size) | Size of Ephemeral Storage in GiB | `number` | `21` | no |
 | <a name="input_essential"></a> [essential](#input\_essential) | Determines whether all other containers in a task are stopped, if this container fails or stops for any reason. Due to how Terraform type casts booleans in json it is required to double quote this value | `bool` | `true` | no |
 | <a name="input_external_task_definition_updates"></a> [external\_task\_definition\_updates](#input\_external\_task\_definition\_updates) | Enable to allow the task definition to be updated outside of this Terraform module. This should be enabled when using a deployment tool such as ecs-deploy which updates the task definition and will then keep the ECS service using the latest version of the task definition. | `bool` | `false` | no |
-| <a name="input_extra_container_definitions"></a> [extra\_container\_definitions](#input\_extra\_container\_definitions) | A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition | `list(any)` | `[]` | no |
+| <a name="input_extra_container_definitions"></a> [extra\_container\_definitions](#input\_extra\_container\_definitions) | A list of valid container definitions provided as a single valid JSON document. These will be provided as supplimentary to the main Atlantis container definition | `any` | `[]` | no |
 | <a name="input_extra_load_balancers"></a> [extra\_load\_balancers](#input\_extra\_load\_balancers) | A list of maps for additional ECS task load balancers | `list(map(string))` | `[]` | no |
 | <a name="input_firelens_configuration"></a> [firelens\_configuration](#input\_firelens\_configuration) | The FireLens configuration for the container. This is used to specify and configure a log router for container logs. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_FirelensConfiguration.html | <pre>object({<br>    type    = string<br>    options = map(string)<br>  })</pre> | `null` | no |
 | <a name="input_github_webhooks_cidr_blocks"></a> [github\_webhooks\_cidr\_blocks](#input\_github\_webhooks\_cidr\_blocks) | List of IPv4 CIDR blocks used by GitHub webhooks | `list(string)` | <pre>[<br>  "140.82.112.0/20",<br>  "185.199.108.0/22",<br>  "192.30.252.0/22",<br>  "143.55.64.0/20"<br>]</pre> | no |
