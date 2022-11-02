@@ -184,6 +184,8 @@ alb_authenticate_oidc = {
 }
 ```
 
+Read more in [this post](https://medium.com/@sandrinodm/securing-your-applications-with-aws-alb-built-in-authentication-and-auth0-310ad84c8595).
+
 ##### Okta
 
 ```hcl
@@ -198,7 +200,7 @@ alb_authenticate_oidc = {
 }
 ```
 
-Read more in [this post](https://medium.com/swlh/aws-alb-authentication-with-okta-oidc-using-terraform-902cd8289db4)
+Read more in [this post](https://medium.com/swlh/aws-alb-authentication-with-okta-oidc-using-terraform-902cd8289db4).
 
 ##### Google
 

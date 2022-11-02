@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.23.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.23.0...v3.23.1) (2022-11-01)
+
+
+### Bug Fixes
+
+* Remove unneeded ingress for EFS traffic from the entire VPC ([#318](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/318)) ([9e0c0ff](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/9e0c0ff1d3601d8e536b2d672cba4d1379286908))
+
 ## [3.23.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.22.1...v3.23.0) (2022-10-31)
 
 
