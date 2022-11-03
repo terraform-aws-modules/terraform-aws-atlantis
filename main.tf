@@ -572,7 +572,8 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
       aws_ssm_parameter.atlantis_github_user_token[*].arn,
       aws_ssm_parameter.atlantis_gitlab_user_token[*].arn,
       aws_ssm_parameter.atlantis_bitbucket_user_token[*].arn,
-      aws_ssm_parameter.atlantis_github_app_key[*].arn
+      aws_ssm_parameter.atlantis_github_app_key[*].arn,
+      try(var.repository_credentials["credentialsParameter"], [])
     ])
 
     actions = [
