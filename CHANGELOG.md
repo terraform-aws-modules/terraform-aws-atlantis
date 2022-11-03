@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.24.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.23.1...v3.24.0) (2022-11-03)
+
+
+### Features
+
+* Add permissions to access repository credentials to `ecs_task_access_secrets` ([#306](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/306)) ([15e9d9b](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/15e9d9be786c74e7fda7aa621292500fc2e0dea4))
+
 ### [3.23.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.23.0...v3.23.1) (2022-11-01)
 
 
