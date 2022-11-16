@@ -392,7 +392,7 @@ module "atlantis_sg" {
 }
 
 module "efs_sg" {
-  source  = "terraform-aws-modules/security-group/aws//modules/nfs"
+  source  = "terraform-aws-modules/security-group/aws"
   version = "v4.8.0"
   count   = var.enable_ephemeral_storage ? 0 : 1
 
