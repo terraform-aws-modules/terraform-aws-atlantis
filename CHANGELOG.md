@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.25.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.24.1...v3.25.0) (2022-11-16)
+
+
+### Features
+
+* Use base security-group module to remove duplicate EFS security group ([#325](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/325)) ([8433f55](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/8433f5562daba6a1bcf28a57982564827f7bfed8))
+
 ### [3.24.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.24.0...v3.24.1) (2022-11-07)
 
 
