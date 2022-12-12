@@ -242,9 +242,10 @@ module "alb" {
   name     = var.name
   internal = var.internal
 
-  vpc_id          = local.vpc_id
-  subnets         = local.public_subnet_ids
-  security_groups = flatten([module.alb_https_sg.security_group_id, module.alb_http_sg.security_group_id, var.security_group_ids])
+  enable_cross_zone_load_balancing = var.alb_enable_cross_zone_load_balancing
+  vpc_id                           = local.vpc_id
+  subnets                          = local.public_subnet_ids
+  security_groups                  = flatten([module.alb_https_sg.security_group_id, module.alb_http_sg.security_group_id, var.security_group_ids])
 
   access_logs = {
     enabled = var.alb_logging_enabled

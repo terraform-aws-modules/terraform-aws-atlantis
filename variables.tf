@@ -766,3 +766,9 @@ variable "max_session_duration" {
   type        = number
   default     = null
 }
+
+variable "alb_enable_cross_zone_load_balancing" {
+  description = "Whether cross-zone load balancing is enabled for the load balancer"
+  type        = bool
+  default     = null
+}
