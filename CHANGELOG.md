@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.26.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.25.0...v3.26.0) (2022-12-15)
+
+
+### Features
+
+* Add ability to enable cross-zone load balancing ([#326](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/326)) ([1d1c75f](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/1d1c75f3396550920e4f55f2c2e10b99d39eecbb))
+
 ## [3.25.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.24.1...v3.25.0) (2022-11-16)
 
 
