@@ -101,12 +101,13 @@ module "atlantis" {
   atlantis_repo_allowlist        = [for repo in var.github_repo_names : "github.com/${var.github_owner}/${repo}"]
 
   # ALB access
-  alb_ingress_cidr_blocks         = var.alb_ingress_cidr_blocks
-  alb_logging_enabled             = true
-  alb_log_bucket_name             = module.atlantis_access_log_bucket.s3_bucket_id
-  alb_log_location_prefix         = "atlantis-alb"
-  alb_listener_ssl_policy_default = "ELBSecurityPolicy-TLS-1-2-2017-01"
-  alb_drop_invalid_header_fields  = true
+  alb_ingress_cidr_blocks              = var.alb_ingress_cidr_blocks
+  alb_logging_enabled                  = true
+  alb_log_bucket_name                  = module.atlantis_access_log_bucket.s3_bucket_id
+  alb_log_location_prefix              = "atlantis-alb"
+  alb_listener_ssl_policy_default      = "ELBSecurityPolicy-TLS-1-2-2017-01"
+  alb_drop_invalid_header_fields       = true
+  alb_enable_cross_zone_load_balancing = true
 
   allow_unauthenticated_access = true
   allow_github_webhooks        = true
