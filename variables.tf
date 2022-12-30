@@ -65,6 +65,18 @@ variable "cidr" {
   default     = ""
 }
 
+variable "region" {
+  description = "The region where resources will be created"
+  type        = string
+  default     = ""
+}
+
+variable "profile" {
+  description = "The AWS profile to which will be used in creating resources"
+  type        = string
+  default     = "default"
+}
+
 variable "azs" {
   description = "A list of availability zones in the region"
   type        = list(string)

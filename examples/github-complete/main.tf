@@ -1,10 +1,6 @@
-provider "aws" {
-  region = local.region
-}
-
 locals {
-  name   = "github-complete"
-  region = "eu-west-1"
+  name   = "atlantis"
+  region = var.region
 
   tags = {
     Owner       = "user"
