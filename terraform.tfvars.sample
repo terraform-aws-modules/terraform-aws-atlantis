@@ -9,7 +9,7 @@ vpc_id = ""
 private_subnet_ids = ["", ""]
 public_subnet_ids = ["", ""]
 
-region = "us-east-1"
+region = "eu-west-1"
 profile = "default"
 
 # DNS
