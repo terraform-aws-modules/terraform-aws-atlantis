@@ -1,5 +1,5 @@
 locals {
-  name   = "atlantis"
+  name   = "github-complete"
   region = var.region
 
   tags = {
