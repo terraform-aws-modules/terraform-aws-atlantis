@@ -743,6 +743,18 @@ variable "efs_file_system_token" {
   default     = ""
 }
 
+variable "efs_file_system_throughput_mode" {
+  description = "Throughput mode for the file system. Valid values: bursting, provisioned, or elastic. Defaults to bursting. When using provisioned, also set efs_file_system_provisioned_throughput_in_mibps."
+  type        = string
+  default     = "bursting"
+}
+
+variable "efs_file_system_provisioned_throughput_in_mibps" {
+  description = "Optional) The throughput, measured in MiB/s, that you want to provision for the file system. Only applicable with efs_file_system_throughput_mode set to provisioned."
+  type        = number
+  default     = null
+}
+
 variable "alb_ip_address_type" {
   description = "The type of IP addresses used by the subnets for your load balancer. The possible values are ipv4 and dualstack"
   type        = string
