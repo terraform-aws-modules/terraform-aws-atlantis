@@ -594,6 +594,12 @@ variable "atlantis_github_user" {
   default     = ""
 }
 
+variable "atlantis_github_org" {
+  description = "GitHub organization that the Atlantis app is installed under"
+  type        = string
+  default     = ""
+}
+
 variable "atlantis_github_app_id" {
   description = "GitHub App ID that is running the Atlantis command"
   type        = string

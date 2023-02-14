@@ -59,6 +59,10 @@ locals {
       value = var.atlantis_github_user
     },
     {
+      name  = "ATLANTIS_GH_ORG"
+      value = var.atlantis_github_org
+    },
+    {
       name  = "ATLANTIS_GITLAB_USER"
       value = var.atlantis_gitlab_user
     },
