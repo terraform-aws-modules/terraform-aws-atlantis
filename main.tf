@@ -660,7 +660,7 @@ module "container_definition_github_gitlab" {
     },
   ]
 
-  log_configuration      = var.log_configuration != {} ? var.log_configuration : local.log_configuration
+  log_configuration      = var.log_configuration ? var.log_configuration : local.log_configuration
   firelens_configuration = var.firelens_configuration
 
   environment = concat(
