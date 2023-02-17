@@ -142,10 +142,10 @@ module "atlantis" {
     options = {
       Name = "firelens"
     }
-    secretOptions = [ {
-      name = "apiKey"
+    secretOptions = [{
+      name      = "apiKey"
       valueFrom = "/some/ssm/parameter"
-    } ]
+    }]
   }
 
   tags = local.tags

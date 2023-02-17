@@ -132,6 +132,17 @@ locals {
     sourceVolume  = "efs-storage"
     readOnly      = "false"
   }]
+
+  # default log_configuration
+  log_configuration = {
+    logDriver = "awslogs"
+    options = {
+      awslogs-region        = data.aws_region.current.name
+      awslogs-group         = aws_cloudwatch_log_group.atlantis.name
+      awslogs-stream-prefix = "ecs"
+    }
+    secretOptions = []
+  }
 }
 
 data "aws_partition" "current" {}
@@ -649,7 +660,7 @@ module "container_definition_github_gitlab" {
     },
   ]
 
-  log_configuration = var.log_configuration
+  log_configuration      = var.log_configuration != {} ? var.log_configuration : local.log_configuration
   firelens_configuration = var.firelens_configuration
 
   environment = concat(
@@ -698,7 +709,7 @@ module "container_definition_bitbucket" {
     },
   ]
 
-  log_configuration = var.log_configuration
+  log_configuration      = var.log_configuration ? var.log_configuration : local.log_configuration
   firelens_configuration = var.firelens_configuration
 
   environment = concat(

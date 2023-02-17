@@ -543,23 +543,15 @@ variable "log_configuration" {
   description = "The logConfiguration for the container. This allows overridding the default `awslogs` settings. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_LogConfiguration.html"
   type = object({
     logDriver = string
-    options = map(string)
+    options   = map(string)
     secretOptions = list(
       object({
-        name = string
+        name      = string
         valueFrom = string
       })
     )
   })
-  default = {
-    logDriver = "awslogs"
-    options = {
-      awslogs-region        = data.aws_region.current.name
-      awslogs-group         = aws_cloudwatch_log_group.atlantis.name
-      awslogs-stream-prefix = "ecs"
-    }
-    secretOptions = []
-  }
+  default = null
 }
 
 # Atlantis
