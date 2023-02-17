@@ -136,6 +136,18 @@ module "atlantis" {
     }
   ]
 
+  # Override the log configuration on the atlantis container
+  log_configuration = {
+    logDriver = "awsfirelens"
+    options = {
+      Name = "firelens"
+    }
+    secretOptions = [ {
+      name = "apiKey"
+      valueFrom = "/some/ssm/parameter"
+    } ]
+  }
+
   tags = local.tags
 }
 
