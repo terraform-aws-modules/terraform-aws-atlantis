@@ -746,7 +746,7 @@ variable "efs_file_system_token" {
 variable "efs_throughput_mode" {
   description = "(Optional) Throughput mode for the file system. Defaults to bursting. Valid values: bursting, provisioned, or elastic. When using provisioned, also set provisioned_throughput_in_mibps."
   type        = string
-  default     = "bursting"
+  default     = null
   validation {
     condition     = contains(["bursting", "provisioned", "elastic"], var.efs_throughput_mode)
     error_message = "The mode must be one of \"bursting\" \"provisioned\" or \"elastic\""
