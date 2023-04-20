@@ -539,6 +539,22 @@ variable "firelens_configuration" {
   default = null
 }
 
+# https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_LogConfiguration.html"
+variable "custom_log_configuration" {
+  description = "The logConfiguration for the container. This allows overriding the default `awslogs` settings. For more details, see https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_LogConfiguration.html"
+  type = object({
+    logDriver = string
+    options   = map(string)
+    secretOptions = optional(list(
+      object({
+        name      = string
+        valueFrom = string
+      })
+    ))
+  })
+  default = null
+}
+
 # Atlantis
 variable "atlantis_image" {
   description = "Docker image to run Atlantis with. If not specified, official Atlantis image will be used"
