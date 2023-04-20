@@ -124,7 +124,11 @@ locals {
     var.tags,
   )
 
-  policies_arn = var.policies_arn != null ? var.policies_arn : ["arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"]
+  default_policies = [
+    "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  ]
+
+  policies_arn = var.policies_arn != null ? var.policies_arn : local.default_policies
 
   # Chunk these into groups of 5, the limit for IPs in an AWS lb listener
   whitelist_unauthenticated_cidr_block_chunks = chunklist(
@@ -567,10 +571,10 @@ resource "aws_iam_role" "ecs_task_execution" {
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_task_execution" {
-  for_each = toset(local.policies_arn)
+  count = length(local.policies_arn)
 
   role       = aws_iam_role.ecs_task_execution.id
-  policy_arn = each.value
+  policy_arn = local.policies_arn[count.index]
 }
 
 # ref: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data.html
