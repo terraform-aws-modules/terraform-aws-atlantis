@@ -71,6 +71,18 @@ variable "azs" {
   default     = []
 }
 
+variable "enable_nat_gateway" {
+  description = "Should be true if you want to provision NAT Gateways for each of your private networks"
+  type        = bool
+  default     = true
+}
+
+variable "single_nat_gateway" {
+  description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks"
+  type        = bool
+  default     = true
+}
+
 variable "manage_default_security_group" {
   description = "Should be true to adopt and manage default security group"
   type        = bool
