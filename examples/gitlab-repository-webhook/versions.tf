@@ -8,8 +8,9 @@ terraform {
     }
 
     gitlab = {
+      # gitlab provider requires terraform 1.0 or later starting in 15.x.x
       source  = "gitlabhq/gitlab"
-      version = ">= 3.0"
+      version = "3.20.0"
     }
   }
 }
