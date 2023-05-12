@@ -465,6 +465,9 @@ resource "aws_efs_file_system" "this" {
 
   creation_token = coalesce(var.efs_file_system_token, var.name)
 
+  throughput_mode                 = var.efs_throughput_mode
+  provisioned_throughput_in_mibps = var.efs_provisioned_throughput_in_mibps
+
   encrypted = var.efs_file_system_encrypted
 }
 

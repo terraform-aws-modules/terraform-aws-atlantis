@@ -6,13 +6,13 @@
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
-| <a name="requirement_gitlab"></a> [gitlab](#requirement\_gitlab) | >= 3.0 |
+| <a name="requirement_gitlab"></a> [gitlab](#requirement\_gitlab) | 3.20.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_gitlab"></a> [gitlab](#provider\_gitlab) | >= 3.0 |
+| <a name="provider_gitlab"></a> [gitlab](#provider\_gitlab) | 3.20.0 |
 
 ## Modules
 
@@ -22,7 +22,7 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [gitlab_project_hook.this](https://registry.terraform.io/providers/gitlabhq/gitlab/latest/docs/resources/project_hook) | resource |
+| [gitlab_project_hook.this](https://registry.terraform.io/providers/gitlabhq/gitlab/3.20.0/docs/resources/project_hook) | resource |
 
 ## Inputs
 
