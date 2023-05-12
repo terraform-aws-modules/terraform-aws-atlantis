@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.27.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.26.1...v3.27.0) (2023-05-12)
+
+
+### Features
+
+* Add EFS performance settings. ([#339](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/339)) ([ba3ecf9](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/ba3ecf96bcef5c32653219f06a3c373af1aca6bf))
+
 ### [3.26.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.26.0...v3.26.1) (2023-05-12)
 
 
