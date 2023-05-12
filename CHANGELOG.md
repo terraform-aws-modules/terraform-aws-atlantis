@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.28.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.27.0...v3.28.0) (2023-05-12)
+
+
+### Features
+
+* Make the enable_nat_gateway and single_nat_gateway variables configurable ([#343](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/343)) ([375a926](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/375a926af8c5c9020e21861b45eb5cb9380cf776))
+
 ## [3.27.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.26.1...v3.27.0) (2023-05-12)
 
 
