@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [3.26.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.26.0...v3.26.1) (2023-05-12)
+
+
+### Bug Fixes
+
+* Gitlab versioning errors with terraform 0.13 ([#344](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/344)) ([359ab38](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/359ab388ec9e34261268bd927e4013f8a7a230ea))
+
 ## [3.26.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.25.0...v3.26.0) (2022-12-15)
 
 
