@@ -71,6 +71,18 @@ variable "azs" {
   default     = []
 }
 
+variable "enable_nat_gateway" {
+  description = "Should be true if you want to provision NAT Gateways for each of your private networks"
+  type        = bool
+  default     = true
+}
+
+variable "single_nat_gateway" {
+  description = "Should be true if you want to provision a single shared NAT Gateway across all of your private networks"
+  type        = bool
+  default     = true
+}
+
 variable "manage_default_security_group" {
   description = "Should be true to adopt and manage default security group"
   type        = bool
@@ -747,6 +759,18 @@ variable "efs_file_system_token" {
   description = "Be able to import other EFS instance created by the other module"
   type        = string
   default     = ""
+}
+
+variable "efs_throughput_mode" {
+  description = "(Optional) Throughput mode for the file system. Defaults to bursting. Valid values: bursting, provisioned, or elastic. When using provisioned, also set provisioned_throughput_in_mibps."
+  type        = string
+  default     = null
+}
+
+variable "efs_provisioned_throughput_in_mibps" {
+  description = "The throughput, measured in MiB/s, that you want to provision for the file system. Only applicable with efs_throughput_mode set to provisioned"
+  type        = number
+  default     = null
 }
 
 variable "alb_ip_address_type" {

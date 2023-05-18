@@ -225,8 +225,8 @@ module "vpc" {
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
 
-  enable_nat_gateway   = true
-  single_nat_gateway   = true
+  enable_nat_gateway   = var.enable_nat_gateway
+  single_nat_gateway   = var.single_nat_gateway
   enable_dns_hostnames = !var.enable_ephemeral_storage
 
   manage_default_security_group  = var.manage_default_security_group
@@ -468,6 +468,9 @@ resource "aws_efs_file_system" "this" {
   count = var.enable_ephemeral_storage ? 0 : 1
 
   creation_token = coalesce(var.efs_file_system_token, var.name)
+
+  throughput_mode                 = var.efs_throughput_mode
+  provisioned_throughput_in_mibps = var.efs_provisioned_throughput_in_mibps
 
   encrypted = var.efs_file_system_encrypted
 }

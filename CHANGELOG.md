@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+## [3.28.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.27.0...v3.28.0) (2023-05-12)
+
+
+### Features
+
+* Make the enable_nat_gateway and single_nat_gateway variables configurable ([#343](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/343)) ([375a926](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/375a926af8c5c9020e21861b45eb5cb9380cf776))
+
+## [3.27.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.26.1...v3.27.0) (2023-05-12)
+
+
+### Features
+
+* Add EFS performance settings. ([#339](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/339)) ([ba3ecf9](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/ba3ecf96bcef5c32653219f06a3c373af1aca6bf))
+
+### [3.26.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.26.0...v3.26.1) (2023-05-12)
+
+
+### Bug Fixes
+
+* Gitlab versioning errors with terraform 0.13 ([#344](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/344)) ([359ab38](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/359ab388ec9e34261268bd927e4013f8a7a230ea))
+
 ## [3.26.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.25.0...v3.26.0) (2022-12-15)
 
 
