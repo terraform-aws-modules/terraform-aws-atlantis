@@ -71,6 +71,12 @@ variable "azs" {
   default     = []
 }
 
+variable "enable_flow_log" {
+  description = "Should be true if you want to create a flow log for the VPC"
+  type        = bool
+  default     = false
+}
+
 variable "enable_nat_gateway" {
   description = "Should be true if you want to provision NAT Gateways for each of your private networks"
   type        = bool

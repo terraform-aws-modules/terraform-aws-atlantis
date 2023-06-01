@@ -224,6 +224,7 @@ module "vpc" {
   enable_nat_gateway   = var.enable_nat_gateway
   single_nat_gateway   = var.single_nat_gateway
   enable_dns_hostnames = !var.enable_ephemeral_storage
+  enable_flow_log      = var.enable_flow_log
 
   manage_default_security_group  = var.manage_default_security_group
   default_security_group_ingress = var.default_security_group_ingress
