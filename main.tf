@@ -221,10 +221,14 @@ module "vpc" {
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
 
-  enable_nat_gateway   = var.enable_nat_gateway
-  single_nat_gateway   = var.single_nat_gateway
-  enable_dns_hostnames = !var.enable_ephemeral_storage
-  enable_flow_log      = var.enable_flow_log
+  enable_nat_gateway                   = var.enable_nat_gateway
+  single_nat_gateway                   = var.single_nat_gateway
+  enable_dns_hostnames                 = !var.enable_ephemeral_storage
+  enable_flow_log                      = var.enable_flow_log
+  create_flow_log_cloudwatch_log_group = var.create_flow_log_cloudwatch_log_group
+  create_flow_log_cloudwatch_iam_role  = var.create_flow_log_cloudwatch_iam_role
+  flow_log_max_aggregation_interval    = var.flow_log_max_aggregation_interval
+
 
   manage_default_security_group  = var.manage_default_security_group
   default_security_group_ingress = var.default_security_group_ingress

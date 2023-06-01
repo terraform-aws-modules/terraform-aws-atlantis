@@ -77,6 +77,24 @@ variable "enable_flow_log" {
   default     = false
 }
 
+variable "create_flow_log_cloudwatch_log_group" {
+  description = "Should be true if you want to create a cloudwatch log group for the flow log"
+  type        = bool
+  default     = false
+}
+
+variable "create_flow_log_cloudwatch_iam_role" {
+  description = "Should be true if you want to create an IAM role for the flow log"
+  type        = bool
+  default     = false
+}
+
+variable "flow_log_max_aggregation_interval" {
+  description = "The maximum interval of time during which a flow of packets is captured and aggregated into a flow log record. Valid Values: 60 seconds (1 minute) | 600 seconds (10 minutes)"
+  type        = number
+  default     = 60
+}
+
 variable "enable_nat_gateway" {
   description = "Should be true if you want to provision NAT Gateways for each of your private networks"
   type        = bool
