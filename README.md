@@ -280,7 +280,7 @@ allow_github_webhooks        = true
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | v3.2.0 |
-| <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | v6.5.0 |
+| <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | v6.7.0 |
 | <a name="module_alb_http_sg"></a> [alb\_http\_sg](#module\_alb\_http\_sg) | terraform-aws-modules/security-group/aws//modules/http-80 | v4.3.0 |
 | <a name="module_alb_https_sg"></a> [alb\_https\_sg](#module\_alb\_https\_sg) | terraform-aws-modules/security-group/aws//modules/https-443 | v4.3.0 |
 | <a name="module_atlantis_sg"></a> [atlantis\_sg](#module\_atlantis\_sg) | terraform-aws-modules/security-group/aws | v4.3.0 |
@@ -328,6 +328,7 @@ allow_github_webhooks        = true
 | <a name="input_acm_certificate_domain_name"></a> [acm\_certificate\_domain\_name](#input\_acm\_certificate\_domain\_name) | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name` | `string` | `""` | no |
 | <a name="input_alb_authenticate_cognito"></a> [alb\_authenticate\_cognito](#input\_alb\_authenticate\_cognito) | Map of AWS Cognito authentication parameters to protect ALB (eg, using SAML). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-cognito-action | `any` | `{}` | no |
 | <a name="input_alb_authenticate_oidc"></a> [alb\_authenticate\_oidc](#input\_alb\_authenticate\_oidc) | Map of Authenticate OIDC parameters to protect ALB (eg, using Auth0). See https://www.terraform.io/docs/providers/aws/r/lb_listener.html#authenticate-oidc-action | `any` | `{}` | no |
+| <a name="input_alb_desync_mitigation_mode"></a> [alb\_desync\_mitigation\_mode](#input\_alb\_desync\_mitigation\_mode) | Determines how the load balancer handles requests that might pose a security risk to an application due to HTTP desync. | `string` | `null` | no |
 | <a name="input_alb_drop_invalid_header_fields"></a> [alb\_drop\_invalid\_header\_fields](#input\_alb\_drop\_invalid\_header\_fields) | Indicates whether invalid header fields are dropped in application load balancers. Defaults to false. | `bool` | `null` | no |
 | <a name="input_alb_enable_cross_zone_load_balancing"></a> [alb\_enable\_cross\_zone\_load\_balancing](#input\_alb\_enable\_cross\_zone\_load\_balancing) | Whether cross-zone load balancing is enabled for the load balancer | `bool` | `null` | no |
 | <a name="input_alb_enable_deletion_protection"></a> [alb\_enable\_deletion\_protection](#input\_alb\_enable\_deletion\_protection) | If true, deletion of the load balancer will be disabled via the AWS API. This will prevent Terraform from deleting the load balancer. Defaults to false. | `bool` | `null` | no |

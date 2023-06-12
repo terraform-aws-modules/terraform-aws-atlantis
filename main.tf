@@ -237,7 +237,7 @@ module "vpc" {
 ################################################################################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v6.5.0"
+  version = "v6.7.0"
 
   name     = var.name
   internal = var.internal
@@ -257,6 +257,7 @@ module "alb" {
 
   enable_deletion_protection = var.alb_enable_deletion_protection
 
+  desync_mitigation_mode     = var.alb_desync_mitigation_mode
   drop_invalid_header_fields = var.alb_drop_invalid_header_fields
 
   listener_ssl_policy_default = var.alb_listener_ssl_policy_default

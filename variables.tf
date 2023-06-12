@@ -162,6 +162,12 @@ variable "alb_enable_deletion_protection" {
   default     = null
 }
 
+variable "alb_desync_mitigation_mode" {
+  description = "Determines how the load balancer handles requests that might pose a security risk to an application due to HTTP desync."
+  type        = string
+  default     = null
+}
+
 variable "alb_drop_invalid_header_fields" {
   description = "Indicates whether invalid header fields are dropped in application load balancers. Defaults to false."
   type        = bool
