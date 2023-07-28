@@ -13,7 +13,7 @@ locals {
     "_"
   )}" : "http://${module.alb.lb_dns_name}"
 
-  
+
   atlantis_url_events = "${local.atlantis_url}/events"
 
   # Include only one group of secrets - for github, github app,  gitlab or bitbucket
@@ -262,7 +262,7 @@ module "alb" {
   drop_invalid_header_fields = var.alb_drop_invalid_header_fields
 
   listener_ssl_policy_default = var.alb_listener_ssl_policy_default
-  
+
   https_listeners = var.create_https_listener == false ? [] : [
     {
       target_group_index   = 0
@@ -285,20 +285,20 @@ module "alb" {
         protocol    = "HTTPS"
         status_code = "HTTP_301"
       }
-      authenticate_oidc = null
+      authenticate_oidc    = null
       authenticate_cognito = null
     },
     ] : [
     {
-      port                 = 80
-      protocol             = "HTTP"
-      action_type          = "${local.alb_authentication_method}"
+      port        = 80
+      protocol    = "HTTP"
+      action_type = "${local.alb_authentication_method}"
       # redirect = {
       #   port        = null
       #   protocol    = null
       #   status_code = "HTTP_301"
       # }
-      redirect = {}
+      redirect             = {}
       authenticate_oidc    = var.alb_authenticate_oidc
       authenticate_cognito = var.alb_authenticate_cognito
     },
