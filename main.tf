@@ -6,12 +6,14 @@ locals {
 
   # Atlantis
   atlantis_image = var.atlantis_image == "" ? "ghcr.io/runatlantis/atlantis:${var.atlantis_version}" : var.atlantis_image
-  atlantis_url = "https://${coalesce(
+  atlantis_url = var.atlantis_url_ssl == true ? "https://${coalesce(
     var.atlantis_fqdn,
     element(concat(aws_route53_record.atlantis[*].fqdn, [""]), 0),
     module.alb.lb_dns_name,
     "_"
-  )}"
+  )}" : "http://${module.alb.lb_dns_name}"
+
+  
   atlantis_url_events = "${local.atlantis_url}/events"
 
   # Include only one group of secrets - for github, github app,  gitlab or bitbucket

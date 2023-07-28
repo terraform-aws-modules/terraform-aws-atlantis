@@ -808,3 +808,9 @@ variable "create_https_listener" {
   type        = bool
   default     = true
 }
+
+variable "atlantis_url_ssl" {
+  description = "Whether the url will be using https or not"
+  type        = bool
+  default     = true
+}
