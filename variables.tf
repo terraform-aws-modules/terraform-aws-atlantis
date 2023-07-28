@@ -796,3 +796,15 @@ variable "alb_enable_cross_zone_load_balancing" {
   type        = bool
   default     = null
 }
+
+variable "create_acm_certificate" {
+  description = "Whether to create ACM certificate for load balancer"
+  type        = bool
+  default     = true
+}
+
+variable "create_https_listener" {
+  description = "Whether to create https listener for load balancer"
+  type        = bool
+  default     = true
+}

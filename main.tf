@@ -260,7 +260,8 @@ module "alb" {
   drop_invalid_header_fields = var.alb_drop_invalid_header_fields
 
   listener_ssl_policy_default = var.alb_listener_ssl_policy_default
-  https_listeners = [
+  
+  https_listeners = var.create_https_listener == false ? [] : [
     {
       target_group_index   = 0
       port                 = 443
@@ -272,7 +273,7 @@ module "alb" {
     },
   ]
 
-  http_tcp_listeners = [
+  http_tcp_listeners = var.create_https_listener == true ? [
     {
       port        = 80
       protocol    = "HTTP"
@@ -282,6 +283,22 @@ module "alb" {
         protocol    = "HTTPS"
         status_code = "HTTP_301"
       }
+      authenticate_oidc = null
+      authenticate_cognito = null
+    },
+    ] : [
+    {
+      port                 = 80
+      protocol             = "HTTP"
+      action_type          = "${local.alb_authentication_method}"
+      # redirect = {
+      #   port        = null
+      #   protocol    = null
+      #   status_code = "HTTP_301"
+      # }
+      redirect = {}
+      authenticate_oidc    = var.alb_authenticate_oidc
+      authenticate_cognito = var.alb_authenticate_cognito
     },
   ]
 
@@ -305,7 +322,9 @@ module "alb" {
 resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
   count = var.allow_unauthenticated_access ? length(local.whitelist_unauthenticated_cidr_block_chunks) : 0
 
-  listener_arn = module.alb.https_listener_arns[0]
+
+  #listener_arn = module.alb.https_listener_arns[0]
+  listener_arn = var.create_https_listener == true ? module.alb.https_listener_arns[0] : module.alb.http_tcp_listener_arns[0]
   priority     = var.allow_unauthenticated_access_priority + count.index
 
   action {
@@ -324,7 +343,8 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
 resource "aws_lb_listener_rule" "unauthenticated_access_for_webhook" {
   count = var.allow_unauthenticated_access && var.allow_github_webhooks ? 1 : 0
 
-  listener_arn = module.alb.https_listener_arns[0]
+  #listener_arn = module.alb.https_listener_arns[0]
+  listener_arn = var.create_https_listener == true ? module.alb.https_listener_arns[0] : module.alb.http_tcp_listener_arns[0]
   priority     = var.allow_unauthenticated_webhook_access_priority
 
   action {
@@ -413,6 +433,7 @@ module "efs_sg" {
 # ACM (SSL certificate)
 ################################################################################
 module "acm" {
+  count   = var.create_acm_certificate ? 1 : 0
   source  = "terraform-aws-modules/acm/aws"
   version = "v3.2.0"
 
