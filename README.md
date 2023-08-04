@@ -264,31 +264,31 @@ allow_github_webhooks        = true
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.1 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.69 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 2.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.69 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 2.0 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | v3.2.0 |
-| <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | v6.5.0 |
-| <a name="module_alb_http_sg"></a> [alb\_http\_sg](#module\_alb\_http\_sg) | terraform-aws-modules/security-group/aws//modules/http-80 | v4.3.0 |
-| <a name="module_alb_https_sg"></a> [alb\_https\_sg](#module\_alb\_https\_sg) | terraform-aws-modules/security-group/aws//modules/https-443 | v4.3.0 |
-| <a name="module_atlantis_sg"></a> [atlantis\_sg](#module\_atlantis\_sg) | terraform-aws-modules/security-group/aws | v4.3.0 |
-| <a name="module_container_definition_bitbucket"></a> [container\_definition\_bitbucket](#module\_container\_definition\_bitbucket) | cloudposse/ecs-container-definition/aws | v0.58.1 |
-| <a name="module_container_definition_github_gitlab"></a> [container\_definition\_github\_gitlab](#module\_container\_definition\_github\_gitlab) | cloudposse/ecs-container-definition/aws | v0.58.1 |
-| <a name="module_ecs"></a> [ecs](#module\_ecs) | terraform-aws-modules/ecs/aws | v3.3.0 |
-| <a name="module_efs_sg"></a> [efs\_sg](#module\_efs\_sg) | terraform-aws-modules/security-group/aws | v4.8.0 |
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | v3.6.0 |
+| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | v4.3.2 |
+| <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | v8.7.0 |
+| <a name="module_alb_http_sg"></a> [alb\_http\_sg](#module\_alb\_http\_sg) | terraform-aws-modules/security-group/aws//modules/http-80 | v5.1.0 |
+| <a name="module_alb_https_sg"></a> [alb\_https\_sg](#module\_alb\_https\_sg) | terraform-aws-modules/security-group/aws//modules/https-443 | v5.1.0 |
+| <a name="module_atlantis_sg"></a> [atlantis\_sg](#module\_atlantis\_sg) | terraform-aws-modules/security-group/aws | v5.1.0 |
+| <a name="module_container_definition_bitbucket"></a> [container\_definition\_bitbucket](#module\_container\_definition\_bitbucket) | cloudposse/ecs-container-definition/aws | v0.60.0 |
+| <a name="module_container_definition_github_gitlab"></a> [container\_definition\_github\_gitlab](#module\_container\_definition\_github\_gitlab) | cloudposse/ecs-container-definition/aws | v0.60.0 |
+| <a name="module_ecs"></a> [ecs](#module\_ecs) | terraform-aws-modules/ecs/aws | v5.2.1 |
+| <a name="module_efs_sg"></a> [efs\_sg](#module\_efs\_sg) | terraform-aws-modules/security-group/aws | v5.1.0 |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | v5.1.1 |
 
 ## Resources
 

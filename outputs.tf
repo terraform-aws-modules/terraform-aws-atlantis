@@ -58,7 +58,7 @@ output "ecs_cluster_id" {
 
 output "ecs_cluster_arn" {
   description = "ECS cluster ARN"
-  value       = module.ecs.ecs_cluster_arn
+  value       = module.ecs.cluster_arn
 }
 
 # VPC

@@ -28,7 +28,7 @@ locals {
   alb_authentication_method = length(keys(var.alb_authenticate_oidc)) > 0 ? "authenticate-oidc" : length(keys(var.alb_authenticate_cognito)) > 0 ? "authenticate-cognito" : "forward"
 
   # ECS - existing or new?
-  ecs_cluster_id = var.create_ecs_cluster ? module.ecs.ecs_cluster_id : var.ecs_cluster_id
+  ecs_cluster_id = var.create_ecs_cluster ? module.ecs.cluster_id : var.ecs_cluster_id
 
   # Container definitions
   container_definitions = var.custom_container_definitions == "" ? var.atlantis_bitbucket_user_token != "" ? jsonencode(concat([module.container_definition_bitbucket.json_map_object], var.extra_container_definitions)) : jsonencode(concat([module.container_definition_github_gitlab.json_map_object], var.extra_container_definitions)) : var.custom_container_definitions
@@ -210,7 +210,7 @@ resource "aws_ssm_parameter" "atlantis_github_app_key" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v3.6.0"
+  version = "v5.1.1"
 
   create_vpc = var.vpc_id == ""
 
@@ -220,6 +220,8 @@ module "vpc" {
   azs             = var.azs
   private_subnets = var.private_subnets
   public_subnets  = var.public_subnets
+
+  map_public_ip_on_launch = true
 
   enable_nat_gateway   = var.enable_nat_gateway
   single_nat_gateway   = var.single_nat_gateway
@@ -237,7 +239,7 @@ module "vpc" {
 ################################################################################
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "v6.5.0"
+  version = "v8.7.0"
 
   name     = var.name
   internal = var.internal
@@ -245,6 +247,7 @@ module "alb" {
   enable_cross_zone_load_balancing = var.alb_enable_cross_zone_load_balancing
   vpc_id                           = local.vpc_id
   subnets                          = local.public_subnet_ids
+  create_security_group            = false
   security_groups                  = flatten([module.alb_https_sg.security_group_id, module.alb_http_sg.security_group_id, var.security_group_ids])
 
   access_logs = {
@@ -258,6 +261,7 @@ module "alb" {
   enable_deletion_protection = var.alb_enable_deletion_protection
 
   drop_invalid_header_fields = var.alb_drop_invalid_header_fields
+  enable_xff_client_port     = false
 
   listener_ssl_policy_default = var.alb_listener_ssl_policy_default
   https_listeners = [
@@ -344,7 +348,7 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_webhook" {
 ################################################################################
 module "alb_https_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/https-443"
-  version = "v4.3.0"
+  version = "v5.1.0"
 
   name        = "${var.name}-alb-https"
   vpc_id      = local.vpc_id
@@ -358,7 +362,7 @@ module "alb_https_sg" {
 
 module "alb_http_sg" {
   source  = "terraform-aws-modules/security-group/aws//modules/http-80"
-  version = "v4.3.0"
+  version = "v5.1.0"
 
   name        = "${var.name}-alb-http"
   vpc_id      = local.vpc_id
@@ -371,7 +375,7 @@ module "alb_http_sg" {
 
 module "atlantis_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v4.3.0"
+  version = "v5.1.0"
 
   name        = var.name
   vpc_id      = local.vpc_id
@@ -394,7 +398,7 @@ module "atlantis_sg" {
 
 module "efs_sg" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "v4.8.0"
+  version = "v5.1.0"
   count   = var.enable_ephemeral_storage ? 0 : 1
 
   name        = "${var.name}-efs"
@@ -414,7 +418,7 @@ module "efs_sg" {
 ################################################################################
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "v3.2.0"
+  version = "v4.3.2"
 
   create_certificate = var.certificate_arn == ""
 
@@ -507,20 +511,18 @@ resource "aws_efs_access_point" "this" {
 ################################################################################
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "v3.3.0"
+  version = "v5.2.1"
 
-  create_ecs = var.create_ecs_cluster
+  create = var.create_ecs_cluster
 
-  name               = var.name
-  container_insights = var.ecs_container_insights
+  cluster_name = var.name
+  cluster_settings = {
+    "name" : "containerInsights",
+    "value" : var.ecs_container_insights ? "enabled" : "disabled"
+  }
 
-  capacity_providers = ["FARGATE", "FARGATE_SPOT"]
-
-  default_capacity_provider_strategy = [
-    {
-      capacity_provider = var.ecs_fargate_spot ? "FARGATE_SPOT" : "FARGATE"
-    }
-  ]
+  default_capacity_provider_use_fargate = true
+  fargate_capacity_providers            = var.ecs_fargate_spot ? { FARGATE_SPOT = {} } : { FARGATE = {} }
 
   tags = local.tags
 }
@@ -590,7 +592,7 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
 data "aws_iam_policy_document" "ecs_task_access_secrets_with_kms" {
   count = var.ssm_kms_key_arn == "" ? 0 : 1
 
-  source_json = data.aws_iam_policy_document.ecs_task_access_secrets.json
+  source_policy_documents = [data.aws_iam_policy_document.ecs_task_access_secrets.json]
 
   statement {
     sid       = "AllowKMSDecrypt"
@@ -620,7 +622,7 @@ resource "aws_iam_role_policy" "ecs_task_access_secrets" {
 
 module "container_definition_github_gitlab" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.58.1"
+  version = "v0.60.0"
 
   container_name  = var.name
   container_image = local.atlantis_image
@@ -677,7 +679,7 @@ module "container_definition_github_gitlab" {
 
 module "container_definition_bitbucket" {
   source  = "cloudposse/ecs-container-definition/aws"
-  version = "v0.58.1"
+  version = "v0.60.0"
 
   container_name  = var.name
   container_image = local.atlantis_image

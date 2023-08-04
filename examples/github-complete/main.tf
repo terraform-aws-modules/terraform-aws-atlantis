@@ -253,4 +253,3 @@ data "aws_iam_policy_document" "atlantis_access_log_bucket_policy" {
     }
   }
 }
-
