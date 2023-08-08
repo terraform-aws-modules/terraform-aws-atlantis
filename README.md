@@ -367,6 +367,7 @@ allow_github_webhooks        = true
 | <a name="input_atlantis_port"></a> [atlantis\_port](#input\_atlantis\_port) | Local port Atlantis should be running on. Default value is most likely fine. | `number` | `4141` | no |
 | <a name="input_atlantis_repo_allowlist"></a> [atlantis\_repo\_allowlist](#input\_atlantis\_repo\_allowlist) | List of allowed repositories Atlantis can be used with | `list(string)` | n/a | yes |
 | <a name="input_atlantis_security_group_tags"></a> [atlantis\_security\_group\_tags](#input\_atlantis\_security\_group\_tags) | Additional tags to put on the atlantis security group | `map(string)` | `{}` | no |
+| <a name="input_atlantis_url_ssl"></a> [atlantis\_url\_ssl](#input\_atlantis\_url\_ssl) | Whether the url will be using https or not | `bool` | `true` | no |
 | <a name="input_atlantis_version"></a> [atlantis\_version](#input\_atlantis\_version) | Verion of Atlantis to run. If not specified latest will be used | `string` | `"latest"` | no |
 | <a name="input_atlantis_write_git_creds"></a> [atlantis\_write\_git\_creds](#input\_atlantis\_write\_git\_creds) | Write out a .git-credentials file with the provider user and token to allow cloning private modules over HTTPS or SSH | `string` | `"true"` | no |
 | <a name="input_azs"></a> [azs](#input\_azs) | A list of availability zones in the region | `list(string)` | `[]` | no |
@@ -379,7 +380,9 @@ allow_github_webhooks        = true
 | <a name="input_container_depends_on"></a> [container\_depends\_on](#input\_container\_depends\_on) | The dependencies defined for container startup and shutdown. A container can contain multiple dependencies. When a dependency is defined for container startup, for container shutdown it is reversed. The condition can be one of START, COMPLETE, SUCCESS or HEALTHY | <pre>list(object({<br>    containerName = string<br>    condition     = string<br>  }))</pre> | `null` | no |
 | <a name="input_container_memory"></a> [container\_memory](#input\_container\_memory) | The amount (in MiB) of memory used by the atlantis container. If not specified ecs\_task\_memory will be used | `number` | `null` | no |
 | <a name="input_container_memory_reservation"></a> [container\_memory\_reservation](#input\_container\_memory\_reservation) | The amount of memory (in MiB) to reserve for the container | `number` | `128` | no |
+| <a name="input_create_acm_certificate"></a> [create\_acm\_certificate](#input\_create\_acm\_certificate) | Whether to create ACM certificate for load balancer | `bool` | `true` | no |
 | <a name="input_create_ecs_cluster"></a> [create\_ecs\_cluster](#input\_create\_ecs\_cluster) | Whether to create an ECS cluster or not | `bool` | `true` | no |
+| <a name="input_create_https_listener"></a> [create\_https\_listener](#input\_create\_https\_listener) | Whether to create https listener for load balancer | `bool` | `true` | no |
 | <a name="input_create_route53_aaaa_record"></a> [create\_route53\_aaaa\_record](#input\_create\_route53\_aaaa\_record) | Whether to create Route53 AAAA record for Atlantis | `bool` | `false` | no |
 | <a name="input_create_route53_record"></a> [create\_route53\_record](#input\_create\_route53\_record) | Whether to create Route53 A record for Atlantis | `bool` | `true` | no |
 | <a name="input_custom_container_definitions"></a> [custom\_container\_definitions](#input\_custom\_container\_definitions) | A list of valid container definitions provided as a single valid JSON document. By default, the standard container definition is used. | `string` | `""` | no |
