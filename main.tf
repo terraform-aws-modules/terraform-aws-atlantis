@@ -292,7 +292,7 @@ module "alb" {
     {
       port                 = 80
       protocol             = "HTTP"
-      action_type          = "${local.alb_authentication_method}"
+      action_type          = local.alb_authentication_method
       redirect             = {}
       authenticate_oidc    = var.alb_authenticate_oidc
       authenticate_cognito = var.alb_authenticate_cognito
