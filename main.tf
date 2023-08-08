@@ -320,7 +320,6 @@ resource "aws_lb_listener_rule" "unauthenticated_access_for_cidr_blocks" {
   count = var.allow_unauthenticated_access ? length(local.whitelist_unauthenticated_cidr_block_chunks) : 0
 
 
-  #listener_arn = module.alb.https_listener_arns[0]
   listener_arn = var.create_https_listener == true ? module.alb.https_listener_arns[0] : module.alb.http_tcp_listener_arns[0]
   priority     = var.allow_unauthenticated_access_priority + count.index
 
