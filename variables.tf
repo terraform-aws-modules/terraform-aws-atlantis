@@ -599,6 +599,12 @@ variable "atlantis_write_git_creds" {
   default     = "true"
 }
 
+variable "atlantis_tf_plugin_cache_lock_file" {
+  description = "Revert to Terraform <1.4 Plugin Cache Behavior"
+  type        = string
+  default     = "false"
+}
+
 # Github
 variable "atlantis_github_user" {
   description = "GitHub username that is running the Atlantis command"

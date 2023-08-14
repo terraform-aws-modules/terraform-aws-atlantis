@@ -85,6 +85,10 @@ locals {
     {
       name  = "ATLANTIS_WRITE_GIT_CREDS"
       value = var.atlantis_write_git_creds
+    },
+    {
+      name  = "TF_PLUGIN_CACHE_MAY_BREAK_DEPENDENCY_LOCK_FILE"
+      value = var.atlantis_tf_plugin_cache_lock_file
     }
   ]
 

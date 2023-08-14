@@ -367,6 +367,7 @@ allow_github_webhooks        = true
 | <a name="input_atlantis_port"></a> [atlantis\_port](#input\_atlantis\_port) | Local port Atlantis should be running on. Default value is most likely fine. | `number` | `4141` | no |
 | <a name="input_atlantis_repo_allowlist"></a> [atlantis\_repo\_allowlist](#input\_atlantis\_repo\_allowlist) | List of allowed repositories Atlantis can be used with | `list(string)` | n/a | yes |
 | <a name="input_atlantis_security_group_tags"></a> [atlantis\_security\_group\_tags](#input\_atlantis\_security\_group\_tags) | Additional tags to put on the atlantis security group | `map(string)` | `{}` | no |
+| <a name="input_atlantis_tf_plugin_cache_lock_file"></a> [atlantis\_tf\_plugin\_cache\_lock\_file](#input\_atlantis\_tf\_plugin\_cache\_lock\_file) | Revert to Terraform <1.4 Plugin Cache Behavior | `string` | `"false"` | no |
 | <a name="input_atlantis_version"></a> [atlantis\_version](#input\_atlantis\_version) | Verion of Atlantis to run. If not specified latest will be used | `string` | `"latest"` | no |
 | <a name="input_atlantis_write_git_creds"></a> [atlantis\_write\_git\_creds](#input\_atlantis\_write\_git\_creds) | Write out a .git-credentials file with the provider user and token to allow cloning private modules over HTTPS or SSH | `string` | `"true"` | no |
 | <a name="input_azs"></a> [azs](#input\_azs) | A list of availability zones in the region | `list(string)` | `[]` | no |
