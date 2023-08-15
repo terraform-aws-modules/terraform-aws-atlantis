@@ -1,12 +1,7 @@
-provider "gitlab" {
-  token    = var.gitlab_token
-  base_url = var.gitlab_base_url
-}
-
 resource "gitlab_project_hook" "this" {
-  count = var.create_gitlab_repository_webhook ? length(var.atlantis_repo_allowlist) : 0
+  count = var.create ? length(var.repositories) : 0
 
-  project                 = var.atlantis_repo_allowlist[count.index]
+  project                 = var.repositories[count.index]
   url                     = var.webhook_url
   token                   = var.webhook_secret
   enable_ssl_verification = false

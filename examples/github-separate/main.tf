@@ -7,10 +7,6 @@ provider "github" {
   owner = var.github_owner
 }
 
-data "aws_route53_zone" "this" {
-  name = var.domain
-}
-
 data "aws_availability_zones" "available" {}
 
 locals {
@@ -35,6 +31,15 @@ module "atlantis" {
   source = "../../"
 
   name = local.name
+
+  # Existing cluster
+  create_cluster = false
+  cluster_arn    = module.ecs_cluster.arn
+
+  # Existing ALB
+  create_alb            = false
+  alb_target_group_arn  = module.alb.target_groups["atlantis"].arn
+  alb_security_group_id = module.alb.security_group_id
 
   # ECS
   atlantis = {
@@ -72,19 +77,8 @@ module "atlantis" {
     }
   }
 
-  # ALB
-  alb = {
-    # For example only
-    enable_deletion_protection = false
-  }
-
-  alb_subnets     = module.vpc.public_subnets
   service_subnets = module.vpc.private_subnets
   vpc_id          = module.vpc.vpc_id
-
-  # ACM
-  certificate_domain_name = "${local.name}.${var.domain}"
-  route53_zone_id         = data.aws_route53_zone.this.id
 
   # EFS
   enable_efs = true
@@ -110,13 +104,95 @@ module "github_repository_webhooks" {
 
   repositories = var.atlantis_repo_allowlist
 
-  webhook_url    = "${module.atlantis.url}/events"
+  webhook_url    = "http://${module.alb.dns_name}/events"
   webhook_secret = random_password.webhook_secret.result
 }
 
 ################################################################################
 # Supporting Resources
 ################################################################################
+
+module "ecs_cluster" {
+  source  = "terraform-aws-modules/ecs/aws//modules/cluster"
+  version = "5.6.0"
+
+  # Cluster
+  cluster_name = local.name
+  cluster_settings = {
+    name  = "containerInsights"
+    value = "enabled"
+  }
+
+  tags = local.tags
+}
+
+module "alb" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "9.1.0"
+
+  name = local.name
+
+  # Load balancer
+  enable_deletion_protection = false # For example only
+  subnets                    = module.vpc.public_subnets
+
+  # Listener(s)
+  default_port     = 80
+  default_protocol = "HTTP"
+  listeners = {
+    http = {
+      port     = 80
+      protocol = "HTTP"
+
+      forward = {
+        target_group_key = "atlantis"
+      }
+    }
+  }
+
+  # Target group(s)
+  target_groups = {
+    atlantis = {
+      backend_protocol                  = "HTTP"
+      backend_port                      = 4141
+      create_attachment                 = false
+      target_type                       = "ip"
+      deregistration_delay              = 10
+      load_balancing_cross_zone_enabled = true
+
+      health_check = {
+        enabled             = true
+        healthy_threshold   = 5
+        interval            = 30
+        matcher             = "200"
+        path                = "/healthz"
+        port                = "traffic-port"
+        protocol            = "HTTP"
+        timeout             = 5
+        unhealthy_threshold = 2
+      }
+    }
+  }
+
+  # Security group
+  vpc_id = module.vpc.vpc_id
+  security_group_ingress_rules = {
+    http = {
+      from_port   = 80
+      to_port     = 80
+      ip_protocol = "tcp"
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+  }
+  security_group_egress_rules = {
+    all = {
+      ip_protocol = "-1"
+      cidr_ipv4   = "0.0.0.0/0"
+    }
+  }
+
+  tags = local.tags
+}
 
 resource "random_password" "webhook_secret" {
   length  = 32

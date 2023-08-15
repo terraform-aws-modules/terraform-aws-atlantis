@@ -8,11 +8,6 @@ variable "github_owner" {
   type        = string
 }
 
-variable "domain" {
-  description = "Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance"
-  type        = string
-}
-
 variable "atlantis_github_user" {
   description = "GitHub user or organization name"
   type        = string

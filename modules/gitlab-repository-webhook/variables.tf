@@ -1,24 +1,13 @@
-variable "create_gitlab_repository_webhook" {
+variable "create" {
   description = "Whether to create Gitlab repository webhook for Atlantis"
   type        = bool
   default     = true
 }
 
-variable "gitlab_base_url" {
-  description = "Gitlab base_url use"
-  type        = string
-  default     = ""
-}
-
-variable "gitlab_token" {
-  description = "Gitlab token to use when creating webhook"
-  type        = string
-  default     = ""
-}
-
-variable "atlantis_repo_allowlist" {
+variable "repositories" {
   description = "List of names of repositories which belong to the `gitlab_base_url` specified"
   type        = list(string)
+  default     = []
 }
 
 variable "webhook_url" {

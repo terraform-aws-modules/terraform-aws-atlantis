@@ -1,13 +1,7 @@
-provider "github" {
-  base_url = var.github_base_url
-  token    = var.github_token
-  owner    = var.github_owner
-}
-
 resource "github_repository_webhook" "this" {
-  count = var.create_github_repository_webhook ? length(var.atlantis_repo_allowlist) : 0
+  count = var.create ? length(var.repositories) : 0
 
-  repository = var.atlantis_repo_allowlist[count.index]
+  repository = var.repositories[count.index]
 
   configuration {
     url          = var.webhook_url
