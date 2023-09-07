@@ -1,11 +1,11 @@
 # VPC - use these parameters to create new VPC resources
-cidr = "10.10.0.0/16"
+cidr = "102.10.0.0/16"
 
-azs = ["eu-west-1a", "eu-west-1b"]
+azs = ["us-east-1a", "us-east-1b"]
 
-private_subnets = ["10.10.1.0/24", "10.10.2.0/24"]
+private_subnets = ["102.10.1.0/24", "102.10.2.0/24"]
 
-public_subnets = ["10.10.11.0/24", "10.10.12.0/24"]
+public_subnets = ["102.10.11.0/24", "102.10.12.0/24"]
 
 # VPC - use these parameters to use existing VPC resources
 # vpc_id = "vpc-1651acf1"
@@ -13,7 +13,7 @@ public_subnets = ["10.10.11.0/24", "10.10.12.0/24"]
 # public_subnet_ids = ["subnet-1211eef5", "subnet-163466ab"]
 
 # DNS
-route53_zone_name = "example.com"
+route53_zone_name = "devops.com.ph"
 
 # ACM (SSL certificate)
 # Specify ARN of an existing certificate or new one will be created and validated using Route53 DNS:
@@ -23,23 +23,13 @@ route53_zone_name = "example.com"
 ecs_service_assign_public_ip = true
 
 # Atlantis
-atlantis_repo_allowlist = ["github.com/terraform-aws-modules/*"]
+# gitlab_base_url = ["https://github.com/devkinetics/"]
+atlantis_repo_allowlist = ["terraform-aws-atlantis"]
 
 # Specify one of the following block.
 # For Github
-atlantis_github_user = ""
-atlantis_github_user_token = ""
-
-# For Gitlab
-atlantis_gitlab_user = ""
-atlantis_gitlab_user_token = ""
-
-# For Bitbucket
-atlantis_bitbucket_user = ""
-atlantis_bitbucket_user_token = ""
-
-# For Bitbucket on prem (Stash)
-# atlantis_bitbucket_base_url = ""
+atlantis_github_user = "mikaelvg"
+atlantis_github_user_token = "ghp_xxxxx"
 
 # Tags
 tags = {
