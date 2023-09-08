@@ -1,3 +1,4 @@
+# Atlantis test 0
 locals {
   # VPC - existing or new?
   vpc_id             = var.vpc_id == "" ? module.vpc.vpc_id : var.vpc_id
