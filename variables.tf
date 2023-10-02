@@ -229,6 +229,12 @@ variable "certificate_arn" {
   default     = ""
 }
 
+variable "validate_certificate" {
+  description = "Whether to validate certificate by creating Route53 record"
+  type        = bool
+  default     = true
+}
+
 variable "acm_certificate_domain_name" {
   description = "Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance. Specify if it is different from value in `route53_zone_name`"
   type        = string
