@@ -210,7 +210,7 @@ resource "aws_ssm_parameter" "atlantis_github_app_key" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "v3.6.0"
+  version = "v3.19.0"
 
   create_vpc = var.vpc_id == ""
 
@@ -508,7 +508,7 @@ resource "aws_efs_access_point" "this" {
 ################################################################################
 module "ecs" {
   source  = "terraform-aws-modules/ecs/aws"
-  version = "v3.3.0"
+  version = "v3.5.0"
 
   create_ecs = var.create_ecs_cluster
 
@@ -591,7 +591,7 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
 data "aws_iam_policy_document" "ecs_task_access_secrets_with_kms" {
   count = var.ssm_kms_key_arn == "" ? 0 : 1
 
-  source_json = data.aws_iam_policy_document.ecs_task_access_secrets.json
+  source_policy_documents = [ data.aws_iam_policy_document.ecs_task_access_secrets.json ]
 
   statement {
     sid       = "AllowKMSDecrypt"
