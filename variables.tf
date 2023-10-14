@@ -570,10 +570,10 @@ variable "atlantis_port" {
   default     = 4141
 }
 
-variable "atlantis_repo_allowlist" {
-  description = "List of allowed repositories Atlantis can be used with"
-  type        = list(string)
-}
+# variable "atlantis_repo_allowlist" {
+#   description = "List of allowed repositories Atlantis can be used with"
+#   type        = list(string)
+# }
 
 variable "allow_repo_config" {
   description = "When true allows the use of atlantis.yaml config files within the source repos."

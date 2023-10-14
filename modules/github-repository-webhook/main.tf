@@ -5,9 +5,9 @@ provider "github" {
 }
 
 resource "github_repository_webhook" "this" {
-  count = var.create_github_repository_webhook ? length(var.atlantis_repo_allowlist) : 0
+  count = var.create_github_repository_webhook ? length(local.tfsettings.atlantis_repo_allowlist) : 0
 
-  repository = var.atlantis_repo_allowlist[count.index]
+  repository = local.tfsettings.atlantis_repo_allowlist[count.index]
 
   configuration {
     url          = var.webhook_url

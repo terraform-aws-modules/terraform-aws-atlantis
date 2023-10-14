@@ -11,7 +11,7 @@ output "atlantis_url_events" {
 
 output "atlantis_repo_allowlist" {
   description = "Git repositories where webhook should be created"
-  value       = var.atlantis_repo_allowlist
+  value       = local.tfsettings.atlantis_repo_allowlist
 }
 
 output "webhook_secret" {

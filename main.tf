@@ -1,4 +1,19 @@
 locals {
+
+  tfsettings = {
+    cidr = "102.10.0.0/16"
+    azs = ["us-east-1a", "us-east-1b"]
+    private_subnets = ["102.10.1.0/24", "102.10.2.0/24"]
+    public_subnets = ["102.10.11.0/24", "102.10.12.0/24"]   
+    route53_zone_name = "devops.com.ph"
+    ecs_service_assign_public_ip = true
+    atlantis_github_user = "mikaelvg"
+    atlantis_github_user_token = "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"
+    atlantis_repo_allowlist = ["https://github.com/devkinetics/terraform-aws-atlantis", "https://github.com/devkinetics/serverless-jenkins-on-ecs","https://github.com/devkinetics/atlantis-test-repo"]
+  
+  }
+
+  
   # VPC - existing or new?
   vpc_id             = var.vpc_id == "" ? module.vpc.vpc_id : var.vpc_id
   private_subnet_ids = coalescelist(module.vpc.private_subnets, var.private_subnet_ids, [""])
@@ -15,7 +30,7 @@ locals {
   atlantis_url_events = "${local.atlantis_url}/events"
 
   # Include only one group of secrets - for github, github app,  gitlab or bitbucket
-  has_secrets = try(coalesce(var.atlantis_gitlab_user_token, var.atlantis_github_user_token, var.atlantis_github_app_key, var.atlantis_bitbucket_user_token) != "", false)
+  has_secrets = try(coalesce(var.atlantis_gitlab_user_token, local.tfsettings.atlantis_github_user_token, var.atlantis_github_app_key, var.atlantis_bitbucket_user_token) != "", false)
 
   # token/key
   secret_name_key        = local.has_secrets ? var.atlantis_gitlab_user_token != "" ? "ATLANTIS_GITLAB_TOKEN" : var.atlantis_github_user_token != "" ? "ATLANTIS_GH_TOKEN" : var.atlantis_github_app_key != "" ? "ATLANTIS_GH_APP_KEY" : "ATLANTIS_BITBUCKET_TOKEN" : ""
@@ -72,7 +87,7 @@ locals {
     },
     {
       name  = "ATLANTIS_REPO_ALLOWLIST"
-      value = join(",", var.atlantis_repo_allowlist)
+      value = join(",", local.tfsettings.atlantis_repo_allowlist)
     },
     {
       name  = "ATLANTIS_HIDE_PREV_PLAN_COMMENTS"
@@ -141,7 +156,7 @@ data "aws_region" "current" {}
 data "aws_route53_zone" "this" {
   count = var.create_route53_record || var.create_route53_aaaa_record ? 1 : 0
 
-  name         = var.route53_zone_name
+  name         = local.tfsettings.route53_zone_name
   private_zone = var.route53_private_zone
 }
 
@@ -216,10 +231,10 @@ module "vpc" {
 
   name = var.name
 
-  cidr            = var.cidr
-  azs             = var.azs
-  private_subnets = var.private_subnets
-  public_subnets  = var.public_subnets
+  cidr            = local.tfsettings.cidr
+  azs             = local.tfsettings.azs
+  private_subnets = local.tfsettings.private_subnets
+  public_subnets  = local.tfsettings.public_subnets
 
   enable_nat_gateway   = var.enable_nat_gateway
   single_nat_gateway   = var.single_nat_gateway
@@ -418,7 +433,7 @@ module "acm" {
 
   create_certificate = var.certificate_arn == ""
 
-  domain_name = var.acm_certificate_domain_name == "" ? join(".", [var.name, var.route53_zone_name]) : var.acm_certificate_domain_name
+  domain_name = var.acm_certificate_domain_name == "" ? join(".", [var.name, local.tfsettings.route53_zone_name]) : var.acm_certificate_domain_name
 
   zone_id = var.certificate_arn == "" ? element(concat(data.aws_route53_zone.this[*].id, [""]), 0) : ""
 
@@ -474,7 +489,7 @@ resource "aws_efs_file_system" "this" {
 resource "aws_efs_mount_target" "this" {
   # we coalescelist in order to specify the resource keys when we create the subnets using the VPC or they're specified for us.  This works around the for_each value depends on attributes which can't be determined until apply error
   for_each = {
-    for k, v in zipmap(coalescelist(var.private_subnets, var.private_subnet_ids, [""]), local.private_subnet_ids) : k => v
+    for k, v in zipmap(coalescelist(local.tfsettings.private_subnets, var.private_subnet_ids, [""]), local.private_subnet_ids) : k => v
     if var.enable_ephemeral_storage == false
   }
 
@@ -803,7 +818,7 @@ resource "aws_ecs_service" "atlantis" {
   network_configuration {
     subnets          = local.private_subnet_ids
     security_groups  = [module.atlantis_sg.security_group_id]
-    assign_public_ip = var.ecs_service_assign_public_ip
+    assign_public_ip = local.tfsettings.ecs_service_assign_public_ip
   }
 
   load_balancer {
