@@ -7,9 +7,9 @@ locals {
     public_subnets = ["102.10.11.0/24", "102.10.12.0/24"]   
     route53_zone_name = "devops.com.ph"
     ecs_service_assign_public_ip = true
-    atlantis_github_user = "mikaelvg"
-    atlantis_github_user_token = "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"
-    atlantis_repo_allowlist = ["https://github.com/devkinetics/terraform-aws-atlantis", "https://github.com/devkinetics/serverless-jenkins-on-ecs","https://github.com/devkinetics/atlantis-test-repo"]
+    atlantis_github_user = "jrzvnn"
+    atlantis_github_user_token = "ghp_xxx"
+    atlantis_repo_allowlist = ["github.com/devkinetics/serverless-jenkins-on-ecs"]
   
   }
 
