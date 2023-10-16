@@ -164,15 +164,19 @@ resource "aws_ssm_parameter" "webhook" {
   tags = local.tags
 }
 
-resource "aws_ssm_parameter" "atlantis_github_user_token" {
-  count = var.atlantis_github_user_token != "" ? 1 : 0
+## Moved to devios-secret-parameters repo.
+# resource "aws_ssm_parameter" "atlantis_github_user_token" {
+#   count = var.atlantis_github_user_token != "" ? 1 : 0
 
-  name  = var.atlantis_github_user_token_ssm_parameter_name
-  type  = "SecureString"
-  value = var.atlantis_github_user_token
-
-  tags = local.tags
-}
+#   name  = var.atlantis_github_user_token_ssm_parameter_name
+#   type  = "SecureString"
+#   value = var.atlantis_github_user_token
+#   lifecycle {
+#     prevent_destroy  = false
+#   }
+  
+#   tags = local.tags
+# }
 
 resource "aws_ssm_parameter" "atlantis_gitlab_user_token" {
   count = var.atlantis_gitlab_user_token != "" ? 1 : 0
@@ -571,14 +575,23 @@ data "aws_iam_policy_document" "ecs_task_access_secrets" {
   statement {
     effect = "Allow"
 
+    # resources = flatten([
+    #   aws_ssm_parameter.webhook[*].arn,
+    #   aws_ssm_parameter.atlantis_github_user_token[*].arn,
+    #   aws_ssm_parameter.atlantis_gitlab_user_token[*].arn,
+    #   aws_ssm_parameter.atlantis_bitbucket_user_token[*].arn,
+    #   aws_ssm_parameter.atlantis_github_app_key[*].arn,
+    #   try(var.repository_credentials["credentialsParameter"], [])
+    # ])
+
     resources = flatten([
       aws_ssm_parameter.webhook[*].arn,
-      aws_ssm_parameter.atlantis_github_user_token[*].arn,
+      "arn:aws:ssm:us-east-1:353472581086:parameter/dev/atlantis-fargate/TOKEN/github-token",
       aws_ssm_parameter.atlantis_gitlab_user_token[*].arn,
       aws_ssm_parameter.atlantis_bitbucket_user_token[*].arn,
       aws_ssm_parameter.atlantis_github_app_key[*].arn,
       try(var.repository_credentials["credentialsParameter"], [])
-    ])
+    ])    
 
     actions = [
       "ssm:GetParameters",
