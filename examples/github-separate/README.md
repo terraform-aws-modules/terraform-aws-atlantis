@@ -1,10 +1,10 @@
-# Complete GitHub example
+# Separate GitHub example
 
-Configuration in this directory provisions Atlantis on ECS with EFS storage, ALB, Route53 record and GitHub repository webhooks.
+Configuration in this directory provisions Atlantis on ECS with EFS storage and GitHub repository webhooks. It demonstrates how users can deploy this module on an existing ECS Fargate cluster and with an existing ALB.
 
 ## Usage
 
-To run this code you need to copy `terraform.tfvars.sample` into `terraform.tfvars` and update the values locally or specify them using environment variables (`TF_VAR_github_app_id=xxx`, `TF_VAR_github_owner=xxx`, etc.). Ensure that `bootstrap_github_app` is `true`.  Once ready, execute:
+To run this code you need to copy `terraform.tfvars.sample` into `terraform.tfvars` and update the values locally or specify them using environment variables (`TF_VAR_github_app_id=xxx`, `TF_VAR_github_owner=xxx`, etc.). Once ready, execute:
 
 ```bash
 terraform init
@@ -35,7 +35,9 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | 9.1.0 |
 | <a name="module_atlantis"></a> [atlantis](#module\_atlantis) | ../../ | n/a |
+| <a name="module_ecs_cluster"></a> [ecs\_cluster](#module\_ecs\_cluster) | terraform-aws-modules/ecs/aws//modules/cluster | 5.6.0 |
 | <a name="module_github_repository_webhooks"></a> [github\_repository\_webhooks](#module\_github\_repository\_webhooks) | ../../modules/github-repository-webhook | n/a |
 | <a name="module_secrets_manager"></a> [secrets\_manager](#module\_secrets\_manager) | terraform-aws-modules/secrets-manager/aws | ~> 1.0 |
 | <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
@@ -46,7 +48,6 @@ Note that this example may create resources which cost money. Run `terraform des
 |------|------|
 | [random_password.webhook_secret](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
-| [aws_route53_zone.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 
 ## Inputs
 
@@ -54,7 +55,6 @@ Note that this example may create resources which cost money. Run `terraform des
 |------|-------------|------|---------|:--------:|
 | <a name="input_atlantis_github_user"></a> [atlantis\_github\_user](#input\_atlantis\_github\_user) | GitHub user or organization name | `string` | n/a | yes |
 | <a name="input_atlantis_repo_allowlist"></a> [atlantis\_repo\_allowlist](#input\_atlantis\_repo\_allowlist) | List of GitHub repositories that Atlantis will be allowed to access | `list(string)` | n/a | yes |
-| <a name="input_domain"></a> [domain](#input\_domain) | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance | `string` | n/a | yes |
 | <a name="input_github_owner"></a> [github\_owner](#input\_github\_owner) | Github owner to use when creating webhook | `string` | n/a | yes |
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token to use when creating webhook | `string` | n/a | yes |
 
