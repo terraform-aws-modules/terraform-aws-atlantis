@@ -65,6 +65,7 @@ module "alb" {
       http-https-redirect = {
         port     = 80
         protocol = "HTTP"
+
         redirect = {
           port        = "443"
           protocol    = "HTTPS"
@@ -72,19 +73,19 @@ module "alb" {
         }
       }
 
-      https = {
-        port            = 443
-        protocol        = "HTTPS"
-        ssl_policy      = try(var.alb.https_listener_ssl_policy, "ELBSecurityPolicy-TLS13-1-2-Res-2021-06")
-        certificate_arn = var.create_certificate ? module.acm.acm_certificate_arn : var.certificate_arn
+      https = merge(
+        {
+          port            = 443
+          protocol        = "HTTPS"
+          ssl_policy      = try(var.alb.https_listener_ssl_policy, "ELBSecurityPolicy-TLS13-1-2-Res-2021-06")
+          certificate_arn = var.create_certificate ? module.acm.acm_certificate_arn : var.certificate_arn
 
-        authenticate_cognito = try(var.alb.https_listener_authenticate_cognito, [])
-        authenticate_oidc    = try(var.alb.https_listener_authenticate_oidc, [])
-
-        forward = {
-          target_group_key = "atlantis"
-        }
-      }
+          forward = {
+            target_group_key = "atlantis"
+          }
+        },
+        lookup(var.alb, "https_listener", {})
+      )
     },
     lookup(var.alb, "listeners", {})
   )
@@ -182,6 +183,15 @@ module "acm" {
 ################################################################################
 # ECS
 ################################################################################
+
+locals {
+  mount_path = "/home/atlantis"
+  mount_points = var.enable_efs ? [{
+    containerPath = local.mount_path
+    sourceVolume  = "efs"
+    readOnly      = false
+  }] : try(var.atlantis.mount_points, [])
+}
 
 module "ecs_cluster" {
   source  = "terraform-aws-modules/ecs/aws//modules/cluster"
@@ -308,7 +318,7 @@ module "ecs_service" {
         log_configuration      = lookup(var.atlantis, "log_configuration", {})
         memory                 = try(var.atlantis.memory, 2048)
         memory_reservation     = try(var.atlantis.memory_reservation, null)
-        mount_points           = try(var.atlantis.mount_points, [])
+        mount_points           = local.mount_points
         name                   = "atlantis"
         port_mappings = [{
           name          = "atlantis"
@@ -360,13 +370,14 @@ module "ecs_service" {
   skip_destroy = try(var.service.skip_destroy, null)
   volume = { for k, v in merge(
     {
-      name = "efs"
-      efs_volume_configuration = {
-        file_system_id     = module.efs.id
-        transit_encryption = "ENABLED"
-        authorization_config = {
-          access_point_id = module.efs.access_points["atlantis"].id
-          iam             = "ENABLED"
+      efs = {
+        efs_volume_configuration = {
+          file_system_id     = module.efs.id
+          transit_encryption = "ENABLED"
+          authorization_config = {
+            access_point_id = module.efs.access_points["atlantis"].id
+            iam             = "ENABLED"
+          }
         }
       }
     },
@@ -515,7 +526,7 @@ module "efs" {
           uid = var.atlantis_uid
         }
         root_directory = {
-          path = "/home/atlantis"
+          path = local.mount_path
           creation_info = {
             owner_gid   = var.atlantis_gid
             owner_uid   = var.atlantis_uid
