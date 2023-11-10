@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.0.2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.1...v4.0.2) (2023-11-10)
+
+
+### Bug Fixes
+
+* Ensure conditional creation of EFS and entire module are functioning as intended ([#370](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/370)) ([2a8d178](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/2a8d178773d1ec3b2cbae5bac4f1da99ba6a4963))
+
 ### [4.0.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.0...v4.0.1) (2023-11-10)
 
 
