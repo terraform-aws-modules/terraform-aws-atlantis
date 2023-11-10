@@ -230,7 +230,7 @@ module "ecs_service" {
   ignore_task_definition_changes     = try(var.service.ignore_task_definition_changes, false)
   alarms                             = try(var.service.alarms, {})
   capacity_provider_strategy         = try(var.service.capacity_provider_strategy, {})
-  cluster_arn                        = var.create_cluster ? module.ecs_cluster.arn : var.cluster_arn
+  cluster_arn                        = var.create_cluster && var.create ? module.ecs_cluster.arn : var.cluster_arn
   deployment_controller              = try(var.service.deployment_controller, {})
   deployment_maximum_percent         = try(var.service.deployment_maximum_percent, 200)
   deployment_minimum_healthy_percent = try(var.service.deployment_minimum_healthy_percent, 66)
@@ -243,7 +243,7 @@ module "ecs_service" {
   load_balancer = merge(
     {
       service = {
-        target_group_arn = var.create_alb ? module.alb.target_groups["atlantis"].arn : var.alb_target_group_arn
+        target_group_arn = var.create_alb && var.create ? module.alb.target_groups["atlantis"].arn : var.alb_target_group_arn
         container_name   = "atlantis"
         container_port   = local.atlantis_port
       }
@@ -375,7 +375,7 @@ module "ecs_service" {
           file_system_id     = module.efs.id
           transit_encryption = "ENABLED"
           authorization_config = {
-            access_point_id = module.efs.access_points["atlantis"].id
+            access_point_id = try(module.efs.access_points["atlantis"].id, null)
             iam             = "ENABLED"
           }
         }

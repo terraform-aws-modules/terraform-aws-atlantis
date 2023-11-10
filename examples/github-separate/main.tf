@@ -80,22 +80,6 @@ module "atlantis" {
   service_subnets = module.vpc.private_subnets
   vpc_id          = module.vpc.vpc_id
 
-  # EFS
-  enable_efs = true
-  efs = {
-    mount_targets = {
-      "eu-west-1a" = {
-        subnet_id = module.vpc.private_subnets[0]
-      }
-      "eu-west-1b" = {
-        subnet_id = module.vpc.private_subnets[1]
-      }
-      "eu-west-1c" = {
-        subnet_id = module.vpc.private_subnets[2]
-      }
-    }
-  }
-
   tags = local.tags
 }
 
@@ -106,6 +90,12 @@ module "github_repository_webhooks" {
 
   webhook_url    = "http://${module.alb.dns_name}/events"
   webhook_secret = random_password.webhook_secret.result
+}
+
+module "atlantis_disabled" {
+  source = "../../"
+
+  create = false
 }
 
 ################################################################################
