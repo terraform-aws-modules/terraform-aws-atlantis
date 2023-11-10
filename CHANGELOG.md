@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.0.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.0...v4.0.1) (2023-11-10)
+
+
+### Bug Fixes
+
+* Correct EFS mount and correct listener authentication when value is not provided ([#368](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/368)) ([e031208](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/e0312088d38e4793673961069d2cf5bf22f2263f))
+
 ## [4.0.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v3.28.0...v4.0.0) (2023-11-04)
 
 
