@@ -139,7 +139,7 @@ module "alb" {
       }
     }
   )
-  security_group_egress_rules = lookup(var.alb, "security_group_ingress_rules",
+  security_group_egress_rules = lookup(var.alb, "security_group_egress_rules",
     {
       all = {
         ip_protocol = "-1"
