@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.0.3](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.2...v4.0.3) (2023-11-16)
+
+
+### Bug Fixes
+
+* Correct security group egress rule lookup name ([#372](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/372)) ([a5e3f83](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/a5e3f837b7c1735690cb1439459461ff0c78614c))
+
 ### [4.0.2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.1...v4.0.2) (2023-11-10)
 
 
