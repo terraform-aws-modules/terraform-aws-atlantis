@@ -34,3 +34,12 @@ output "efs" {
   description = "EFS created and all of its associated outputs"
   value       = module.efs
 }
+
+################################################################################
+# ACM
+################################################################################
+
+output "acm" {
+  description = "ACM created and all of its associated outputs"
+  value       = module.acm
+}
