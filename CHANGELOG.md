@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.0.5](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.4...v4.0.5) (2023-11-30)
+
+
+### Bug Fixes
+
+* Correct ALB atlantis target group protocol and port arguments ([#375](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/375)) ([cc3e2c2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/cc3e2c282f009694d5ce69d3d7d40a0cf0748c7d))
+
 ### [4.0.4](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.3...v4.0.4) (2023-11-30)
 
 
