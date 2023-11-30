@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.0.4](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.3...v4.0.4) (2023-11-30)
+
+
+### Bug Fixes
+
+* Give Atlantis write permission to EFS ([#376](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/376)) ([1db4a44](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/1db4a445b4e3aab3a00995838273c3589d39ca17))
+
 ### [4.0.3](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.2...v4.0.3) (2023-11-16)
 
 
