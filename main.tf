@@ -94,8 +94,8 @@ module "alb" {
   target_groups = merge(
     {
       atlantis = {
-        backend_protocol                  = "HTTP"
-        backend_port                      = local.atlantis_port
+        protocol                          = "HTTP"
+        port                              = local.atlantis_port
         create_attachment                 = false
         target_type                       = "ip"
         deregistration_delay              = 10
