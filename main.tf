@@ -485,7 +485,10 @@ module "efs" {
   override_policy_documents          = try(var.efs.override_policy_documents, [])
   policy_statements = concat(
     [{
-      actions = ["elasticfilesystem:ClientMount"]
+      actions = [
+        "elasticfilesystem:ClientMount",
+        "elasticfilesystem:ClientWrite",
+      ]
       principals = [
         {
           type        = "AWS"
