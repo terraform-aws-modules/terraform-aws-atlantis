@@ -67,6 +67,7 @@ module "atlantis" {
         valueFrom = try(module.secrets_manager["github-webhook-secret"].secret_arn, "")
       },
     ]
+    fqdn = module.alb.dns_name
   }
 
   service = {

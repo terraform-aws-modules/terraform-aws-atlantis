@@ -1,8 +1,7 @@
 locals {
   # Atlantis
   atlantis_url = "https://${try(coalesce(
-    try(var.atlantis.fqdn, null),
-    module.alb.route53_records["A"].fqdn,
+    try(var.atlantis.fqdn, module.alb.route53_records["A"].fqdn, null),
     module.alb.dns_name,
   ), "")}"
 
