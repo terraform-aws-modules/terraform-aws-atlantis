@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.0.6](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.5...v4.0.6) (2023-12-11)
+
+
+### Bug Fixes
+
+* FQDN detection when using an existing ALB ([#379](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/379)) ([50ee855](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/50ee85553f7473c9d4e680b7cbb172de5304798d))
+
 ### [4.0.5](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.4...v4.0.5) (2023-11-30)
 
 
