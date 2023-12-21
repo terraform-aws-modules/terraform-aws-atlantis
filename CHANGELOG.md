@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.0.7](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.6...v4.0.7) (2023-12-21)
+
+
+### Bug Fixes
+
+* Add 'Name' Tag to EFS File System ([#387](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/387)) ([fb4acfc](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/fb4acfc252e15aa3c0a12df8f4e36de43621cdcc))
+
 ### [4.0.6](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.5...v4.0.6) (2023-12-11)
 
 
