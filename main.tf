@@ -93,6 +93,7 @@ module "alb" {
   target_groups = merge(
     {
       atlantis = {
+        name                              = var.name
         protocol                          = "HTTP"
         port                              = local.atlantis_port
         create_attachment                 = false
