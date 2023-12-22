@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.0.8](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.7...v4.0.8) (2023-12-22)
+
+
+### Bug Fixes
+
+* Add ALB Target Group Name ([#389](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/389)) ([8e6599f](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/8e6599f0a03c4d0fd99359838a12518b77b087e2))
+
 ### [4.0.7](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.6...v4.0.7) (2023-12-21)
 
 
