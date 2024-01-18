@@ -236,6 +236,7 @@ No resources.
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_alb"></a> [alb](#input\_alb) | Map of values passed to ALB module definition. See the [ALB module](https://github.com/terraform-aws-modules/terraform-aws-alb) for full list of arguments supported | `any` | `{}` | no |
+| <a name="input_alb_https_default_action"></a> [alb\_https\_default\_action](#input\_alb\_https\_default\_action) | Default action for the ALB https listener | `any` | <pre>{<br>  "forward": {<br>    "target_group_key": "atlantis"<br>  }<br>}</pre> | no |
 | <a name="input_alb_security_group_id"></a> [alb\_security\_group\_id](#input\_alb\_security\_group\_id) | ID of an existing security group that will be used by ALB. Required if `create_alb` is `false` | `string` | `""` | no |
 | <a name="input_alb_subnets"></a> [alb\_subnets](#input\_alb\_subnets) | List of subnets to place ALB in. Required if `create_alb` is `true` | `list(string)` | `[]` | no |
 | <a name="input_alb_target_group_arn"></a> [alb\_target\_group\_arn](#input\_alb\_target\_group\_arn) | ARN of an existing ALB target group that will be used to route traffic to the Atlantis service. Required if `create_alb` is `false` | `string` | `""` | no |

@@ -68,6 +68,16 @@ variable "alb" {
   default     = {}
 }
 
+variable "alb_https_default_action" {
+  description = "Default action for the ALB https listener"
+  type        = any
+  default = {
+    forward = {
+      target_group_key = "atlantis"
+    }
+  }
+}
+
 variable "alb_subnets" {
   description = "List of subnets to place ALB in. Required if `create_alb` is `true`"
   type        = list(string)
