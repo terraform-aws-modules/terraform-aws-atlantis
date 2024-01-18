@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.2.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.1.0...v4.2.0) (2024-01-18)
+
+
+### Features
+
+* Add support for different name for EFS ([#392](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/392)) ([bf31af0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/bf31af0c27f0e060ec1e7735e365e82925e0e531))
+
 ## [4.1.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.8...v4.1.0) (2024-01-18)
 
 
