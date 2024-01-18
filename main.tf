@@ -78,11 +78,8 @@ module "alb" {
           protocol        = "HTTPS"
           ssl_policy      = try(var.alb.https_listener_ssl_policy, "ELBSecurityPolicy-TLS13-1-2-Res-2021-06")
           certificate_arn = var.create_certificate ? module.acm.acm_certificate_arn : var.certificate_arn
-
-          forward = {
-            target_group_key = "atlantis"
-          }
         },
+        var.alb_https_default_action,
         lookup(var.alb, "https_listener", {})
       )
     },

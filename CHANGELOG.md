@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.1.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.8...v4.1.0) (2024-01-18)
+
+
+### Features
+
+* Configurable default action https listener ([#391](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/391)) ([7e75eec](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/7e75eec8a67bc428263e73320922a279081ac0bb))
+
 ### [4.0.8](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.0.7...v4.0.8) (2023-12-22)
 
 
