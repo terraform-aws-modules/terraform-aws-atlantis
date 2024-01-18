@@ -464,7 +464,7 @@ module "efs" {
   version = "1.3.1"
 
   create = var.create && var.enable_efs
-  name   = var.name
+  name   = try(var.efs.name, var.name)
 
   # File system
   availability_zone_name          = try(var.efs.availability_zone_name, null)
