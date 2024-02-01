@@ -17,3 +17,8 @@ variable "atlantis_repo_allowlist" {
   description = "List of GitHub repositories that Atlantis will be allowed to access"
   type        = list(string)
 }
+
+variable "repositories" {
+  description = "List of GitHub repositories to create webhooks for. This is just the name of the repository, excluding the user or organization"
+  type        = list(string)
+}

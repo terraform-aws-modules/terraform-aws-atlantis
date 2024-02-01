@@ -108,7 +108,7 @@ module "atlantis" {
 module "github_repository_webhooks" {
   source = "../../modules/github-repository-webhook"
 
-  repositories = var.atlantis_repo_allowlist
+  repositories = var.repositories
 
   webhook_url    = "${module.atlantis.url}/events"
   webhook_secret = random_password.webhook_secret.result

@@ -57,6 +57,7 @@ Note that this example may create resources which cost money. Run `terraform des
 | <a name="input_domain"></a> [domain](#input\_domain) | Route53 domain name to use for ACM certificate. Route53 zone for this domain should be created in advance | `string` | n/a | yes |
 | <a name="input_github_owner"></a> [github\_owner](#input\_github\_owner) | Github owner to use when creating webhook | `string` | n/a | yes |
 | <a name="input_github_token"></a> [github\_token](#input\_github\_token) | Github token to use when creating webhook | `string` | n/a | yes |
+| <a name="input_repositories"></a> [repositories](#input\_repositories) | List of GitHub repositories to create webhooks for. This is just the name of the repository, excluding the user or organization | `list(string)` | n/a | yes |
 
 ## Outputs
 
