@@ -22,3 +22,8 @@ variable "atlantis_repo_allowlist" {
   description = "List of GitHub repositories that Atlantis will be allowed to access"
   type        = list(string)
 }
+
+variable "git_host_domain" {
+  description = "Example: github.com"
+  type        = string
+}

@@ -45,7 +45,7 @@ module "atlantis" {
       },
       {
         name  = "ATLANTIS_REPO_ALLOWLIST"
-        value = join(",", var.atlantis_repo_allowlist)
+        value = join(",", formatlist("${var.git_host_domain}/${var.github_owner}/%s", var.atlantis_repo_allowlist))
       },
       {
         name  = "ATLANTIS_ENABLE_DIFF_MARKDOWN_FORMAT"

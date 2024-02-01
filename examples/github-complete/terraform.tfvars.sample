@@ -2,6 +2,6 @@ github_token = "ghp_aldkfjadkfjaldfjk"
 github_owner = "me"
 
 domain = "mydomain.com"
-
+git_host_domain = "github.com"
 atlantis_github_user = "JohnDoe"
 atlantis_repo_allowlist = ["my-repo"]
