@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [4.2.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.2.0...v4.2.1) (2024-03-04)
+
+
+### Bug Fixes
+
+* Change default deployment percentages when using EFS to allow updates to succeed ([#399](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/399)) ([834bc0d](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/834bc0da151eabaa459ebe838fc1ca6e4184d11e))
+
 ## [4.2.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.1.0...v4.2.0) (2024-01-18)
 
 
