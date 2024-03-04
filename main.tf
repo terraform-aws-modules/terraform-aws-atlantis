@@ -188,6 +188,10 @@ locals {
     sourceVolume  = "efs"
     readOnly      = false
   }] : try(var.atlantis.mount_points, [])
+
+  # Ref https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/383
+  deployment_maximum_percent         = var.enable_efs ? 100 : 200
+  deployment_minimum_healthy_percent = var.enable_efs ? 0 : 66
 }
 
 module "ecs_cluster" {
@@ -229,8 +233,8 @@ module "ecs_service" {
   capacity_provider_strategy         = try(var.service.capacity_provider_strategy, {})
   cluster_arn                        = var.create_cluster && var.create ? module.ecs_cluster.arn : var.cluster_arn
   deployment_controller              = try(var.service.deployment_controller, {})
-  deployment_maximum_percent         = try(var.service.deployment_maximum_percent, 200)
-  deployment_minimum_healthy_percent = try(var.service.deployment_minimum_healthy_percent, 66)
+  deployment_maximum_percent         = try(var.service.deployment_maximum_percent, local.deployment_maximum_percent)
+  deployment_minimum_healthy_percent = try(var.service.deployment_minimum_healthy_percent, local.deployment_minimum_healthy_percent)
   desired_count                      = try(var.service.desired_count, 1)
   enable_ecs_managed_tags            = try(var.service.enable_ecs_managed_tags, true)
   enable_execute_command             = try(var.service.enable_execute_command, false)
