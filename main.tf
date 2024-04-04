@@ -196,7 +196,7 @@ locals {
 
 module "ecs_cluster" {
   source  = "terraform-aws-modules/ecs/aws//modules/cluster"
-  version = "5.6.0"
+  version = "5.11.0"
 
   create = var.create && var.create_cluster
 
@@ -223,7 +223,7 @@ module "ecs_cluster" {
 
 module "ecs_service" {
   source  = "terraform-aws-modules/ecs/aws//modules/service"
-  version = "5.6.0"
+  version = "5.11.0"
 
   create = var.create
 
@@ -396,6 +396,7 @@ module "ecs_service" {
   task_exec_iam_role_permissions_boundary = try(var.service.task_exec_iam_role_permissions_boundary, null)
   task_exec_iam_role_tags                 = try(var.service.task_exec_iam_role_tags, {})
   task_exec_iam_role_policies             = lookup(var.service, "task_exec_iam_role_policies", {})
+  task_exec_iam_role_max_session_duration = try(var.service.task_exec_iam_role_max_session_duration, null)
 
   # Task execution IAM role policy
   create_task_exec_policy  = try(var.service.create_task_exec_policy, true)
