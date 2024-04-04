@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.3.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.2.2...v4.3.0) (2024-04-04)
+
+
+### Features
+
+* Configure max_session_duration for the ECS Task Execution role ([#401](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/401)) ([c92654a](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/c92654a9dba29c67614a0864ce209ba6c7a1a420))
+
 ## [4.2.2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.2.1...v4.2.2) (2024-03-07)
 
 
