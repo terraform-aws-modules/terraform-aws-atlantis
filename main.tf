@@ -156,7 +156,10 @@ module "alb" {
   associate_web_acl = try(var.alb.associate_web_acl, false)
   web_acl_arn       = try(var.alb.web_acl_arn, null)
 
-  tags = var.tags
+  tags = merge(
+    try(var.alb.tags, {}),
+    var.tags
+  )
 }
 
 ################################################################################
