@@ -157,7 +157,7 @@ module "alb" {
   web_acl_arn       = try(var.alb.web_acl_arn, null)
 
   tags = merge(
-    try(var.alb.tags, {}), 
+    try(var.alb.tags, {}),
     var.tags
   )
 }
