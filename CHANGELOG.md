@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.4.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.3.0...v4.4.0) (2024-07-05)
+
+
+### Features
+
+* Allow setting ALB specific tags ([#404](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/404)) ([bbf63ba](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/bbf63baaefe89650eb61fce51babf54b5ae29208))
+
 ## [4.3.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.2.2...v4.3.0) (2024-04-04)
 
 
