@@ -14,7 +14,7 @@ terraform apply
 
 Note that this example may create resources which cost money. Run `terraform destroy` when you don't need these resources.
 
-<!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
@@ -69,4 +69,4 @@ Note that this example may create resources which cost money. Run `terraform des
 | <a name="output_cluster"></a> [cluster](#output\_cluster) | ECS cluster created and all of its associated outputs |
 | <a name="output_efs"></a> [efs](#output\_efs) | EFS created and all of its associated outputs |
 | <a name="output_service"></a> [service](#output\_service) | ECS service created and all of its associated |
-<!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+<!-- END_TF_DOCS -->
