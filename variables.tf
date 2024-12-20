@@ -51,13 +51,13 @@ variable "create_alb" {
 }
 
 variable "alb_target_group_arn" {
-  description = "ARN of an existing ALB target group that will be used to route traffic to the Atlantis service. Required if `create_alb` is `false`"
+  description = "ARN of an existing ALB target group that will be used to route traffic to the Atlantis service."
   type        = string
   default     = ""
 }
 
 variable "alb_security_group_id" {
-  description = "ID of an existing security group that will be used by ALB. Required if `create_alb` is `false`"
+  description = "ID of an existing security group that will be used by ALB."
   type        = string
   default     = ""
 }

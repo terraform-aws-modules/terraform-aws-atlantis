@@ -447,7 +447,7 @@ module "ecs_service" {
         protocol                 = "tcp"
         source_security_group_id = var.create_alb ? module.alb.security_group_id : var.alb_security_group_id
       }
-    }: {},
+    } : {},
     lookup(var.service, "security_group_rules", {
       egress = {
         type        = "egress"
