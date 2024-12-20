@@ -246,11 +246,11 @@ module "ecs_service" {
   launch_type                        = try(var.service.launch_type, "FARGATE")
   load_balancer = merge(
     {
-      service = {
+      service = var.create_alb || can(coalesce(var.alb_target_group_arn)) ? {
         target_group_arn = var.create_alb && var.create ? module.alb.target_groups["atlantis"].arn : var.alb_target_group_arn
         container_name   = "atlantis"
         container_port   = local.atlantis_port
-      }
+      } : {}
     },
     lookup(var.service, "load_balancer", {})
   )
@@ -439,7 +439,7 @@ module "ecs_service" {
   security_group_use_name_prefix = try(var.service.security_group_use_name_prefix, true)
   security_group_description     = try(var.service.security_group_description, null)
   security_group_rules = merge(
-    {
+    var.create_alb || can(coalesce(var.alb_security_group_id)) ? {
       atlantis = {
         type                     = "ingress"
         from_port                = local.atlantis_port
@@ -447,7 +447,7 @@ module "ecs_service" {
         protocol                 = "tcp"
         source_security_group_id = var.create_alb ? module.alb.security_group_id : var.alb_security_group_id
       }
-    },
+    }: {},
     lookup(var.service, "security_group_rules", {
       egress = {
         type        = "egress"
