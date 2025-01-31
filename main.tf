@@ -186,11 +186,11 @@ module "acm" {
 
 locals {
   mount_path = "/home/atlantis"
-  mount_points = var.enable_efs ? [{
+  mount_points = var.enable_efs ? concat(try(var.atlantis.mount_points, []), [{
     containerPath = local.mount_path
     sourceVolume  = "efs"
     readOnly      = false
-  }] : try(var.atlantis.mount_points, [])
+  }]) : try(var.atlantis.mount_points, [])
 
   # Ref https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/383
   deployment_maximum_percent         = var.enable_efs ? 100 : 200
