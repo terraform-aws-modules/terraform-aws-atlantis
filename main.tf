@@ -386,7 +386,7 @@ module "ecs_service" {
       }
     },
     lookup(var.service, "volume", {})
-  ) : k => v if var.enable_efs }
+  ) : k => v if k != "efs" || var.enable_efs }
   task_tags = try(var.service.task_tags, {})
 
   # Task execution IAM role
