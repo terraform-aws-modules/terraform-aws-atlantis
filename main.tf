@@ -15,12 +15,12 @@ locals {
 locals {
   route53_records = {
     A = {
-      name    = try(coalesce(var.route53_record_name, var.name), "")
+      name    = try(var.route53_record_name != null ? var.route53_record_name : var.name, "")
       type    = "A"
       zone_id = var.route53_zone_id
     }
     AAAA = {
-      name    = try(coalesce(var.route53_record_name, var.name), "")
+      name    = try(var.route53_record_name != null ? var.route53_record_name : var.name, "")
       type    = "AAAA"
       zone_id = var.route53_zone_id
     }
