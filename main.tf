@@ -220,7 +220,7 @@ module "ecs_cluster" {
   cloudwatch_log_group_tags              = try(var.cluster.cloudwatch_log_group_tags, {})
 
   # Capacity providers
-  default_capacity_provider_strategy     = try(var.cluster.default_capacity_provider_strategy, {})
+  default_capacity_provider_strategy = try(var.cluster.default_capacity_provider_strategy, {})
 
   tags = var.tags
 }
@@ -233,7 +233,7 @@ module "ecs_service" {
 
   # Service
   ignore_task_definition_changes     = try(var.service.ignore_task_definition_changes, false)
-  alarms                             = try(var.service.alarms, { alarm_names = [] })  
+  alarms                             = try(var.service.alarms, { alarm_names = [] })
   capacity_provider_strategy         = try(var.service.capacity_provider_strategy, {})
   cluster_arn                        = var.create_cluster && var.create ? module.ecs_cluster.arn : var.cluster_arn
   deployment_controller              = try(var.service.deployment_controller, {})
