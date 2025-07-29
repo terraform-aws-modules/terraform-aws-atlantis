@@ -220,7 +220,7 @@ module "ecs_cluster" {
   cloudwatch_log_group_tags              = try(var.cluster.cloudwatch_log_group_tags, {})
 
   # Capacity providers
-  default_capacity_provider_strategy  = try(var.cluster.default_capacity_provider_strategy, {})
+  default_capacity_provider_strategy     = try(var.cluster.default_capacity_provider_strategy, {})
 
   tags = var.tags
 }
@@ -440,10 +440,10 @@ module "ecs_service" {
   security_group_ingress_rules = merge(
     {
       atlantis = {
-        description                 = "Allow traffic from ALB to Atlantis"
-        from_port                   = local.atlantis_port
-        to_port                     = local.atlantis_port
-        ip_protocol                 = "tcp"
+        description                  = "Allow traffic from ALB to Atlantis"
+        from_port                    = local.atlantis_port
+        to_port                      = local.atlantis_port
+        ip_protocol                  = "tcp"
         referenced_security_group_id = var.create_alb ? module.alb.security_group_id : var.alb_security_group_id
       }
     },
