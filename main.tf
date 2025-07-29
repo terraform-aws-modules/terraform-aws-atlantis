@@ -438,26 +438,31 @@ module "ecs_service" {
   security_group_use_name_prefix = try(var.service.security_group_use_name_prefix, true)
   security_group_description     = try(var.service.security_group_description, null)
   security_group_ingress_rules = merge(
-    lookup(var.service, "security_group_ingress_rules", {}),
     {
       atlantis = {
-        description                  = "Allow ALB to Atlantis"
-        from_port                    = local.atlantis_port
-        to_port                      = local.atlantis_port
-        ip_protocol                  = "tcp"
+        description                 = "Allow traffic from ALB to Atlantis"
+        from_port                   = local.atlantis_port
+        to_port                     = local.atlantis_port
+        ip_protocol                 = "tcp"
         referenced_security_group_id = var.create_alb ? module.alb.security_group_id : var.alb_security_group_id
       }
-    }
+    },
+    lookup(var.service, "security_group_ingress_rules", {})
   )
-  security_group_egress_rules = {
-    egress = {
-      description  = "Allow all outbound traffic"
-      from_port    = 0
-      to_port      = 0
-      ip_protocol  = "-1"
-      cidr_ipv4    = "0.0.0.0/0"
-    }
-  }
+
+  security_group_egress_rules = merge(
+    {
+      egress = {
+        description = "Allow all outbound traffic"
+        from_port   = 0
+        to_port     = 0
+        ip_protocol = "-1"
+        cidr_ipv4   = "0.0.0.0/0"
+      }
+    },
+    lookup(var.service, "security_group_egress_rules", {})
+  )
+
   security_group_tags = try(var.service.security_group_tags, {})
 
   tags = var.tags
