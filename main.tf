@@ -29,7 +29,7 @@ locals {
 
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "9.1.0"
+  version = "9.17.0"
 
   create = var.create && var.create_alb
 
@@ -168,7 +168,7 @@ module "alb" {
 
 module "acm" {
   source  = "terraform-aws-modules/acm/aws"
-  version = "5.0.0"
+  version = "6.1.0"
 
   create_certificate = var.create && var.create_certificate && var.create_alb
 
@@ -199,18 +199,19 @@ locals {
 
 module "ecs_cluster" {
   source  = "terraform-aws-modules/ecs/aws//modules/cluster"
-  version = "5.11.0"
+  version = "6.1.1"
 
   create = var.create && var.create_cluster
 
   # Cluster
-  cluster_name          = try(var.cluster.name, var.name)
-  cluster_configuration = try(var.cluster.configuration, {})
-  cluster_settings = try(var.cluster.settings, {
-    name  = "containerInsights"
-    value = "enabled"
+  name          = try(var.cluster.name, var.name)
+  configuration = try(var.cluster.configuration, {})
+  setting = try(var.cluster.settings, [
+    {
+      name  = "containerInsights"
+      value = "enabled"
     }
-  )
+  ])
 
   # Cloudwatch log group
   create_cloudwatch_log_group            = try(var.cluster.create_cloudwatch_log_group, true)
@@ -219,20 +220,20 @@ module "ecs_cluster" {
   cloudwatch_log_group_tags              = try(var.cluster.cloudwatch_log_group_tags, {})
 
   # Capacity providers
-  fargate_capacity_providers = try(var.cluster.fargate_capacity_providers, {})
+  default_capacity_provider_strategy  = try(var.cluster.default_capacity_provider_strategy, {})
 
   tags = var.tags
 }
 
 module "ecs_service" {
   source  = "terraform-aws-modules/ecs/aws//modules/service"
-  version = "5.11.0"
+  version = "6.1.1"
 
   create = var.create
 
   # Service
   ignore_task_definition_changes     = try(var.service.ignore_task_definition_changes, false)
-  alarms                             = try(var.service.alarms, {})
+  alarms                              = try(var.service.alarms, { alarm_names = [] })  
   capacity_provider_strategy         = try(var.service.capacity_provider_strategy, {})
   cluster_arn                        = var.create_cluster && var.create ? module.ecs_cluster.arn : var.cluster_arn
   deployment_controller              = try(var.service.deployment_controller, {})
@@ -264,7 +265,7 @@ module "ecs_service" {
   propagate_tags                = try(var.service.propagate_tags, null)
   scheduling_strategy           = try(var.service.scheduling_strategy, null)
   service_connect_configuration = lookup(var.service, "service_connect_configuration", {})
-  service_registries            = lookup(var.service, "service_registries", {})
+  service_registries            = try(var.service.service_registries, null)
   timeouts                      = try(var.service.timeouts, {})
   triggers                      = try(var.service.triggers, {})
   wait_for_steady_state         = try(var.service.wait_for_steady_state, null)
@@ -278,7 +279,7 @@ module "ecs_service" {
   iam_role_description          = try(var.service.iam_role_description, null)
   iam_role_permissions_boundary = try(var.service.iam_role_permissions_boundary, null)
   iam_role_tags                 = try(var.service.iam_role_tags, {})
-  iam_role_statements           = lookup(var.service, "iam_role_statements", {})
+  iam_role_statements           = lookup(var.service, "iam_role_statements", [])
 
   # Task definition
   create_task_definition = try(var.service.create_task_definition, true)
@@ -355,17 +356,15 @@ module "ecs_service" {
     },
     lookup(var.service, "container_definitions", {})
   )
-  container_definition_defaults         = lookup(var.service, "container_definition_defaults", {})
   cpu                                   = try(var.service.cpu, 1024)
-  ephemeral_storage                     = try(var.service.ephemeral_storage, {})
+  ephemeral_storage                     = try(var.service.ephemeral_storage, null)
   family                                = try(var.service.family, null)
-  inference_accelerator                 = try(var.service.inference_accelerator, {})
   ipc_mode                              = try(var.service.ipc_mode, null)
   memory                                = try(var.service.memory, 2048)
   network_mode                          = try(var.service.network_mode, "awsvpc")
   pid_mode                              = try(var.service.pid_mode, null)
   task_definition_placement_constraints = try(var.service.task_definition_placement_constraints, {})
-  proxy_configuration                   = try(var.service.proxy_configuration, {})
+  proxy_configuration                   = try(var.service.proxy_configuration, null)
   requires_compatibilities              = try(var.service.requires_compatibilities, ["FARGATE"])
   runtime_platform = try(var.service.runtime_platform, {
     operating_system_family = "LINUX"
@@ -405,7 +404,7 @@ module "ecs_service" {
   create_task_exec_policy  = try(var.service.create_task_exec_policy, true)
   task_exec_ssm_param_arns = try(var.service.task_exec_ssm_param_arns, ["arn:aws:ssm:*:*:parameter/*"])
   task_exec_secret_arns    = try(var.service.task_exec_secret_arns, ["arn:aws:secretsmanager:*:*:secret:*"])
-  task_exec_iam_statements = lookup(var.service, "task_exec_iam_statements", {})
+  task_exec_iam_statements = lookup(var.service, "task_exec_iam_statements", [])
 
   # Tasks - IAM role
   create_tasks_iam_role               = try(var.service.create_tasks_iam_role, true)
@@ -417,7 +416,7 @@ module "ecs_service" {
   tasks_iam_role_permissions_boundary = try(var.service.tasks_iam_role_permissions_boundary, null)
   tasks_iam_role_tags                 = try(var.service.tasks_iam_role_tags, {})
   tasks_iam_role_policies             = lookup(var.service, "tasks_iam_role_policies", {})
-  tasks_iam_role_statements           = lookup(var.service, "tasks_iam_role_statements", {})
+  tasks_iam_role_statements           = lookup(var.service, "tasks_iam_role_statements", [])
 
   # Task set
   external_id               = try(var.service.external_id, null)
@@ -438,26 +437,27 @@ module "ecs_service" {
   security_group_name            = try(var.service.security_group_name, null)
   security_group_use_name_prefix = try(var.service.security_group_use_name_prefix, true)
   security_group_description     = try(var.service.security_group_description, null)
-  security_group_rules = merge(
+  security_group_ingress_rules = merge(
+    lookup(var.service, "security_group_ingress_rules", {}),
     {
       atlantis = {
-        type                     = "ingress"
-        from_port                = local.atlantis_port
-        to_port                  = local.atlantis_port
-        protocol                 = "tcp"
-        source_security_group_id = var.create_alb ? module.alb.security_group_id : var.alb_security_group_id
+        description                  = "Allow ALB to Atlantis"
+        from_port                    = local.atlantis_port
+        to_port                      = local.atlantis_port
+        ip_protocol                  = "tcp"
+        referenced_security_group_id = var.create_alb ? module.alb.security_group_id : var.alb_security_group_id
       }
-    },
-    lookup(var.service, "security_group_rules", {
-      egress = {
-        type        = "egress"
-        from_port   = 0
-        to_port     = 0
-        protocol    = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-      }
-    })
+    }
   )
+  security_group_egress_rules = {
+    egress = {
+      description  = "Allow all outbound traffic"
+      from_port    = 0
+      to_port      = 0
+      ip_protocol  = "-1"
+      cidr_ipv4    = "0.0.0.0/0"
+    }
+  }
   security_group_tags = try(var.service.security_group_tags, {})
 
   tags = var.tags
@@ -469,7 +469,7 @@ module "ecs_service" {
 
 module "efs" {
   source  = "terraform-aws-modules/efs/aws"
-  version = "1.3.1"
+  version = "1.7.0"
 
   create = var.create && var.enable_efs
   name   = try(var.efs.name, var.name)
