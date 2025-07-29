@@ -4,4 +4,6 @@ github_owner = "me"
 domain = "mydomain.com"
 
 atlantis_github_user = "JohnDoe"
-atlantis_repo_allowlist = ["my-repo"]
+# Format is {hostname}/{owner}/{repo} https://www.runatlantis.io/docs/server-configuration.html#repo-allowlist
+atlantis_repo_allowlist = ["github.com/johndoe/*"]
+repositories = ["myrepo"]
