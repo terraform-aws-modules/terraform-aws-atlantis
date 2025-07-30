@@ -125,7 +125,7 @@ resource "random_password" "webhook_secret" {
 
 module "secrets_manager" {
   source  = "terraform-aws-modules/secrets-manager/aws"
-  version = "~> 1.0"
+  version = "1.3.1"
 
   for_each = {
     github-token = {
@@ -146,7 +146,7 @@ module "secrets_manager" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  version = "6.0.1"
 
   name = local.name
   cidr = local.vpc_cidr
