@@ -105,11 +105,11 @@ module "atlantis_disabled" {
 
 module "ecs_cluster" {
   source  = "terraform-aws-modules/ecs/aws//modules/cluster"
-  version = "5.6.0"
+  version = "6.1.1"
 
   # Cluster
-  cluster_name = local.name
-  cluster_settings = {
+  name = local.name
+  setting = {
     name  = "containerInsights"
     value = "enabled"
   }
@@ -119,7 +119,7 @@ module "ecs_cluster" {
 
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "9.1.0"
+  version = "9.17.0"
 
   name = local.name
 
