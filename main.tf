@@ -287,16 +287,16 @@ module "ecs_service" {
   container_definitions = merge(
     {
       atlantis = {
-        command                 = try(var.atlantis.command, [])
-        cpu                     = try(var.atlantis.cpu, 1024)
-        dependsOn               = try(var.atlantis.depends_on, [])
-        disableNetworking       = try(var.atlantis.disableNetworking, null)
-        dnsSearchDomains        = try(var.atlantis.dnsSearchDomains, [])
-        dnsServers              = try(var.atlantis.dnsServers, [])
-        dockerLabels            = try(var.atlantis.dockerLabels, {})
-        dockerSecurityOptions   = try(var.atlantis.dockerSecurityOptions, [])
-        enable_execute_command  = try(var.atlantis.enable_execute_command, try(var.service.enable_execute_command, false))
-        entryPoint              = try(var.atlantis.entryPoint, [])
+        command                = try(var.atlantis.command, [])
+        cpu                    = try(var.atlantis.cpu, 1024)
+        dependsOn              = try(var.atlantis.depends_on, [])
+        disableNetworking      = try(var.atlantis.disableNetworking, null)
+        dnsSearchDomains       = try(var.atlantis.dnsSearchDomains, [])
+        dnsServers             = try(var.atlantis.dnsServers, [])
+        dockerLabels           = try(var.atlantis.dockerLabels, {})
+        dockerSecurityOptions  = try(var.atlantis.dockerSecurityOptions, [])
+        enable_execute_command = try(var.atlantis.enable_execute_command, try(var.service.enable_execute_command, false))
+        entryPoint             = try(var.atlantis.entryPoint, [])
         environment = concat(
           [
             {
@@ -310,40 +310,40 @@ module "ecs_service" {
           ],
           lookup(var.atlantis, "environment", [])
         )
-        environmentFiles        = try(var.atlantis.environmentFiles, [])
-        essential              = try(var.atlantis.essential, true)
-        extraHosts              = try(var.atlantis.extraHosts, [])
-        firelensConfiguration   = try(var.atlantis.firelensConfiguration, {})
-        healthCheck             = try(var.atlantis.healthCheck, {})
-        hostname               = try(var.atlantis.hostname, null)
-        image                  = try(var.atlantis.image, "ghcr.io/runatlantis/atlantis:latest")
-        interactive            = try(var.atlantis.interactive, false)
-        links                  = try(var.atlantis.links, [])
-        linuxParameters         = try(var.atlantis.linuxParameters, {})
-        logConfiguration        = lookup(var.atlantis, "logConfiguration", {})
-        memory                 = try(var.atlantis.memory, 2048)
-        memoryReservation       = try(var.atlantis.memoryReservation, null)
-        mountPoints             = local.mount_points
-        name                   = "atlantis"
+        environmentFiles      = try(var.atlantis.environmentFiles, [])
+        essential             = try(var.atlantis.essential, true)
+        extraHosts            = try(var.atlantis.extraHosts, [])
+        firelensConfiguration = try(var.atlantis.firelensConfiguration, {})
+        healthCheck           = try(var.atlantis.healthCheck, {})
+        hostname              = try(var.atlantis.hostname, null)
+        image                 = try(var.atlantis.image, "ghcr.io/runatlantis/atlantis:latest")
+        interactive           = try(var.atlantis.interactive, false)
+        links                 = try(var.atlantis.links, [])
+        linuxParameters       = try(var.atlantis.linuxParameters, {})
+        logConfiguration      = lookup(var.atlantis, "logConfiguration", {})
+        memory                = try(var.atlantis.memory, 2048)
+        memoryReservation     = try(var.atlantis.memoryReservation, null)
+        mountPoints           = local.mount_points
+        name                  = "atlantis"
         portMappings = [{
           name          = "atlantis"
           containerPort = local.atlantis_port
           hostPort      = local.atlantis_port
           protocol      = "tcp"
         }]
-        privileged               = try(var.atlantis.privileged, false)
-        pseudoTerminal           = try(var.atlantis.pseudoTerminal, false)
-        readonlyRootFilesystem   = try(var.atlantis.readonlyRootFilesystem, false)
-        repositoryCredentials    = try(var.atlantis.repositoryCredentials, {})
-        resourceRequirements     = try(var.atlantis.resourceRequirements, [])
-        secrets                  = try(var.atlantis.secrets, [])
-        startTimeout             = try(var.atlantis.startTimeout, 30)
-        stopTimeout              = try(var.atlantis.stopTimeout, 120)
-        systemControls           = try(var.atlantis.systemControls, [])
-        ulimits                  = try(var.atlantis.ulimits, [])
-        user                     = try(var.atlantis.user, "${var.atlantis_uid}:${var.atlantis_gid}")
-        volumesFrom              = try(var.atlantis.volumesFrom, [])
-        workingDirectory         = try(var.atlantis.workingDirectory, null)
+        privileged             = try(var.atlantis.privileged, false)
+        pseudoTerminal         = try(var.atlantis.pseudoTerminal, false)
+        readonlyRootFilesystem = try(var.atlantis.readonlyRootFilesystem, false)
+        repositoryCredentials  = try(var.atlantis.repositoryCredentials, {})
+        resourceRequirements   = try(var.atlantis.resourceRequirements, [])
+        secrets                = try(var.atlantis.secrets, [])
+        startTimeout           = try(var.atlantis.startTimeout, 30)
+        stopTimeout            = try(var.atlantis.stopTimeout, 120)
+        systemControls         = try(var.atlantis.systemControls, [])
+        ulimits                = try(var.atlantis.ulimits, [])
+        user                   = try(var.atlantis.user, "${var.atlantis_uid}:${var.atlantis_gid}")
+        volumesFrom            = try(var.atlantis.volumesFrom, [])
+        workingDirectory       = try(var.atlantis.workingDirectory, null)
 
         # CloudWatch Log Group
         service                                = var.name
