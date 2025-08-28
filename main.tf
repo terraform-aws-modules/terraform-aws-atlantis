@@ -190,7 +190,7 @@ locals {
     containerPath = local.mount_path
     sourceVolume  = "efs"
     readOnly      = false
-  }] : try(var.atlantis.mount_points, [])
+  }] : try(var.atlantis.mountPoints, [])
 
   # Ref https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/383
   deployment_maximum_percent         = var.enable_efs ? 100 : 200
@@ -233,17 +233,17 @@ module "ecs_service" {
 
   # Service
   ignore_task_definition_changes     = try(var.service.ignore_task_definition_changes, false)
-  alarms                             = try(var.service.alarms, { alarm_names = [] })
-  capacity_provider_strategy         = try(var.service.capacity_provider_strategy, {})
+  alarms                             = try(var.service.alarms, null)
+  capacity_provider_strategy         = var.service.capacity_provider_strategy
   cluster_arn                        = var.create_cluster && var.create ? module.ecs_cluster.arn : var.cluster_arn
-  deployment_controller              = try(var.service.deployment_controller, {})
+  deployment_controller              = var.service.deployment_controller
   deployment_maximum_percent         = try(var.service.deployment_maximum_percent, local.deployment_maximum_percent)
   deployment_minimum_healthy_percent = try(var.service.deployment_minimum_healthy_percent, local.deployment_minimum_healthy_percent)
   desired_count                      = try(var.service.desired_count, 1)
   enable_ecs_managed_tags            = try(var.service.enable_ecs_managed_tags, true)
   enable_execute_command             = try(var.service.enable_execute_command, false)
   force_new_deployment               = try(var.service.force_new_deployment, true)
-  health_check_grace_period_seconds  = try(var.service.health_check_grace_period_seconds, null)
+  health_check_grace_period_seconds  = var.service.health_check_grace_period_seconds
   launch_type                        = try(var.service.launch_type, "FARGATE")
   load_balancer = merge(
     {
@@ -259,44 +259,44 @@ module "ecs_service" {
   assign_public_ip              = try(var.service.assign_public_ip, false)
   security_group_ids            = try(var.service.security_group_ids, [])
   subnet_ids                    = try(var.service.subnet_ids, var.service_subnets)
-  ordered_placement_strategy    = try(var.service.ordered_placement_strategy, {})
-  placement_constraints         = try(var.service.placement_constraints, {})
-  platform_version              = try(var.service.platform_version, null)
-  propagate_tags                = try(var.service.propagate_tags, null)
-  scheduling_strategy           = try(var.service.scheduling_strategy, null)
-  service_connect_configuration = lookup(var.service, "service_connect_configuration", {})
-  service_registries            = try(var.service.service_registries, null)
-  timeouts                      = try(var.service.timeouts, {})
-  triggers                      = try(var.service.triggers, {})
-  wait_for_steady_state         = try(var.service.wait_for_steady_state, null)
+  ordered_placement_strategy    = var.service.ordered_placement_strategy
+  placement_constraints         = var.service.placement_constraints
+  platform_version              = var.service.platform_version
+  propagate_tags                = var.service.propagate_tags
+  scheduling_strategy           = var.service.scheduling_strategy
+  service_connect_configuration = var.service.service_connect_configuration
+  service_registries            = var.service.service_registries
+  timeouts                      = var.service.timeouts
+  triggers                      = var.service.triggers
+  wait_for_steady_state         = var.service.wait_for_steady_state
 
   # Service IAM role
   create_iam_role               = try(var.service.create_iam_role, true)
-  iam_role_arn                  = try(var.service.iam_role_arn, null)
-  iam_role_name                 = try(var.service.iam_role_name, null)
+  iam_role_arn                  = var.service.iam_role_arn
+  iam_role_name                 = var.service.iam_role_name
   iam_role_use_name_prefix      = try(var.service.iam_role_use_name_prefix, true)
-  iam_role_path                 = try(var.service.iam_role_path, null)
-  iam_role_description          = try(var.service.iam_role_description, null)
-  iam_role_permissions_boundary = try(var.service.iam_role_permissions_boundary, null)
+  iam_role_path                 = var.service.iam_role_path
+  iam_role_description          = var.service.iam_role_description
+  iam_role_permissions_boundary = var.service.iam_role_permissions_boundary
   iam_role_tags                 = try(var.service.iam_role_tags, {})
   iam_role_statements           = lookup(var.service, "iam_role_statements", [])
 
   # Task definition
   create_task_definition = try(var.service.create_task_definition, true)
-  task_definition_arn    = try(var.service.task_definition_arn, null)
+  task_definition_arn    = var.service.task_definition_arn
   container_definitions = merge(
     {
       atlantis = {
         command                 = try(var.atlantis.command, [])
         cpu                     = try(var.atlantis.cpu, 1024)
-        dependencies            = try(var.atlantis.dependencies, []) # depends_on is a reserved word
-        disable_networking      = try(var.atlantis.disable_networking, null)
-        dns_search_domains      = try(var.atlantis.dns_search_domains, [])
-        dns_servers             = try(var.atlantis.dns_servers, [])
-        docker_labels           = try(var.atlantis.docker_labels, {})
-        docker_security_options = try(var.atlantis.docker_security_options, [])
+        dependsOn               = try(var.atlantis.depends_on, [])
+        disableNetworking       = try(var.atlantis.disableNetworking, null)
+        dnsSearchDomains        = try(var.atlantis.dnsSearchDomains, [])
+        dnsServers              = try(var.atlantis.dnsServers, [])
+        dockerLabels            = try(var.atlantis.dockerLabels, {})
+        dockerSecurityOptions   = try(var.atlantis.dockerSecurityOptions, [])
         enable_execute_command  = try(var.atlantis.enable_execute_command, try(var.service.enable_execute_command, false))
-        entrypoint              = try(var.atlantis.entrypoint, [])
+        entryPoint              = try(var.atlantis.entryPoint, [])
         environment = concat(
           [
             {
@@ -310,40 +310,40 @@ module "ecs_service" {
           ],
           lookup(var.atlantis, "environment", [])
         )
-        environment_files      = try(var.atlantis.environment_files, [])
+        environmentFiles        = try(var.atlantis.environmentFiles, [])
         essential              = try(var.atlantis.essential, true)
-        extra_hosts            = try(var.atlantis.extra_hosts, [])
-        firelens_configuration = try(var.atlantis.firelens_configuration, {})
-        health_check           = try(var.atlantis.health_check, {})
+        extraHosts              = try(var.atlantis.extraHosts, [])
+        firelensConfiguration   = try(var.atlantis.firelensConfiguration, {})
+        healthCheck             = try(var.atlantis.healthCheck, {})
         hostname               = try(var.atlantis.hostname, null)
         image                  = try(var.atlantis.image, "ghcr.io/runatlantis/atlantis:latest")
         interactive            = try(var.atlantis.interactive, false)
         links                  = try(var.atlantis.links, [])
-        linux_parameters       = try(var.atlantis.linux_parameters, {})
-        log_configuration      = lookup(var.atlantis, "log_configuration", {})
+        linuxParameters         = try(var.atlantis.linuxParameters, {})
+        logConfiguration        = lookup(var.atlantis, "logConfiguration", {})
         memory                 = try(var.atlantis.memory, 2048)
-        memory_reservation     = try(var.atlantis.memory_reservation, null)
-        mount_points           = local.mount_points
+        memoryReservation       = try(var.atlantis.memoryReservation, null)
+        mountPoints             = local.mount_points
         name                   = "atlantis"
-        port_mappings = [{
+        portMappings = [{
           name          = "atlantis"
           containerPort = local.atlantis_port
           hostPort      = local.atlantis_port
           protocol      = "tcp"
         }]
         privileged               = try(var.atlantis.privileged, false)
-        pseudo_terminal          = try(var.atlantis.pseudo_terminal, false)
-        readonly_root_filesystem = try(var.atlantis.readonly_root_filesystem, false)
-        repository_credentials   = try(var.atlantis.repository_credentials, {})
-        resource_requirements    = try(var.atlantis.resource_requirements, [])
+        pseudoTerminal           = try(var.atlantis.pseudoTerminal, false)
+        readonlyRootFilesystem   = try(var.atlantis.readonlyRootFilesystem, false)
+        repositoryCredentials    = try(var.atlantis.repositoryCredentials, {})
+        resourceRequirements     = try(var.atlantis.resourceRequirements, [])
         secrets                  = try(var.atlantis.secrets, [])
-        start_timeout            = try(var.atlantis.start_timeout, 30)
-        stop_timeout             = try(var.atlantis.stop_timeout, 120)
-        system_controls          = try(var.atlantis.system_controls, [])
+        startTimeout             = try(var.atlantis.startTimeout, 30)
+        stopTimeout              = try(var.atlantis.stopTimeout, 120)
+        systemControls           = try(var.atlantis.systemControls, [])
         ulimits                  = try(var.atlantis.ulimits, [])
         user                     = try(var.atlantis.user, "${var.atlantis_uid}:${var.atlantis_gid}")
-        volumes_from             = try(var.atlantis.volumes_from, [])
-        working_directory        = try(var.atlantis.working_directory, null)
+        volumesFrom              = try(var.atlantis.volumesFrom, [])
+        workingDirectory         = try(var.atlantis.workingDirectory, null)
 
         # CloudWatch Log Group
         service                                = var.name
@@ -357,20 +357,20 @@ module "ecs_service" {
     lookup(var.service, "container_definitions", {})
   )
   cpu                                   = try(var.service.cpu, 1024)
-  ephemeral_storage                     = try(var.service.ephemeral_storage, null)
-  family                                = try(var.service.family, null)
-  ipc_mode                              = try(var.service.ipc_mode, null)
+  ephemeral_storage                     = var.service.ephemeral_storage
+  family                                = var.service.family
+  ipc_mode                              = var.service.ipc_mode
   memory                                = try(var.service.memory, 2048)
   network_mode                          = try(var.service.network_mode, "awsvpc")
-  pid_mode                              = try(var.service.pid_mode, null)
-  task_definition_placement_constraints = try(var.service.task_definition_placement_constraints, {})
-  proxy_configuration                   = try(var.service.proxy_configuration, null)
+  pid_mode                              = var.service.pid_mode
+  task_definition_placement_constraints = var.service.task_definition_placement_constraints
+  proxy_configuration                   = var.service.proxy_configuration
   requires_compatibilities              = try(var.service.requires_compatibilities, ["FARGATE"])
   runtime_platform = try(var.service.runtime_platform, {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
   })
-  skip_destroy = try(var.service.skip_destroy, null)
+  skip_destroy = var.service.skip_destroy
   volume = { for k, v in merge(
     {
       efs = {
@@ -390,40 +390,40 @@ module "ecs_service" {
 
   # Task execution IAM role
   create_task_exec_iam_role               = try(var.service.create_task_exec_iam_role, true)
-  task_exec_iam_role_arn                  = try(var.service.task_exec_iam_role_arn, null)
-  task_exec_iam_role_name                 = try(var.service.task_exec_iam_role_name, null)
+  task_exec_iam_role_arn                  = var.service.task_exec_iam_role_arn
+  task_exec_iam_role_name                 = var.service.task_exec_iam_role_name
   task_exec_iam_role_use_name_prefix      = try(var.service.task_exec_iam_role_use_name_prefix, true)
-  task_exec_iam_role_path                 = try(var.service.task_exec_iam_role_path, null)
-  task_exec_iam_role_description          = try(var.service.task_exec_iam_role_description, null)
-  task_exec_iam_role_permissions_boundary = try(var.service.task_exec_iam_role_permissions_boundary, null)
+  task_exec_iam_role_path                 = var.service.task_exec_iam_role_path
+  task_exec_iam_role_description          = var.service.task_exec_iam_role_description
+  task_exec_iam_role_permissions_boundary = var.service.task_exec_iam_role_permissions_boundary
   task_exec_iam_role_tags                 = try(var.service.task_exec_iam_role_tags, {})
   task_exec_iam_role_policies             = lookup(var.service, "task_exec_iam_role_policies", {})
-  task_exec_iam_role_max_session_duration = try(var.service.task_exec_iam_role_max_session_duration, null)
+  task_exec_iam_role_max_session_duration = var.service.task_exec_iam_role_max_session_duration
 
   # Task execution IAM role policy
   create_task_exec_policy  = try(var.service.create_task_exec_policy, true)
-  task_exec_ssm_param_arns = try(var.service.task_exec_ssm_param_arns, ["arn:aws:ssm:*:*:parameter/*"])
-  task_exec_secret_arns    = try(var.service.task_exec_secret_arns, ["arn:aws:secretsmanager:*:*:secret:*"])
+  task_exec_ssm_param_arns = try(var.service.task_exec_ssm_param_arns, [])
+  task_exec_secret_arns    = try(var.service.task_exec_secret_arns, [])
   task_exec_iam_statements = lookup(var.service, "task_exec_iam_statements", [])
 
   # Tasks - IAM role
   create_tasks_iam_role               = try(var.service.create_tasks_iam_role, true)
-  tasks_iam_role_arn                  = try(var.service.tasks_iam_role_arn, null)
-  tasks_iam_role_name                 = try(var.service.tasks_iam_role_name, null)
+  tasks_iam_role_arn                  = var.service.tasks_iam_role_arn
+  tasks_iam_role_name                 = var.service.tasks_iam_role_name
   tasks_iam_role_use_name_prefix      = try(var.service.tasks_iam_role_use_name_prefix, true)
-  tasks_iam_role_path                 = try(var.service.tasks_iam_role_path, null)
-  tasks_iam_role_description          = try(var.service.tasks_iam_role_description, null)
-  tasks_iam_role_permissions_boundary = try(var.service.tasks_iam_role_permissions_boundary, null)
+  tasks_iam_role_path                 = var.service.tasks_iam_role_path
+  tasks_iam_role_description          = var.service.tasks_iam_role_description
+  tasks_iam_role_permissions_boundary = var.service.tasks_iam_role_permissions_boundary
   tasks_iam_role_tags                 = try(var.service.tasks_iam_role_tags, {})
   tasks_iam_role_policies             = lookup(var.service, "tasks_iam_role_policies", {})
   tasks_iam_role_statements           = lookup(var.service, "tasks_iam_role_statements", [])
 
   # Task set
-  external_id               = try(var.service.external_id, null)
-  scale                     = try(var.service.scale, {})
-  force_delete              = try(var.service.force_delete, null)
+  external_id               = var.service.external_id
+  scale                     = var.service.scale
+  force_delete              = var.service.force_delete
   wait_until_stable         = try(var.service.wait_until_stable, null)
-  wait_until_stable_timeout = try(var.service.wait_until_stable_timeout, null)
+  wait_until_stable_timeout = var.service.wait_until_stable_timeout
 
   # Autoscaling
   enable_autoscaling            = try(var.service.enable_autoscaling, false)
@@ -434,9 +434,9 @@ module "ecs_service" {
 
   # Security Group
   create_security_group          = try(var.service.create_security_group, true)
-  security_group_name            = try(var.service.security_group_name, null)
+  security_group_name            = var.service.security_group_name
   security_group_use_name_prefix = try(var.service.security_group_use_name_prefix, true)
-  security_group_description     = try(var.service.security_group_description, null)
+  security_group_description     = var.service.security_group_description
   security_group_ingress_rules = merge(
     {
       atlantis = {
