@@ -234,16 +234,16 @@ module "ecs_service" {
   # Service
   ignore_task_definition_changes     = try(var.service.ignore_task_definition_changes, false)
   alarms                             = try(var.service.alarms, null)
-  capacity_provider_strategy         = var.service.capacity_provider_strategy
+  capacity_provider_strategy         = try(var.service.capacity_provider_strategy, null)
   cluster_arn                        = var.create_cluster && var.create ? module.ecs_cluster.arn : var.cluster_arn
-  deployment_controller              = var.service.deployment_controller
+  deployment_controller              = try(var.service.deployment_controller, null)
   deployment_maximum_percent         = try(var.service.deployment_maximum_percent, local.deployment_maximum_percent)
   deployment_minimum_healthy_percent = try(var.service.deployment_minimum_healthy_percent, local.deployment_minimum_healthy_percent)
   desired_count                      = try(var.service.desired_count, 1)
   enable_ecs_managed_tags            = try(var.service.enable_ecs_managed_tags, true)
   enable_execute_command             = try(var.service.enable_execute_command, false)
   force_new_deployment               = try(var.service.force_new_deployment, true)
-  health_check_grace_period_seconds  = var.service.health_check_grace_period_seconds
+  health_check_grace_period_seconds  = try(var.service.health_check_grace_period_seconds, null)
   launch_type                        = try(var.service.launch_type, "FARGATE")
   load_balancer = merge(
     {
@@ -259,31 +259,31 @@ module "ecs_service" {
   assign_public_ip              = try(var.service.assign_public_ip, false)
   security_group_ids            = try(var.service.security_group_ids, [])
   subnet_ids                    = try(var.service.subnet_ids, var.service_subnets)
-  ordered_placement_strategy    = var.service.ordered_placement_strategy
-  placement_constraints         = var.service.placement_constraints
-  platform_version              = var.service.platform_version
-  propagate_tags                = var.service.propagate_tags
-  scheduling_strategy           = var.service.scheduling_strategy
-  service_connect_configuration = var.service.service_connect_configuration
-  service_registries            = var.service.service_registries
-  timeouts                      = var.service.timeouts
-  triggers                      = var.service.triggers
-  wait_for_steady_state         = var.service.wait_for_steady_state
+  ordered_placement_strategy    = try(var.service.ordered_placement_strategy, null)
+  placement_constraints         = try(var.service.placement_constraints, null)
+  platform_version              = try(var.service.platform_version, null)
+  propagate_tags                = try(var.service.propagate_tags, null)
+  scheduling_strategy           = try(var.service.scheduling_strategy, null)
+  service_connect_configuration = try(var.service.service_connect_configuration, null)
+  service_registries            = try(var.service.service_registries, null)
+  timeouts                      = try(var.service.timeouts, null)
+  triggers                      = try(var.service.triggers, null)
+  wait_for_steady_state         = try(var.service.wait_for_steady_state, null)
 
   # Service IAM role
   create_iam_role               = try(var.service.create_iam_role, true)
-  iam_role_arn                  = var.service.iam_role_arn
-  iam_role_name                 = var.service.iam_role_name
+  iam_role_arn                  = try(var.service.iam_role_arn, null)
+  iam_role_name                 = try(var.service.iam_role_name, null)
   iam_role_use_name_prefix      = try(var.service.iam_role_use_name_prefix, true)
-  iam_role_path                 = var.service.iam_role_path
-  iam_role_description          = var.service.iam_role_description
-  iam_role_permissions_boundary = var.service.iam_role_permissions_boundary
+  iam_role_path                 = try(var.service.iam_role_path, null)
+  iam_role_description          = try(var.service.iam_role_description, null)
+  iam_role_permissions_boundary = try(var.service.iam_role_permissions_boundary, null)
   iam_role_tags                 = try(var.service.iam_role_tags, {})
   iam_role_statements           = lookup(var.service, "iam_role_statements", [])
 
   # Task definition
   create_task_definition = try(var.service.create_task_definition, true)
-  task_definition_arn    = var.service.task_definition_arn
+  task_definition_arn    = try(var.service.task_definition_arn, null)
   container_definitions = merge(
     {
       atlantis = {
@@ -357,20 +357,20 @@ module "ecs_service" {
     lookup(var.service, "container_definitions", {})
   )
   cpu                                   = try(var.service.cpu, 1024)
-  ephemeral_storage                     = var.service.ephemeral_storage
-  family                                = var.service.family
-  ipc_mode                              = var.service.ipc_mode
+  ephemeral_storage                     = try(var.service.ephemeral_storage, null)
+  family                                = try(var.service.family, null)
+  ipc_mode                              = try(var.service.ipc_mode, null)
   memory                                = try(var.service.memory, 2048)
   network_mode                          = try(var.service.network_mode, "awsvpc")
-  pid_mode                              = var.service.pid_mode
-  task_definition_placement_constraints = var.service.task_definition_placement_constraints
-  proxy_configuration                   = var.service.proxy_configuration
+  pid_mode                              = try(var.service.pid_mode, null)
+  task_definition_placement_constraints = try(var.service.task_definition_placement_constraints, null)
+  proxy_configuration                   = try(var.service.proxy_configuration, null)
   requires_compatibilities              = try(var.service.requires_compatibilities, ["FARGATE"])
   runtime_platform = try(var.service.runtime_platform, {
     operating_system_family = "LINUX"
     cpu_architecture        = "X86_64"
   })
-  skip_destroy = var.service.skip_destroy
+  skip_destroy = try(var.service.skip_destroy, null)
   volume = { for k, v in merge(
     {
       efs = {
@@ -390,15 +390,15 @@ module "ecs_service" {
 
   # Task execution IAM role
   create_task_exec_iam_role               = try(var.service.create_task_exec_iam_role, true)
-  task_exec_iam_role_arn                  = var.service.task_exec_iam_role_arn
-  task_exec_iam_role_name                 = var.service.task_exec_iam_role_name
+  task_exec_iam_role_arn                  = try(var.service.task_exec_iam_role_arn, null)
+  task_exec_iam_role_name                 = try(var.service.task_exec_iam_role_name, null)
   task_exec_iam_role_use_name_prefix      = try(var.service.task_exec_iam_role_use_name_prefix, true)
-  task_exec_iam_role_path                 = var.service.task_exec_iam_role_path
-  task_exec_iam_role_description          = var.service.task_exec_iam_role_description
-  task_exec_iam_role_permissions_boundary = var.service.task_exec_iam_role_permissions_boundary
+  task_exec_iam_role_path                 = try(var.service.task_exec_iam_role_path, null)
+  task_exec_iam_role_description          = try(var.service.task_exec_iam_role_description, null)
+  task_exec_iam_role_permissions_boundary = try(var.service.task_exec_iam_role_permissions_boundary, null)
   task_exec_iam_role_tags                 = try(var.service.task_exec_iam_role_tags, {})
   task_exec_iam_role_policies             = lookup(var.service, "task_exec_iam_role_policies", {})
-  task_exec_iam_role_max_session_duration = var.service.task_exec_iam_role_max_session_duration
+  task_exec_iam_role_max_session_duration = try(var.service.task_exec_iam_role_max_session_duration, null)
 
   # Task execution IAM role policy
   create_task_exec_policy  = try(var.service.create_task_exec_policy, true)
@@ -408,22 +408,22 @@ module "ecs_service" {
 
   # Tasks - IAM role
   create_tasks_iam_role               = try(var.service.create_tasks_iam_role, true)
-  tasks_iam_role_arn                  = var.service.tasks_iam_role_arn
-  tasks_iam_role_name                 = var.service.tasks_iam_role_name
+  tasks_iam_role_arn                  = try(var.service.tasks_iam_role_arn, null)
+  tasks_iam_role_name                 = try(var.service.tasks_iam_role_name, null)
   tasks_iam_role_use_name_prefix      = try(var.service.tasks_iam_role_use_name_prefix, true)
-  tasks_iam_role_path                 = var.service.tasks_iam_role_path
-  tasks_iam_role_description          = var.service.tasks_iam_role_description
-  tasks_iam_role_permissions_boundary = var.service.tasks_iam_role_permissions_boundary
+  tasks_iam_role_path                 = try(var.service.tasks_iam_role_path, null)
+  tasks_iam_role_description          = try(var.service.tasks_iam_role_description, null)
+  tasks_iam_role_permissions_boundary = try(var.service.tasks_iam_role_permissions_boundary, null)
   tasks_iam_role_tags                 = try(var.service.tasks_iam_role_tags, {})
   tasks_iam_role_policies             = lookup(var.service, "tasks_iam_role_policies", {})
   tasks_iam_role_statements           = lookup(var.service, "tasks_iam_role_statements", [])
 
   # Task set
-  external_id               = var.service.external_id
-  scale                     = var.service.scale
-  force_delete              = var.service.force_delete
+  external_id               = try(var.service.external_id, null)
+  scale                     = try(var.service.scale, null)
+  force_delete              = try(var.service.force_delete, null)
   wait_until_stable         = try(var.service.wait_until_stable, null)
-  wait_until_stable_timeout = var.service.wait_until_stable_timeout
+  wait_until_stable_timeout = try(var.service.wait_until_stable_timeout, null)
 
   # Autoscaling
   enable_autoscaling            = try(var.service.enable_autoscaling, false)
@@ -434,9 +434,9 @@ module "ecs_service" {
 
   # Security Group
   create_security_group          = try(var.service.create_security_group, true)
-  security_group_name            = var.service.security_group_name
+  security_group_name            = try(var.service.security_group_name, null)
   security_group_use_name_prefix = try(var.service.security_group_use_name_prefix, true)
-  security_group_description     = var.service.security_group_description
+  security_group_description     = try(var.service.security_group_description, null)
   security_group_ingress_rules = merge(
     {
       atlantis = {
