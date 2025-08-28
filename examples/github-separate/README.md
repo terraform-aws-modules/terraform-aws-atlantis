@@ -35,7 +35,7 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | 9.17.0 |
+| <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | ~> 9.0 |
 | <a name="module_atlantis"></a> [atlantis](#module\_atlantis) | ../../ | n/a |
 | <a name="module_atlantis_disabled"></a> [atlantis\_disabled](#module\_atlantis\_disabled) | ../../ | n/a |
 | <a name="module_ecs_cluster"></a> [ecs\_cluster](#module\_ecs\_cluster) | terraform-aws-modules/ecs/aws//modules/cluster | 6.1.1 |
