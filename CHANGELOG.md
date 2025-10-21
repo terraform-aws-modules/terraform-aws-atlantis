@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.4.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.4.0...v4.4.1) (2025-10-21)
+
+### Bug Fixes
+
+* Update CI workflow versions to latest ([#407](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/407)) ([0ee2a20](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/0ee2a20432d43d40c0a0921bca5a6131e531d562))
+* Update CI workflow versions to latest ([#423](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/423)) ([864eaca](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/864eaca26591fa9e9eaf2c5f116134e1baa1c380))
+
 ## [4.4.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.3.0...v4.4.0) (2024-07-05)
 
 
