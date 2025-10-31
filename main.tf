@@ -235,6 +235,7 @@ module "ecs_service" {
   alarms                             = try(var.service.alarms, {})
   capacity_provider_strategy         = try(var.service.capacity_provider_strategy, {})
   cluster_arn                        = var.create_cluster && var.create ? module.ecs_cluster.arn : var.cluster_arn
+  deployment_circuit_breaker         = try(var.service.deployment_circuit_breaker, {})
   deployment_controller              = try(var.service.deployment_controller, {})
   deployment_maximum_percent         = try(var.service.deployment_maximum_percent, local.deployment_maximum_percent)
   deployment_minimum_healthy_percent = try(var.service.deployment_minimum_healthy_percent, local.deployment_minimum_healthy_percent)

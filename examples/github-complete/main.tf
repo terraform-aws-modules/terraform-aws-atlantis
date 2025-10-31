@@ -70,6 +70,12 @@ module "atlantis" {
     tasks_iam_role_policies = {
       AdministratorAccess = "arn:aws:iam::aws:policy/AdministratorAccess"
     }
+
+    # Enable circuit breaker for automatic rollback on failed deployments
+    deployment_circuit_breaker = {
+      enable   = true
+      rollback = true
+    }
   }
 
   # ALB

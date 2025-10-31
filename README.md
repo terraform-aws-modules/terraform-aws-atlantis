@@ -200,6 +200,26 @@ module "atlantis" {
 }
 ```
 
+### Enable Deployment Circuit Breaker
+
+You can enable the ECS deployment circuit breaker to automatically roll back failed deployments:
+
+```hcl
+module "atlantis" {
+  source  = "terraform-aws-modules/atlantis/aws"
+
+  # ...
+
+  service = {
+    # Enable circuit breaker for automatic rollback on failed deployments
+    deployment_circuit_breaker = {
+      enable   = true
+      rollback = true
+    }
+  }
+}
+```
+
 ## Examples
 
 - [Complete Atlantis with GitHub webhook](https://github.com/terraform-aws-modules/terraform-aws-atlantis/tree/master/examples/github-complete)
