@@ -4,11 +4,27 @@ variable "create" {
   default     = true
 }
 
+variable "region" {
+  description = "Region where the resource(s) will be managed. Defaults to the Region set in the provider configuration"
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
   default     = {}
 }
+
+variable "vpc_id" {
+  description = "ID of the VPC where the resources will be provisioned"
+  type        = string
+  default     = ""
+}
+
+################################################################################
+# Atlantis
+################################################################################
 
 variable "name" {
   description = "Common name to use on all resources created unless a more specific name is provided"
@@ -32,12 +48,6 @@ variable "atlantis_uid" {
   description = "UID of the atlantis user"
   type        = number
   default     = 100
-}
-
-variable "vpc_id" {
-  description = "ID of the VPC where the resources will be provisioned"
-  type        = string
-  default     = ""
 }
 
 ################################################################################

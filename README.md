@@ -210,8 +210,8 @@ module "atlantis" {
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | ~> 5.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.10.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.19 |
 
 ## Providers
 
@@ -221,11 +221,11 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | 5.0.0 |
-| <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | 9.1.0 |
-| <a name="module_ecs_cluster"></a> [ecs\_cluster](#module\_ecs\_cluster) | terraform-aws-modules/ecs/aws//modules/cluster | 5.11.0 |
-| <a name="module_ecs_service"></a> [ecs\_service](#module\_ecs\_service) | terraform-aws-modules/ecs/aws//modules/service | 5.11.0 |
-| <a name="module_efs"></a> [efs](#module\_efs) | terraform-aws-modules/efs/aws | 1.3.1 |
+| <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | 6.1.1 |
+| <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | 10.2.0 |
+| <a name="module_ecs_cluster"></a> [ecs\_cluster](#module\_ecs\_cluster) | terraform-aws-modules/ecs/aws//modules/cluster | 6.7.0 |
+| <a name="module_ecs_service"></a> [ecs\_service](#module\_ecs\_service) | terraform-aws-modules/ecs/aws//modules/service | 6.7.0 |
+| <a name="module_efs"></a> [efs](#module\_efs) | terraform-aws-modules/efs/aws | 2.0.0 |
 
 ## Resources
 
@@ -255,6 +255,7 @@ No resources.
 | <a name="input_efs"></a> [efs](#input\_efs) | Map of values passed to EFS module definition. See the [EFS module](https://github.com/terraform-aws-modules/terraform-aws-efs) for full list of arguments supported | `any` | `{}` | no |
 | <a name="input_enable_efs"></a> [enable\_efs](#input\_enable\_efs) | Determines whether to create and utilize an EFS filesystem | `bool` | `false` | no |
 | <a name="input_name"></a> [name](#input\_name) | Common name to use on all resources created unless a more specific name is provided | `string` | `"atlantis"` | no |
+| <a name="input_region"></a> [region](#input\_region) | Region where the resource(s) will be managed. Defaults to the Region set in the provider configuration | `string` | `null` | no |
 | <a name="input_route53_record_name"></a> [route53\_record\_name](#input\_route53\_record\_name) | Name of Route53 record to create ACM certificate in and main A-record. If null is specified, var.name is used instead. Provide empty string to point root domain name to ALB. | `string` | `null` | no |
 | <a name="input_route53_zone_id"></a> [route53\_zone\_id](#input\_route53\_zone\_id) | Route53 zone ID to use for ACM certificate and Route53 records | `string` | `""` | no |
 | <a name="input_service"></a> [service](#input\_service) | Map of values passed to ECS service module definition. See the [ECS service module](https://github.com/terraform-aws-modules/terraform-aws-ecs/tree/master/modules/service) for full list of arguments supported | `any` | `{}` | no |
