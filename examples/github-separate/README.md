@@ -19,7 +19,7 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.10.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.10 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.19 |
 | <a name="requirement_github"></a> [github](#requirement\_github) | >= 5.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.0 |
@@ -35,13 +35,13 @@ Note that this example may create resources which cost money. Run `terraform des
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | 9.1.0 |
+| <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | 10.2.0 |
 | <a name="module_atlantis"></a> [atlantis](#module\_atlantis) | ../../ | n/a |
 | <a name="module_atlantis_disabled"></a> [atlantis\_disabled](#module\_atlantis\_disabled) | ../../ | n/a |
-| <a name="module_ecs_cluster"></a> [ecs\_cluster](#module\_ecs\_cluster) | terraform-aws-modules/ecs/aws//modules/cluster | 5.6.0 |
+| <a name="module_ecs_cluster"></a> [ecs\_cluster](#module\_ecs\_cluster) | terraform-aws-modules/ecs/aws//modules/cluster | 6.7.0 |
 | <a name="module_github_repository_webhooks"></a> [github\_repository\_webhooks](#module\_github\_repository\_webhooks) | ../../modules/github-repository-webhook | n/a |
-| <a name="module_secrets_manager"></a> [secrets\_manager](#module\_secrets\_manager) | terraform-aws-modules/secrets-manager/aws | ~> 1.0 |
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
+| <a name="module_secrets_manager"></a> [secrets\_manager](#module\_secrets\_manager) | terraform-aws-modules/secrets-manager/aws | ~> 2.0 |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 6.0 |
 
 ## Resources
 

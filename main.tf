@@ -318,21 +318,21 @@ module "ecs_service" {
   requires_compatibilities = var.service.requires_compatibilities
   runtime_platform         = var.service.runtime_platform
   track_latest             = true
-  volume = { for k, v in merge(
-    {
+  volume = merge(
+    { for k, v in {
       efs = {
         efs_volume_configuration = {
           file_system_id     = module.efs.id
           transit_encryption = "ENABLED"
           authorization_config = {
-            access_point_id = module.efs.access_points["atlantis"].id
+            access_point_id = try(module.efs.access_points["atlantis"].id, "")
             iam             = "ENABLED"
           }
         }
       }
-    },
+    } : k => v if var.enable_efs },
     var.service.volume
-  ) : k => v if var.enable_efs }
+  )
   task_tags = var.service.task_tags
 
   # Task execution IAM role

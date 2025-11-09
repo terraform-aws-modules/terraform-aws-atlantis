@@ -34,9 +34,10 @@ locals {
 module "atlantis" {
   source = "../../"
 
-  name = local.name
+  name   = local.name
+  vpc_id = module.vpc.vpc_id
 
-  # ECS
+  # ECS Container Definition
   atlantis = {
     environment = [
       {
@@ -64,6 +65,7 @@ module "atlantis" {
     ]
   }
 
+  # ECS Service
   service = {
     subnet_ids = module.vpc.private_subnets
 
@@ -81,10 +83,6 @@ module "atlantis" {
     # For example only
     enable_deletion_protection = false
   }
-
-  # alb_subnets = module.vpc.public_subnets
-  # service_subnets = module.vpc.private_subnets
-  vpc_id = module.vpc.vpc_id
 
   # ACM
   certificate_domain_name = "${local.name}.${var.domain}"
