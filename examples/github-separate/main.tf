@@ -30,7 +30,8 @@ locals {
 module "atlantis" {
   source = "../../"
 
-  name = local.name
+  name   = local.name
+  vpc_id = module.vpc.vpc_id
 
   # Existing cluster
   create_cluster = false
@@ -41,7 +42,7 @@ module "atlantis" {
   alb_target_group_arn  = module.alb.target_groups["atlantis"].arn
   alb_security_group_id = module.alb.security_group_id
 
-  # ECS
+  # ECS Container Definition
   atlantis = {
     environment = [
       {
@@ -70,16 +71,16 @@ module "atlantis" {
     fqdn = module.alb.dns_name
   }
 
+  # ECS Service
   service = {
+    subnet_ids = module.vpc.private_subnets
+
     task_exec_secret_arns = [for sec in module.secrets_manager : sec.secret_arn]
     # Provide Atlantis permission necessary to create/destroy resources
     tasks_iam_role_policies = {
       AdministratorAccess = "arn:aws:iam::aws:policy/AdministratorAccess"
     }
   }
-
-  service_subnets = module.vpc.private_subnets
-  vpc_id          = module.vpc.vpc_id
 
   tags = local.tags
 }
@@ -105,21 +106,21 @@ module "atlantis_disabled" {
 
 module "ecs_cluster" {
   source  = "terraform-aws-modules/ecs/aws//modules/cluster"
-  version = "5.6.0"
+  version = "6.7.0"
 
   # Cluster
-  cluster_name = local.name
-  cluster_settings = {
+  name = local.name
+  setting = [{
     name  = "containerInsights"
     value = "enabled"
-  }
+  }]
 
   tags = local.tags
 }
 
 module "alb" {
   source  = "terraform-aws-modules/alb/aws"
-  version = "9.1.0"
+  version = "10.2.0"
 
   name = local.name
 
@@ -192,7 +193,7 @@ resource "random_password" "webhook_secret" {
 
 module "secrets_manager" {
   source  = "terraform-aws-modules/secrets-manager/aws"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   for_each = {
     github-token = {
@@ -204,16 +205,17 @@ module "secrets_manager" {
   }
 
   # Secret
-  name_prefix             = each.key
-  recovery_window_in_days = 0 # For example only
-  secret_string           = each.value.secret_string
+  name_prefix              = each.key
+  recovery_window_in_days  = 0 # For example only
+  secret_string_wo         = each.value.secret_string
+  secret_string_wo_version = 2
 
   tags = local.tags
 }
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = local.name
   cidr = local.vpc_cidr

@@ -34,9 +34,10 @@ locals {
 module "atlantis" {
   source = "../../"
 
-  name = local.name
+  name   = local.name
+  vpc_id = module.vpc.vpc_id
 
-  # ECS
+  # ECS Container Definition
   atlantis = {
     environment = [
       {
@@ -64,7 +65,10 @@ module "atlantis" {
     ]
   }
 
+  # ECS Service
   service = {
+    subnet_ids = module.vpc.private_subnets
+
     task_exec_secret_arns = [for sec in module.secrets_manager : sec.secret_arn]
     # Provide Atlantis permission necessary to create/destroy resources
     tasks_iam_role_policies = {
@@ -74,13 +78,11 @@ module "atlantis" {
 
   # ALB
   alb = {
+    subnet_ids = module.vpc.public_subnets
+
     # For example only
     enable_deletion_protection = false
   }
-
-  alb_subnets     = module.vpc.public_subnets
-  service_subnets = module.vpc.private_subnets
-  vpc_id          = module.vpc.vpc_id
 
   # ACM
   certificate_domain_name = "${local.name}.${var.domain}"
@@ -125,7 +127,7 @@ resource "random_password" "webhook_secret" {
 
 module "secrets_manager" {
   source  = "terraform-aws-modules/secrets-manager/aws"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   for_each = {
     github-token = {
@@ -137,16 +139,17 @@ module "secrets_manager" {
   }
 
   # Secret
-  name_prefix             = each.key
-  recovery_window_in_days = 0 # For example only
-  secret_string           = each.value.secret_string
+  name_prefix              = each.key
+  recovery_window_in_days  = 0 # For example only
+  secret_string_wo         = each.value.secret_string
+  secret_string_wo_version = 2
 
   tags = local.tags
 }
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = local.name
   cidr = local.vpc_cidr
