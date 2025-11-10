@@ -432,6 +432,10 @@ variable "service" {
       capacity_provider = string
       weight            = optional(number)
     })))
+    deployment_circuit_breaker = optional(object({
+      enable   = bool
+      rollback = bool
+    }))
     enable_ecs_managed_tags           = optional(bool, true)
     force_new_deployment              = optional(bool, true)
     health_check_grace_period_seconds = optional(number)
