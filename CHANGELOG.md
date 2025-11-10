@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.0.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.4.1...v5.0.0) (2025-11-10)
+
+### ⚠ BREAKING CHANGES
+
+* Upgrade Terraform and AWS min required providers to 1.10 and `6.19` respectively (#426)
+
+### Features
+
+* Upgrade Terraform and AWS min required providers to 1.10 and `6.19` respectively ([#426](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/426)) ([2b456f8](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/2b456f884bedfb0b326a8c88fa3ac0354f33cf98))
+
 ## [4.4.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v4.4.0...v4.4.1) (2025-10-21)
 
 ### Bug Fixes
