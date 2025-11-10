@@ -78,7 +78,7 @@ module "atlantis" {
 
   # ALB
   alb = {
-    subnets = module.vpc.public_subnets
+    subnet_ids = module.vpc.public_subnets
 
     # For example only
     enable_deletion_protection = false

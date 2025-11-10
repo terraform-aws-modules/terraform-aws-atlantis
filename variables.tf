@@ -4,6 +4,12 @@ variable "create" {
   default     = true
 }
 
+variable "name" {
+  description = "Common name to use on all resources created unless a more specific name is provided"
+  type        = string
+  default     = "atlantis"
+}
+
 variable "region" {
   description = "Region where the resource(s) will be managed. Defaults to the Region set in the provider configuration"
   type        = string
@@ -25,12 +31,6 @@ variable "vpc_id" {
 ################################################################################
 # Atlantis
 ################################################################################
-
-variable "name" {
-  description = "Common name to use on all resources created unless a more specific name is provided"
-  type        = string
-  default     = "atlantis"
-}
 
 variable "atlantis" {
   description = "Map of values passed to Atlantis container definition. See the [ECS container definition module](https://github.com/terraform-aws-modules/terraform-aws-ecs/tree/master/modules/container-definition) for full list of arguments supported"
@@ -207,7 +207,7 @@ variable "alb" {
     name                             = optional(string)
     preserve_host_header             = optional(bool)
     security_groups                  = optional(list(string), [])
-    subnets                          = optional(list(string), [])
+    subnet_ids                       = optional(list(string), [])
 
     # Listener(s)
     default_port              = optional(number, 80)

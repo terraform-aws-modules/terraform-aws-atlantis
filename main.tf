@@ -48,7 +48,7 @@ module "alb" {
   name                             = try(coalesce(var.alb.name, var.name), "")
   preserve_host_header             = var.alb.preserve_host_header
   security_groups                  = var.alb.security_groups
-  subnets                          = var.alb.subnets
+  subnets                          = var.alb.subnet_ids
 
   # Listener(s)
   default_port     = var.alb.default_port
