@@ -272,6 +272,7 @@ module "ecs_service" {
         essential             = true
         extraHosts            = var.atlantis.extraHosts
         firelensConfiguration = var.atlantis.firelensConfiguration
+        fqdn                  = var.atlantis.fqdn
         healthCheck           = var.atlantis.healthCheck
         hostname              = var.atlantis.hostname
         image                 = var.atlantis.image

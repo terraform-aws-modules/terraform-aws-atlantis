@@ -70,6 +70,7 @@ variable "atlantis" {
         content = string
       }))
     }))
+    fqdn = optional(string)
     healthCheck = optional(object({
       command     = optional(list(string), [])
       interval    = optional(number, 30)
