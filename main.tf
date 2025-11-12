@@ -1,9 +1,12 @@
 locals {
   # Atlantis
-  atlantis_url = "https://${try(coalesce(
-    try(var.atlantis.fqdn, module.alb.route53_records["A"].fqdn, null),
-    module.alb.dns_name,
-  ), "")}"
+  atlantis_url = "https://${try(
+    coalesce(
+      var.atlantis.fqdn,
+      try(module.alb.route53_records["A"].fqdn, null),
+      module.alb.dns_name,
+    ),
+  "")}"
 }
 
 ################################################################################
