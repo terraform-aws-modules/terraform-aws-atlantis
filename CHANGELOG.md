@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.0.2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v5.0.1...v5.0.2) (2025-11-12)
+
+### Bug Fixes
+
+* Update lookup logic for Atlantis URL due to variable optional attributes ([#428](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/428)) ([fd00ee1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/fd00ee10329ce21223951ea035536d3bfb190afb))
+
 ## [5.0.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v5.0.0...v5.0.1) (2025-11-11)
 
 ### Bug Fixes
