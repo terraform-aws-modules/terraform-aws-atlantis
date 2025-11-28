@@ -148,7 +148,6 @@ module "atlantis" {
 You can enable EFS to ensure that any plan outputs are persisted to EFS in the event that the Atlantis Task is replaced:
 
 ```hcl
-```hcl
 module "atlantis" {
   source  = "terraform-aws-modules/atlantis/aws"
 
