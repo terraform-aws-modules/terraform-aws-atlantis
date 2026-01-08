@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.1.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v5.0.2...v5.1.0) (2026-01-08)
+
+### Features
+
+* Add provider meta user-agent ([#433](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/433)) ([c256bc1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/c256bc1549cf79255981a611c3a917d0d497fdbc))
+
 ## [5.0.2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v5.0.1...v5.0.2) (2025-11-12)
 
 ### Bug Fixes
