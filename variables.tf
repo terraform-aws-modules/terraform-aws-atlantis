@@ -438,6 +438,7 @@ variable "service" {
       rollback = bool
     }))
     enable_ecs_managed_tags           = optional(bool, true)
+    enable_execute_command            = optional(bool, false)
     force_new_deployment              = optional(bool, true)
     health_check_grace_period_seconds = optional(number)
     launch_type                       = optional(string, "FARGATE")

@@ -208,7 +208,7 @@ module "ecs_service" {
   deployment_minimum_healthy_percent = 0
   desired_count                      = 1
   enable_ecs_managed_tags            = var.service.enable_ecs_managed_tags
-  enable_execute_command             = false
+  enable_execute_command             = var.service.enable_execute_command
   force_new_deployment               = var.service.force_new_deployment
   health_check_grace_period_seconds  = var.service.health_check_grace_period_seconds
   launch_type                        = var.service.launch_type
