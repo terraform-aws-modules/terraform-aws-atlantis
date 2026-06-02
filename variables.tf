@@ -597,6 +597,14 @@ variable "service" {
       }
     )
     security_group_tags = optional(map(string), {})
+
+    # Service Discovery Registries
+    service_registries = optional(object({
+      container_name = optional(string)
+      container_port = optional(number)
+      port           = optional(number)
+      registry_arn   = string
+    }))
   })
   default = {}
 }

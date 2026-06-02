@@ -399,6 +399,9 @@ module "ecs_service" {
   )
   security_group_tags = var.service.security_group_tags
 
+  # Service Discovery Registries
+  service_registries = var.service.service_registries
+
   tags = var.tags
 }
 
