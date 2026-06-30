@@ -151,6 +151,7 @@ variable "atlantis" {
     # CloudWatch Log Group
     enable_cloudwatch_logging              = optional(bool, true)
     create_cloudwatch_log_group            = optional(bool, true)
+    cloudwatch_log_group_name              = optional(string)
     cloudwatch_log_group_use_name_prefix   = optional(bool, true)
     cloudwatch_log_group_retention_in_days = optional(number, 14)
     cloudwatch_log_group_class             = optional(string)

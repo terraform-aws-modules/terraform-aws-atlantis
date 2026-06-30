@@ -307,6 +307,7 @@ module "ecs_service" {
         service                                = try(coalesce(var.service.name, var.name))
         enable_cloudwatch_logging              = var.atlantis.enable_cloudwatch_logging
         create_cloudwatch_log_group            = var.atlantis.create_cloudwatch_log_group
+        cloudwatch_log_group_name              = var.atlantis.cloudwatch_log_group_name
         cloudwatch_log_group_use_name_prefix   = var.atlantis.cloudwatch_log_group_use_name_prefix
         cloudwatch_log_group_retention_in_days = var.atlantis.cloudwatch_log_group_retention_in_days
         cloudwatch_log_group_class             = var.atlantis.cloudwatch_log_group_class
