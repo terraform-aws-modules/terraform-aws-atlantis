@@ -215,7 +215,7 @@ module "atlantis" {
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.10 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.28 |
 
@@ -226,7 +226,7 @@ No providers.
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
+| ---- | ------ | ------- |
 | <a name="module_acm"></a> [acm](#module\_acm) | terraform-aws-modules/acm/aws | 6.1.1 |
 | <a name="module_alb"></a> [alb](#module\_alb) | terraform-aws-modules/alb/aws | 10.2.0 |
 | <a name="module_ecs_cluster"></a> [ecs\_cluster](#module\_ecs\_cluster) | terraform-aws-modules/ecs/aws//modules/cluster | 6.7.0 |
@@ -240,7 +240,7 @@ No resources.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_alb"></a> [alb](#input\_alb) | Map of values passed to ALB module definition. See the [ALB module](https://github.com/terraform-aws-modules/terraform-aws-alb) for full list of arguments supported | <pre>object({<br/>    # Load Balancer<br/>    access_logs = optional(object({<br/>      bucket  = string<br/>      enabled = optional(bool, true)<br/>      prefix  = optional(string)<br/>    }))<br/>    connection_logs = optional(object({<br/>      bucket  = string<br/>      enabled = optional(bool, true)<br/>      prefix  = optional(string)<br/>    }))<br/>    drop_invalid_header_fields       = optional(bool, true)<br/>    enable_cross_zone_load_balancing = optional(bool, true)<br/>    enable_deletion_protection       = optional(bool, true)<br/>    enable_http2                     = optional(bool, true)<br/>    enable_waf_fail_open             = optional(bool)<br/>    enable_zonal_shift               = optional(bool, true)<br/>    idle_timeout                     = optional(number)<br/>    internal                         = optional(bool)<br/>    ip_address_type                  = optional(string)<br/>    name                             = optional(string)<br/>    preserve_host_header             = optional(bool)<br/>    security_groups                  = optional(list(string), [])<br/>    subnet_ids                       = optional(list(string), [])<br/><br/>    # Listener(s)<br/>    default_port              = optional(number, 80)<br/>    default_protocol          = optional(string, "HTTP")<br/>    https_listener_ssl_policy = optional(string, "ELBSecurityPolicy-TLS13-1-2-2021-06")<br/>    https_default_action = optional(any, {<br/>      forward = {<br/>        target_group_key = "atlantis"<br/>      }<br/>    })<br/>    https_listener = optional(any, {})<br/>    listeners      = optional(any, {})<br/><br/>    # Target Group(s)<br/>    target_groups = optional(any, {})<br/><br/>    # Securtity Group(s)<br/>    create_security_group          = optional(bool, true)<br/>    security_group_name            = optional(string)<br/>    security_group_use_name_prefix = optional(bool, true)<br/>    security_group_description     = optional(string)<br/>    security_group_ingress_rules = optional(map(object({<br/>      name                         = optional(string)<br/>      cidr_ipv4                    = optional(string)<br/>      cidr_ipv6                    = optional(string)<br/>      description                  = optional(string)<br/>      from_port                    = optional(string)<br/>      ip_protocol                  = optional(string, "tcp")<br/>      prefix_list_id               = optional(string)<br/>      referenced_security_group_id = optional(string)<br/>      tags                         = optional(map(string), {})<br/>      to_port                      = optional(string)<br/>      })),<br/>      # Default<br/>      {<br/>        http = {<br/>          from_port = 80<br/>          cidr_ipv4 = "0.0.0.0/0"<br/>        }<br/>        https = {<br/>          from_port = 443<br/>          cidr_ipv4 = "0.0.0.0/0"<br/>        }<br/>      }<br/>    )<br/>    security_group_egress_rules = optional(<br/>      map(object({<br/>        name                         = optional(string)<br/>        cidr_ipv4                    = optional(string)<br/>        cidr_ipv6                    = optional(string)<br/>        description                  = optional(string)<br/>        from_port                    = optional(string)<br/>        ip_protocol                  = optional(string, "tcp")<br/>        prefix_list_id               = optional(string)<br/>        referenced_security_group_id = optional(string)<br/>        tags                         = optional(map(string), {})<br/>        to_port                      = optional(string)<br/>      })),<br/>      # Default<br/>      {<br/>        all = {<br/>          ip_protocol = "-1"<br/>          cidr_ipv4   = "0.0.0.0/0"<br/>        }<br/>      }<br/>    )<br/>    security_group_tags = optional(map(string), {})<br/><br/>    # Route53 Record(s)<br/>    route53_records = optional(map(object({<br/>      zone_id                = string<br/>      name                   = optional(string)<br/>      type                   = string<br/>      evaluate_target_health = optional(bool, true)<br/>    })))<br/><br/>    # WAF<br/>    associate_web_acl = optional(bool, false)<br/>    web_acl_arn       = optional(string)<br/><br/>    tags = optional(map(string), {})<br/>  })</pre> | `{}` | no |
 | <a name="input_alb_security_group_id"></a> [alb\_security\_group\_id](#input\_alb\_security\_group\_id) | ID of an existing security group that will be used by ALB. Required if `create_alb` is `false` | `string` | `""` | no |
 | <a name="input_alb_target_group_arn"></a> [alb\_target\_group\_arn](#input\_alb\_target\_group\_arn) | ARN of an existing ALB target group that will be used to route traffic to the Atlantis service. Required if `create_alb` is `false` | `string` | `""` | no |
@@ -268,7 +268,7 @@ No resources.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_alb"></a> [alb](#output\_alb) | ALB created and all of its associated outputs |
 | <a name="output_cluster"></a> [cluster](#output\_cluster) | ECS cluster created and all of its associated outputs |
 | <a name="output_efs"></a> [efs](#output\_efs) | EFS created and all of its associated outputs |
