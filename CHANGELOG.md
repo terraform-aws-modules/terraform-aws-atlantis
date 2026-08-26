@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.1.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v5.1.0...v5.1.1) (2026-08-26)
+
+### Bug Fixes
+
+* Update GitHub Actions and pre-commit hook versions ([#442](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/442)) ([bea8bac](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/bea8bacd7e87c9422c31179f2f43defc5f35143b))
+
 ## [5.1.0](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v5.0.2...v5.1.0) (2026-01-08)
 
 ### Features
