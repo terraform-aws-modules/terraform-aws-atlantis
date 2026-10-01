@@ -389,15 +389,8 @@ module "ecs_service" {
     },
     var.service.security_group_ingress_rules
   )
-  security_group_egress_rules = merge(
-    {
-      egress = {
-        ip_protocol = "-1"
-        cidr_ipv4   = "0.0.0.0/0"
-      }
-    }
-  )
-  security_group_tags = var.service.security_group_tags
+  security_group_egress_rules = var.service.security_group_egress_rules
+  security_group_tags         = var.service.security_group_tags
 
   tags = var.tags
 }
