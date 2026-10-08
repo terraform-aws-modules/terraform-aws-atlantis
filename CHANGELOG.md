@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [5.1.2](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v5.1.1...v5.1.2) (2026-10-08)
+
+### Bug Fixes
+
+* Pass `service.security_group_egress_rules` through to the ECS service security group ([#446](https://github.com/terraform-aws-modules/terraform-aws-atlantis/issues/446)) ([5eabbfc](https://github.com/terraform-aws-modules/terraform-aws-atlantis/commit/5eabbfcb92e4ef60953a2d932cd7174d6bc80258))
+
 ## [5.1.1](https://github.com/terraform-aws-modules/terraform-aws-atlantis/compare/v5.1.0...v5.1.1) (2026-08-26)
 
 ### Bug Fixes
